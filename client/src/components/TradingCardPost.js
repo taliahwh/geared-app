@@ -14,9 +14,10 @@ import { Ionicons } from '@expo/vector-icons';
 // Components
 import CarouselCards from './carousel/CarouselCards';
 
-const TradingCardPost = ({ imgSrc, forSale, offers }) => {
+const TradingCardPost = ({ imgSrc, forSale, offers, username, images }) => {
   // const [comment, setComment] = useState('');
   const navigation = useNavigation();
+  console.log(username);
   return (
     <View style={styles.container}>
       <View style={styles.headingContainer}>
@@ -38,7 +39,7 @@ const TradingCardPost = ({ imgSrc, forSale, offers }) => {
                 });
               }}
             >
-              <Text style={styles.username}>taliahwh</Text>
+              <Text style={styles.username}>{username}</Text>
             </TouchableOpacity>
             <Text style={styles.location}>Phoenix, Arizona</Text>
           </View>
@@ -53,7 +54,7 @@ const TradingCardPost = ({ imgSrc, forSale, offers }) => {
         </View>
       </View>
       <View style={styles.imageContainer}>
-        <CarouselCards images={imgSrc} />
+        <CarouselCards images={images} />
       </View>
       <View style={styles.buttonContainer}>
         <View style={styles.likeBtnContainer}>
@@ -226,10 +227,11 @@ const styles = StyleSheet.create({
     paddingTop: 7,
     display: 'flex',
     flexDirection: 'row',
+    // backgroundColor: 'orange',
   },
   usernameFont: {
     fontWeight: '500',
-    marginRight: 5,
+    // marginRight: 5,
   },
   viewComments: {
     paddingTop: 7,
