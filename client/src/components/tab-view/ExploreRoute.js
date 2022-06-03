@@ -1,74 +1,78 @@
-import React from 'react';
-import { Asset } from 'expo-asset';
+import React, { useEffect, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
   Dimensions,
   Text,
   FlatList,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Components
 import TradingCardPost from '../TradingCardPost';
 import CarouselCards from '../carousel/CarouselCards';
 
+// Actions
+import { getExplorePosts } from '../../actions/postActions';
+
 const windowWidth = Dimensions.get('window').width;
 
-const tatum = require('../../assets/test-images/tatum.jpg');
-
-const bam = require('../../assets/test-images/IMG_1676.jpg');
-
-const marcus = require('../../assets/test-images/marcus.jpg');
-
-const ayton = require('../../assets/test-images/ayton.jpg');
-
-const maxey = require('../../assets/test-images/maxey.jpg');
-
-const jb = require('../../assets/test-images/jb.jpg');
-
-const POSTS = [
-  {
-    id: 1,
-    name: 'Bam Adebayo',
-    src: bam,
-  },
-  {
-    id: 2,
-    name: 'Jayson Tatum',
-    src: tatum,
-  },
-  {
-    id: 3,
-    name: 'Marcus Smart',
-    src: marcus,
-  },
-  {
-    id: 4,
-    name: 'Deandre Ayton',
-    src: ayton,
-  },
-  {
-    id: 5,
-    name: 'Tyrese Maxey',
-    src: maxey,
-  },
-  {
-    id: 6,
-    name: 'Jaylen Brown',
-    src: jb,
-  },
-];
-
 const ExploreRoute = () => {
+  const dispatch = useDispatch();
+
+  const {
+    loading: loadingExplorePosts,
+    posts,
+    error: errorExplorePosts,
+  } = useSelector((state) => state.explorePosts);
+
+  const renderItem = ({ item }) => {
+    console.log(item.username);
+    return (
+      <TradingCardPost
+        username={item.listedBy.username}
+        description={item.description}
+      />
+    );
+  };
+
+  useEffect(() => {
+    dispatch(getExplorePosts());
+  }, [dispatch]);
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <TradingCardPost forSale={true} />
-      <TradingCardPost />
-      <TradingCardPost />
-      <TradingCardPost forSale={true} />
-      <TradingCardPost offers={true} />
-      <Text style={styles.footer}>End of posts.</Text>
-    </ScrollView>
+    // <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    //   <TradingCardPost forSale={true} />
+    //   <TradingCardPost />
+    //   <TradingCardPost />
+    //   <TradingCardPost forSale={true} />
+    //   <TradingCardPost offers={true} />
+    //   <Text style={styles.footer}>End of posts.</Text>
+    // </ScrollView>
+
+    <View style={styles.container}>
+      {/* {posts && (
+        <FlatList
+          data={posts}
+          renderItem={renderItem}
+          // numColumns={3}
+          keyExtractor={(item) => item._id}
+          // ItemSeparatorComponent={Separator}
+        />
+      )} */}
+      {loadingExplorePosts && <ActivityIndicator />}
+      {posts && posts.length > 0 && (
+        <FlatList
+          data={posts}
+          renderItem={renderItem}
+          // numColumns={3}
+          keyExtractor={(item) => item._id}
+          // ItemSeparatorComponent={Separator}
+        />
+      )}
+    </View>
   );
 };
 
