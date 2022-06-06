@@ -7,7 +7,6 @@ const SLIDER_WIDTH = Dimensions.get('window').width + 98;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.75);
 
 const CarouselCardItem = ({ item }) => {
-  console.log(item);
   return <Image source={{ uri: item.imgUrl }} style={styles.image} />;
 };
 
