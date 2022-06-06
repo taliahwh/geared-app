@@ -20,18 +20,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // collection: {
-    //   type: [postSchema],
-    //   default: [],
-    // },
-    // savedPosts: {
-    //   type: [postSchema],
-    //   default: [],
-    // },
-    // likedPosts: {
-    //   type: [postSchema],
-    //   default: [],
-    // },
+    profileImage: {
+      type: String,
+    },
+    postCollection: {
+      type: [postSchema],
+      default: [],
+    },
+    savedPosts: {
+      type: [postSchema],
+      default: [],
+    },
+    likedPosts: {
+      type: [postSchema],
+      default: [],
+    },
   },
   {
     // Automatically generates createdAt and updatedAt fields
