@@ -39,6 +39,14 @@ const styles = StyleSheet.create({
     borderColor: '#d4d4d4',
     alignItems: 'center',
   },
+  dateInputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: '#d4d4d4',
+  },
+  slash: { paddingHorizontal: 5 },
   inputTitle: {
     width: '30%',
     // backgroundColor: 'pink',

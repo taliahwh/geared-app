@@ -53,7 +53,6 @@ const SignUpScreen = () => {
                     placeholderTextColor={'#a1a1aa'}
                     autoCapitalize="none"
                     returnKeyType="next"
-                    ref={emailRef}
                     onSubmitEditing={() => {
                       lastNameRef.current.focus();
                     }}
