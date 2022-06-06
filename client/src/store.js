@@ -5,8 +5,11 @@ import { composeWithDevTools } from '@redux-devtools/extension';
 
 import { explorePostsReducer } from './reducers/postReducers';
 
+import { userSignInReducer } from './reducers/userReducers';
+
 const reducer = combineReducers({
   explorePosts: explorePostsReducer,
+  userSignIn: userSignInReducer,
 });
 
 // Initial state when the redux store loads
