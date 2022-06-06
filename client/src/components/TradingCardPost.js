@@ -14,10 +14,19 @@ import { Ionicons } from '@expo/vector-icons';
 // Components
 import CarouselCards from './carousel/CarouselCards';
 
-const TradingCardPost = ({ imgSrc, forSale, offers, username, images }) => {
+const TradingCardPost = ({
+  imgSrc,
+  forSale,
+  offers,
+  username,
+  images,
+  description,
+  location,
+  profileImage,
+}) => {
   // const [comment, setComment] = useState('');
   const navigation = useNavigation();
-  console.log(username);
+  // console.log(username);
   return (
     <View style={styles.container}>
       <View style={styles.headingContainer}>
@@ -25,7 +34,7 @@ const TradingCardPost = ({ imgSrc, forSale, offers, username, images }) => {
           <Image
             style={styles.userImage}
             source={{
-              uri: 'https://i0.wp.com/sneakerhistory.com/wp-content/uploads/2019/03/fab-five-air-force-max-black-socks.jpg?fit=1280%2C1600&ssl=1',
+              uri: profileImage,
             }}
           />
 
@@ -41,7 +50,7 @@ const TradingCardPost = ({ imgSrc, forSale, offers, username, images }) => {
             >
               <Text style={styles.username}>{username}</Text>
             </TouchableOpacity>
-            <Text style={styles.location}>Phoenix, Arizona</Text>
+            <Text style={styles.location}>{location}</Text>
           </View>
         </View>
         <View style={styles.info}>
@@ -82,22 +91,8 @@ const TradingCardPost = ({ imgSrc, forSale, offers, username, images }) => {
           />
         </View>
       </View>
-      <View style={styles.descriptionContainer}>
-        <Text>
-          <TouchableOpacity
-            onPress={() => {
-              /* 1. Navigate to the Details route with params */
-              navigation.navigate('User Profile', {
-                itemId: 86,
-                otherParam: 'anything you want here',
-              });
-            }}
-          >
-            <Text style={styles.usernameFont}>taliahwh</Text>
-          </TouchableOpacity>
-          2017-2018 Bam Adebayo Panini Contenders Rookie Auto 49/65
-        </Text>
-      </View>
+
+      <Text style={styles.descriptionContainer}>{description}</Text>
 
       {forSale && (
         <View style={styles.priceContainer}>
@@ -129,6 +124,23 @@ const TradingCardPost = ({ imgSrc, forSale, offers, username, images }) => {
     </View>
   );
 };
+
+// {/* <View style={styles.descriptionContainer}>
+// <Text>
+//   <TouchableOpacity
+//     onPress={() => {
+//       /* 1. Navigate to the Details route with params */
+//       navigation.navigate('User Profile', {
+//         itemId: 86,
+//         otherParam: 'anything you want here',
+//       });
+//     }}
+//   >
+//     <Text style={styles.usernameFont}>{username}</Text>
+//   </TouchableOpacity>
+//   2017-2018 Bam Adebayo Panini Contenders Rookie Auto 49/65
+// </Text>
+// </View> */}
 
 const styles = StyleSheet.create({
   container: {
@@ -225,12 +237,10 @@ const styles = StyleSheet.create({
   descriptionContainer: {
     paddingHorizontal: 15,
     paddingTop: 7,
-    display: 'flex',
-    flexDirection: 'row',
-    // backgroundColor: 'orange',
   },
   usernameFont: {
     fontWeight: '500',
+    backgroundColor: 'pink',
     // marginRight: 5,
   },
   viewComments: {

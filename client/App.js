@@ -11,8 +11,8 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <MainNavigator />
-        {/* <AuthNavigator /> */}
+        {/* <MainNavigator /> */}
+        <AuthNavigator />
       </NavigationContainer>
     </Provider>
   );

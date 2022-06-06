@@ -1,4 +1,5 @@
 import axios from 'axios';
+import geared from '../api/geared';
 
 import {
   EXPLORE_POSTS_REQUEST,
@@ -16,10 +17,8 @@ export const getExplorePosts = () => async (dispatch) => {
 
     dispatch({ type: EXPLORE_POSTS_REQUEST });
 
-    const { data } = await axios.get(
-      'http://10.0.0.26:5000/api/posts/explore',
-      config
-    );
+    const { data } = await geared.get('/api/posts/explore', config);
+    console.log(data);
 
     dispatch({ type: EXPLORE_POSTS_SUCCESS, payload: data });
     console.log(data);
