@@ -13,10 +13,15 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+
+// Actions
+import { signIn } from '../actions/userActions';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const passwordRef = useRef();
+  const dispatch = useDispatch();
 
   const {
     control,
@@ -25,6 +30,11 @@ const LoginScreen = () => {
   } = useForm({
     mode: 'onBlur',
   });
+
+  const onSubmit = (data) => {
+    const { username, password } = data;
+    dispatch(signIn(username, password));
+  };
 
   return (
     <SafeAreaView style={styles.screenContainer}>
@@ -73,7 +83,13 @@ const LoginScreen = () => {
                 )}
               />
 
-              <Text style={styles.loginBtn}>Login</Text>
+              <TouchableOpacity
+                onPress={handleSubmit(onSubmit)}
+                activeOpacity={0.5}
+              >
+                <Text style={styles.loginBtn}>Login</Text>
+              </TouchableOpacity>
+
               <View style={styles.signUpTextContainer}>
                 <Text style={styles.signUpText}>Don't have an account?</Text>
                 <TouchableOpacity

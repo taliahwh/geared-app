@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/api/posts', postRoutes);
-app.use('/api/user', userRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');
