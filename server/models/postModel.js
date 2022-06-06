@@ -46,12 +46,21 @@ export const postSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
-      // userId: {
-      //   type: mongoose.Schema.Types.ObjectId,
-      //   required: true,
-      // },
+      profileImage: {
+        type: String,
+        required: true,
+      },
+      location: {
+        type: String,
+        required: true,
+      },
     },
+    // userId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   required: true,
+    // },
   },
+
   {
     // Automatically generates createdAt and updatedAt fields
     timestamps: true,
