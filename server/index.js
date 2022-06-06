@@ -7,8 +7,10 @@ import colors from 'colors';
 
 // API Routes
 import postRoutes from './routes/postRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 // Error handling middleware
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 dotenv.config();
 
@@ -21,12 +23,15 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/api/posts', postRoutes);
+app.use('/api/user', userRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
 // Error handling middleware
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
