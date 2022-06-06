@@ -7,7 +7,8 @@
   "scripts": {
     "start": "nodemon server/index",
     "data:import": "node server/seeder",
-    "data:destroy": "node server/seeder -d"
+    "data:destroy": "node server/seeder -d",
+    "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=8081'"
   },
   "repository": {
     "type": "git",
