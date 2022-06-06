@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -29,8 +29,9 @@ const ProfileSettingsRoute = () => {
   const [date, setDate] = useState('');
   const [open, setOpen] = useState(false);
   const formattedDOB = moment(date).format('MM/D/YYYY');
-  const dateToday = moment().format('L');
-  const [bio, setBio] = useState('Edit bio screen');
+
+  const dayRef = useRef();
+  const yearRef = useRef();
 
   const {
     control,
@@ -201,18 +202,64 @@ const ProfileSettingsRoute = () => {
           />
         </View>
 
-        <View style={styles.inputContainer}>
+        <View style={styles.dateInputContainer}>
           <Text style={styles.inputTitle}>Date of birth</Text>
-          <TouchableOpacity onPress={showDatePicker}>
-            <Text style={{ color: '#000' }}>
-              {formattedDOB === 'Invalid date' ? dateToday : formattedDOB}
-            </Text>
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={open}
-            mode="date"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
+          <Controller
+            control={control}
+            name="month"
+            render={({ field: { onChange, value, onBlur } }) => (
+              <TextInput
+                // style={styles.inputSection}
+                value={value}
+                onChangeText={(value) => onChange(value)}
+                onBlur={onBlur}
+                placeholder="MM"
+                placeholderTextColor={'#a1a1aa'}
+                maxLength={2}
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  dayRef.current.focus();
+                }}
+              />
+            )}
+          />
+          <Text style={styles.slash}>/</Text>
+          <Controller
+            control={control}
+            name="day"
+            render={({ field: { onChange, value, onBlur } }) => (
+              <TextInput
+                // style={styles.inputSection}
+                value={value}
+                onChangeText={(value) => onChange(value)}
+                onBlur={onBlur}
+                placeholder="DD"
+                placeholderTextColor={'#a1a1aa'}
+                maxLength={2}
+                returnKeyType="next"
+                ref={dayRef}
+                onSubmitEditing={() => {
+                  yearRef.current.focus();
+                }}
+              />
+            )}
+          />
+          <Text style={styles.slash}>/</Text>
+          <Controller
+            control={control}
+            name="year"
+            render={({ field: { onChange, value, onBlur } }) => (
+              <TextInput
+                // style={styles.inputSection}
+                value={value}
+                onChangeText={(value) => onChange(value)}
+                onBlur={onBlur}
+                placeholder="YYYY"
+                placeholderTextColor={'#a1a1aa'}
+                maxLength={4}
+                ref={yearRef}
+              />
+            )}
           />
         </View>
 
