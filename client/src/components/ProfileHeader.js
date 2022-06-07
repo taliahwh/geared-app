@@ -6,8 +6,19 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Pressable,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+
+// Actions
+import { logout } from '../actions/userActions';
 
 const TAG_NAMES = [
   {
@@ -34,6 +45,12 @@ const Separator = () => {
 };
 
 const ProfileHeader = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.userInfoContainer}>
@@ -55,6 +72,36 @@ const ProfileHeader = () => {
             <Text>(13)</Text>
             {/* <Ionicons name="star-half" size={15} color="#3E5E7E" /> */}
           </View>
+        </View>
+
+        <View>
+          {/* <TouchableOpacity onPress={() => console.log('Pressed')}>
+            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+          </TouchableOpacity> */}
+          <Pressable
+            style={styles.pickerContainer}
+            onPress={() => MenuProvider.open}
+          >
+            <Menu>
+              <MenuTrigger>
+                <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+              </MenuTrigger>
+              <MenuOptions style={styles.menu}>
+                <MenuOption onSelect={handleLogout}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      paddingVertical: 2,
+                      textAlign: 'center',
+                      fontWeight: '500',
+                    }}
+                  >
+                    Sign Out
+                  </Text>
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
+          </Pressable>
         </View>
       </View>
 
@@ -107,11 +154,13 @@ const styles = StyleSheet.create({
   userImage: {
     flex: 2,
     // backgroundColor: 'pink',
-    height: 75,
+    height: 68,
     borderWidth: 1,
     borderColor: '#d4d4d4',
     borderRadius: 1000,
+    // marginBottom: 5,
   },
+
   userNameContainer: {
     flex: 8,
     // backgroundColor: 'orange',
@@ -189,6 +238,11 @@ const styles = StyleSheet.create({
   },
   count: {
     fontWeight: '600',
+  },
+  menu: {
+    borderWidth: 1,
+    borderColor: '#d4d4d4',
+    padding: 3,
   },
 });
 
