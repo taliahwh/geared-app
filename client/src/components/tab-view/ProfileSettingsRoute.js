@@ -18,7 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 
 // Components
-import KeyboardAvoidingComponent from '../KeyboardAvoidingComponent';
+import ModalComponent from '../Modal';
 
 // Styles
 import styles from '../../styles/ProfileSettingsRouteStyles';
@@ -326,11 +326,11 @@ const ProfileSettingsRoute = () => {
               setModalVisible(!modalVisible);
             }}
           >
-            <KeyboardAvoidingComponent
+            <ModalComponent
               header={'Bio'}
               closeModal={() => setModalVisible(false)}
               modal={true}
-              textInput={
+              input={
                 <Controller
                   control={control}
                   name="bio"
