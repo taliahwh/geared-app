@@ -27,7 +27,7 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
           />
 
           <View style={styles.usernameContainer}>
-            <Text style={styles.username}>taliahwh</Text>
+            <Text style={styles.username}>fab__five</Text>
 
             <Text style={styles.location}>Phoenix, Arizona</Text>
           </View>
@@ -74,7 +74,7 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
 
       <View style={styles.descriptionContainer}>
         <Text>
-          <Text style={styles.usernameFont}>taliahwh</Text> 2017-2018 Bam
+          <Text style={styles.usernameFont}>fab__five</Text> 2017-2018 Bam
           Adebayo Panini Contenders Rookie Auto 49/65
         </Text>
       </View>
@@ -130,7 +130,7 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
             }}
           />
           <View style={styles.sellerNameContainer}>
-            <Text style={styles.sellerName}>Taliah Wharton</Text>
+            <Text style={styles.sellerName}>Dennis Rodman</Text>
             <Text style={styles.sellerMeta}>SELLER SINCE MAY 2022</Text>
           </View>
         </View>
