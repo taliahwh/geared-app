@@ -13,7 +13,10 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+// Components
+import Alert from '../components/Alert';
 
 // Actions
 import { signIn } from '../actions/userActions';
@@ -22,6 +25,8 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const passwordRef = useRef();
   const dispatch = useDispatch();
+
+  const { error: errorSignIn } = useSelector((state) => state.userSignIn);
 
   const {
     control,
@@ -46,6 +51,8 @@ const LoginScreen = () => {
             <Text style={styles.logo}>geared</Text>
 
             <View style={styles.inputContainer}>
+              {errorSignIn && <Alert>{errorSignIn}</Alert>}
+
               <Controller
                 control={control}
                 name="username"
