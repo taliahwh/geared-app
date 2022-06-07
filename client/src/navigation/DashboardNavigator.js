@@ -2,8 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import DashboardScreen from '../screens/DashboardScreen';
-import EditBioScreen from '../screens/EditBioScreen';
-import EditInterestsScreen from '../screens/EditInterestsScreen';
+import CreateListingScreen from '../screens/CreateListingScreen';
 
 const Stack = createStackNavigator();
 
@@ -15,8 +14,6 @@ const DashboardNavigator = () => {
         component={DashboardScreen}
         options={{
           headerTitle: 'Dashboard',
-          // headerTitle: (props) => <LogoTitle {...props} />,
-          // headerTintColor: '#fff',
           headerStyle: {
             elevation: 0,
             shadowOpacity: 0,
@@ -25,21 +22,9 @@ const DashboardNavigator = () => {
         }}
       />
       <Stack.Screen
-        name="Edit Bio"
-        component={EditBioScreen}
-        options={{
-          headerTitle: 'Bio',
-          // headerTitle: (props) => <LogoTitle {...props} />,
-          // headerTitle: (props) => <LogoTitle {...props} />,
-          // headerTintColor: '#fff',
-
-          headerBackTitleVisible: false,
-        }}
-      />
-      <Stack.Screen
-        name="Edit Interests"
-        component={EditInterestsScreen}
-        options={{ headerTitle: 'Interests', headerBackTitleVisible: false }}
+        name="Listing"
+        component={CreateListingScreen}
+        options={{ headerTitle: 'Listing', headerBackTitleVisible: false }}
       />
     </Stack.Navigator>
   );
