@@ -10,13 +10,14 @@ import {
 
 const initialState = {
   authToken: null,
+  loading: false,
   userInfo: {},
 };
 
 export const userSignInReducer = (state = initialState, action) => {
   switch (action.type) {
     case USER_SIGN_IN_REQUEST:
-      return { loading: true };
+      return { ...state, loading: true };
     case USER_SIGN_IN_SUCCESS:
       return {
         loading: false,
@@ -30,9 +31,12 @@ export const userSignInReducer = (state = initialState, action) => {
         },
       };
     case USER_SIGN_IN_FAILURE:
-      return { loading: false, error: action.payload };
+      return { ...state, error: action.payload };
     case USER_LOGOUT:
-      return {};
+      return {
+        authToken: null,
+        userInfo: {},
+      };
     default:
       return state;
   }
