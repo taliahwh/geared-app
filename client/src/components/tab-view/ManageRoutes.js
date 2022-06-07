@@ -7,6 +7,7 @@ import {
   Dimensions,
   FlatList,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 const thirdWindowWidth = Dimensions.get('window').width / 3;
@@ -31,6 +32,8 @@ const Separator = () => {
 };
 
 const ManageRoute = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <View style={styles.soldContainer}>
@@ -60,7 +63,12 @@ const ManageRoute = () => {
             showsHorizontalScrollIndicator={false}
           />
         </View>
-        <Text style={styles.listAnItemBtn}>List an item</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Listing')}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.listAnItemBtn}>List an item</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
