@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ScrollView,
   View,
   Text,
   StyleSheet,
@@ -35,7 +36,7 @@ const ManageRoute = () => {
   const navigation = useNavigation();
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.soldContainer}>
         <Text style={styles.sectionTitle}>Sold</Text>
         <View style={styles.soldItemsBtn}>
@@ -70,7 +71,7 @@ const ManageRoute = () => {
           <Text style={styles.listAnItemBtn}>List an item</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
