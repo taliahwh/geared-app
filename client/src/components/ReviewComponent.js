@@ -43,30 +43,32 @@ const Ratings = () => {
 
 const ReviewComponent = () => {
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        <View style={styles.userReviewInfoContainer}>
-          <Image
-            style={styles.userImage}
-            source={{
-              uri: 'https://i0.wp.com/sneakerhistory.com/wp-content/uploads/2019/03/fab-five-air-force-max-black-socks.jpg?fit=1280%2C1600&ssl=1',
-            }}
-          />
-          <View style={styles.idk}>
-            <Text style={styles.username}>fab_five</Text>
-            {/* <View style={styles.ratingsContainer}> */}
-            <Ratings />
-            {/* </View> */}
-            <Text style={styles.datePosted}>2 WEEKS AGO</Text>
+    <View>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <View style={styles.userReviewInfoContainer}>
+            <Image
+              style={styles.userImage}
+              source={{
+                uri: 'https://i0.wp.com/sneakerhistory.com/wp-content/uploads/2019/03/fab-five-air-force-max-black-socks.jpg?fit=1280%2C1600&ssl=1',
+              }}
+            />
+            <View style={styles.idk}>
+              <Text style={styles.username}>fab_five</Text>
+              {/* <View style={styles.ratingsContainer}> */}
+              <Ratings />
+              {/* </View> */}
+              <Text style={styles.datePosted}>2 WEEKS AGO</Text>
+            </View>
           </View>
+          <Image style={styles.productImage} source={maxey} />
         </View>
-        <Image style={styles.productImage} source={maxey} />
-      </View>
-      <View style={styles.reviewMessageContainer}>
-        <Text style={styles.reviewMessage}>
-          Seller was great! Card came in great condition.. and shipping was
-          fast!
-        </Text>
+        <View style={styles.reviewMessageContainer}>
+          <Text style={styles.reviewMessage}>
+            Seller was great! Card came in great condition.. and shipping was
+            fast!
+          </Text>
+        </View>
       </View>
       <View style={styles.border} />
     </View>
