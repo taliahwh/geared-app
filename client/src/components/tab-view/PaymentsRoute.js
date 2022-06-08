@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Image } from 'react-native';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import paypal from '../../assets/paypal-logo.png';
 
 const PaymentRoute = () => {
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.topContainer}>
         <View style={styles.paypalCard}>
           <Image
@@ -42,7 +42,7 @@ const PaymentRoute = () => {
           <Ionicons name="chevron-forward-outline" size={24} color="black" />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
