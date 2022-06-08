@@ -14,13 +14,11 @@ const ProfileNavigator = () => {
         component={ProfileScreen}
         options={{
           headerTitle: '',
-          // headerTitle: (props) => <LogoTitle {...props} />,
-          // headerTitle: (props) => <LogoTitle {...props} />,
-          // headerTintColor: '#fff',
           headerStyle: {
             elevation: 0,
             shadowOpacity: 0,
             borderBottomWidth: 0,
+            height: 60,
           },
         }}
       />
