@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ScrollView,
   View,
   KeyboardAvoidingView,
   StyleSheet,
@@ -23,7 +24,7 @@ const Modal = ({ modal = false, closeModal, header, input }) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         {modal && (
-          <View style={styles.inner}>
+          <View style={[styles.inner, { height: containerHeight }]}>
             <View style={styles.headerContainer}>
               <Pressable onPress={closeModal}>
                 <Ionicons name="close-outline" size={26} color="#ef4444" />
@@ -34,7 +35,7 @@ const Modal = ({ modal = false, closeModal, header, input }) => {
                 <Ionicons name="ios-checkmark-sharp" size={24} color="black" />
               </Pressable>
             </View>
-            {input}
+            <ScrollView>{input}</ScrollView>
           </View>
         )}
       </TouchableWithoutFeedback>
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     // justifyContent: 'space-around',
     backgroundColor: '#fff',
-    height: containerHeight,
+    // height: containerHeight,
   },
   headerContainer: {
     display: 'flex',
