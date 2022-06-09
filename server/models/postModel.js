@@ -7,11 +7,11 @@ export const postSchema = new mongoose.Schema(
         {
           title: {
             type: String,
-            required: true,
+            // required: true,
           },
           imgUrl: {
             type: String,
-            required: true,
+            // required: true,
           },
         },
       ],
