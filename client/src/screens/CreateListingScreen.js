@@ -3,11 +3,11 @@ import {
   ScrollView,
   View,
   Text,
-  StyleSheet,
   Modal,
   TouchableOpacity,
   TextInput,
   Image,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useForm, Controller, Switch } from 'react-hook-form';
@@ -29,6 +29,9 @@ const CreateListingScreen = () => {
   const [tags, setTags] = useState({ tag1: '', tag2: '', tag3: '' });
   const [itemPrice, setItemPrice] = useState('');
   const [shippingPrice, setShippingPrice] = useState('');
+
+  // Error handling state
+  const [errorMessage, setErrorMessage] = useState(null);
 
   // Images
   const [image1, setImage1] = useState(null);
@@ -65,9 +68,9 @@ const CreateListingScreen = () => {
   const [listingTypeValue, setListingTypeValue] = useState('Select');
 
   // Location modal
-  const [locationValue, setLocationValue] = useState('US');
+  const [locationValue, setLocationValue] = useState('');
 
-  const pickImage1 = async () => {
+  const pickImage = async (imageNum) => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -78,70 +81,83 @@ const CreateListingScreen = () => {
 
     console.log(result);
 
-    if (!result.cancelled) {
-      setImage1(result.uri);
-    }
-  };
-  const pickImage2 = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage2(result.uri);
-    }
-  };
-  const pickImage3 = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage3(result.uri);
-    }
-  };
-  const pickImage4 = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage4(result.uri);
+    if (imageNum === 1) {
+      if (!result.cancelled) {
+        setImage1(result.uri);
+      }
+    } else if (imageNum === 2) {
+      if (!result.cancelled) {
+        setImage2(result.uri);
+      }
+    } else if (imageNum === 3) {
+      if (!result.cancelled) {
+        setImage3(result.uri);
+      }
+    } else {
+      if (!result.cancelled) {
+        setImage4(result.uri);
+      }
     }
   };
 
-  const {
-    control,
-    handleSubmit,
-    // formState: { errors, isValid },
-  } = useForm({
-    mode: 'onBlur',
-  });
+  const handleSubmit = () => {
+    const newPost = {};
+    const images = [
+      {
+        title: 'IMAGE_1',
+        imgUrl: image1,
+      },
+      {
+        title: 'IMAGE_2',
+        imgUrl: image2,
+      },
+      {
+        title: 'IMAGE_3',
+        imgUrl: image3,
+      },
+      {
+        title: 'IMAGE_4',
+        imgUrl: image4,
+      },
+    ];
+
+    if (!description) {
+      return setErrorMessage('A description of the item is required');
+    }
+    if (!tags.tag1) {
+      return setErrorMessage('At least one tag is required');
+    }
+    if (sportValue === 'Select') {
+      return setErrorMessage('Please choose a sport for your item');
+    }
+    if (conditionValue === 'Select') {
+      return setErrorMessage('Please choose a condition for your item');
+    }
+    if (listingTypeValue === 'Select') {
+      return setErrorMessage('Please choose a listing type');
+    }
+    if (!itemPrice) {
+      return setErrorMessage('Item price is required');
+    }
+    if (!shippingPrice) {
+      return setErrorMessage('Shipping price is required');
+    }
+    if (!locationValue) {
+      return setErrorMessage('Location is required');
+    }
+
+    console.log(!sportValue);
+  };
 
   return (
     <View style={styles.container}>
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+        {/* Error message */}
+        {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
+
         <View style={styles.cameraBtnContainer}>
           {image1 === null ? (
-            <TouchableOpacity onPress={pickImage1} activeOpacity={1}>
+            <TouchableOpacity onPress={() => pickImage(1)} activeOpacity={1}>
               <View style={styles.cameraIconContainer} id="image1">
                 <Ionicons
                   name="camera-outline"
@@ -156,7 +172,11 @@ const CreateListingScreen = () => {
           )}
 
           {image2 === null ? (
-            <TouchableOpacity onPress={pickImage2} activeOpacity={1}>
+            <TouchableOpacity
+              onPress={() => pickImage(2)}
+              activeOpacity={1}
+              disabled={!image1 && true}
+            >
               <View style={styles.cameraIconContainer} id="image2">
                 <Ionicons
                   name="camera-outline"
@@ -171,7 +191,11 @@ const CreateListingScreen = () => {
           )}
 
           {image3 === null ? (
-            <TouchableOpacity onPress={pickImage3} activeOpacity={1}>
+            <TouchableOpacity
+              onPress={() => pickImage(3)}
+              activeOpacity={1}
+              disabled={!image2 && true}
+            >
               <View style={styles.cameraIconContainer} id="image3">
                 <Ionicons
                   name="camera-outline"
@@ -186,7 +210,11 @@ const CreateListingScreen = () => {
           )}
 
           {image4 === null ? (
-            <TouchableOpacity onPress={pickImage4} activeOpacity={1}>
+            <TouchableOpacity
+              onPress={() => pickImage(4)}
+              activeOpacity={1}
+              disabled={!image3 && true}
+            >
               <View style={styles.cameraIconContainer} id="image4">
                 <Ionicons
                   name="camera-outline"
@@ -319,61 +347,67 @@ const CreateListingScreen = () => {
             </View>
           </TouchableOpacity>
 
-          <View style={styles.infoOptionContainer}>
-            <Text style={styles.infoOptionTitle}>Item price</Text>
-            <View style={styles.textAndChevronContainer}>
-              <TextInput
-                style={styles.priceInput}
-                value={itemPrice}
-                onChangeText={(value) => {
-                  setItemPrice(value);
-                }}
-                placeholder={'$'}
-                placeholderTextColor={'#a1a1aa'}
-                maxLength={10}
-                keyboardType="decimal-pad"
-              />
-            </View>
-          </View>
-
-          <View style={styles.descriptionContainer}>
-            <Text style={styles.sectionHeader}>SHIPPING</Text>
-
-            <View style={styles.infoOptionContainer}>
-              <Text style={styles.infoOptionTitle}>Shipping price</Text>
-              <View style={styles.textAndChevronContainer}>
-                <TextInput
-                  style={styles.priceInput}
-                  value={shippingPrice}
-                  onChangeText={(value) => {
-                    setShippingPrice(value);
-                  }}
-                  placeholder={'$'}
-                  placeholderTextColor={'#a1a1aa'}
-                  maxLength={10}
-                  keyboardType="decimal-pad"
-                />
-              </View>
-            </View>
-
-            <TouchableOpacity
-              onPress={() => setLocationModal(true)}
-              activeOpacity={0.9}
-            >
+          {forSale && (
+            <>
               <View style={styles.infoOptionContainer}>
-                <Text style={styles.infoOptionTitle}>Location</Text>
+                <Text style={styles.infoOptionTitle}>Item price</Text>
                 <View style={styles.textAndChevronContainer}>
-                  <Text style={styles.infoOptionSelect}>{locationValue}</Text>
-                  <Ionicons
-                    name="chevron-forward"
-                    size={24}
-                    color="black"
-                    style={styles.chevron}
+                  <TextInput
+                    style={styles.priceInput}
+                    value={itemPrice}
+                    onChangeText={(value) => {
+                      setItemPrice(value);
+                    }}
+                    placeholder={'$'}
+                    placeholderTextColor={'#a1a1aa'}
+                    maxLength={10}
+                    keyboardType="decimal-pad"
                   />
                 </View>
               </View>
-            </TouchableOpacity>
-          </View>
+
+              <View style={styles.descriptionContainer}>
+                <Text style={styles.sectionHeader}>SHIPPING</Text>
+
+                <View style={styles.infoOptionContainer}>
+                  <Text style={styles.infoOptionTitle}>Shipping price</Text>
+                  <View style={styles.textAndChevronContainer}>
+                    <TextInput
+                      style={styles.priceInput}
+                      value={shippingPrice}
+                      onChangeText={(value) => {
+                        setShippingPrice(value);
+                      }}
+                      placeholder={'$'}
+                      placeholderTextColor={'#a1a1aa'}
+                      maxLength={10}
+                      keyboardType="decimal-pad"
+                    />
+                  </View>
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => setLocationModal(true)}
+                  activeOpacity={0.9}
+                >
+                  <View style={styles.infoOptionContainer}>
+                    <Text style={styles.infoOptionTitle}>Location</Text>
+                    <View style={styles.textAndChevronContainer}>
+                      <Text style={styles.infoOptionSelect}>
+                        {locationValue}
+                      </Text>
+                      <Ionicons
+                        name="chevron-forward"
+                        size={24}
+                        color="black"
+                        style={styles.chevron}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </>
+          )}
 
           {/* Sport Modal */}
           <View style={styles.centeredView}>
@@ -884,9 +918,9 @@ const CreateListingScreen = () => {
                         style={styles.searchIcon}
                       />
                       <TextInput
-                        // onChangeText={onChangeNumber}
-                        // value={number}
-                        placeholder="Search location"
+                        onChangeText={(value) => setLocationValue(value)}
+                        value={locationValue}
+                        placeholder="City, State"
                         placeholderTextColor={'#a1a1aa'}
                         // maxLength={45}
                         style={styles.textInput}
@@ -901,7 +935,9 @@ const CreateListingScreen = () => {
       </KeyboardAwareScrollView>
 
       <View style={styles.footer}>
-        <Text style={styles.postListingBtn}>Post listing</Text>
+        <Text style={styles.postListingBtn} onPress={handleSubmit}>
+          Post listing
+        </Text>
       </View>
     </View>
   );
