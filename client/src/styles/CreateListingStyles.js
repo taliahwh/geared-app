@@ -7,6 +7,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 25,
   },
+  error: {
+    color: '#f87171',
+    fontSize: 13,
+    textAlign: 'center',
+    paddingBottom: 20,
+    fontWeight: '500',
+  },
   cameraBtnContainer: {
     dispaly: 'flex',
     flexDirection: 'row',
