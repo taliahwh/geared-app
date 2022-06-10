@@ -53,7 +53,7 @@ const ManageRoute = () => {
         </View>
       </View>
       <View style={styles.sellingContainer}>
-        <Text style={styles.sectionTitle}>Selling</Text>
+        <Text style={styles.sectionTitle}>Your collection</Text>
         <View style={styles.flatlistContainer}>
           <FlatList
             data={IEMS}
