@@ -1,5 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { TransitionPresets } from '@react-navigation/stack';
 
 import DashboardScreen from '../screens/DashboardScreen';
 import CreateListingScreen from '../screens/CreateListingScreen';
@@ -24,7 +25,11 @@ const DashboardNavigator = () => {
       <Stack.Screen
         name="Listing"
         component={CreateListingScreen}
-        options={{ headerTitle: 'Listing', headerBackTitleVisible: false }}
+        options={{
+          headerTitle: 'Listing',
+          headerBackTitleVisible: false,
+          ...TransitionPresets.ModalSlideFromBottomIOS,
+        }}
       />
     </Stack.Navigator>
   );
