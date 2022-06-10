@@ -21,17 +21,40 @@ export const postSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    tags: {
+      type: [String],
+      required: true,
+    },
+    sport: {
+      type: String,
+      required: true,
+    },
+    condition: {
+      type: String,
+      required: true,
+    },
     showcase: {
       type: Boolean,
-      default: true,
+      required: true,
     },
     forSale: {
       type: Boolean,
-      default: false,
+      required: true,
     },
     openToOffers: {
       type: Boolean,
-      default: false,
+      required: true,
+    },
+    itemPrice: {
+      type: Number,
+      required: true,
+    },
+    shippingPrice: {
+      type: Number,
+      required: true,
+    },
+    location: {
+      type: String,
     },
     likes: {
       type: [String],
@@ -50,15 +73,11 @@ export const postSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
-      location: {
-        type: String,
+      userId: {
+        type: mongoose.Schema.Types.ObjectId,
         required: true,
       },
     },
-    // userId: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   required: true,
-    // },
   },
 
   {
