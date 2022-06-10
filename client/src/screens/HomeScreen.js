@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-
-import { Text, View, StyleSheet, Dimensions, StatusBar } from 'react-native';
+import { Text, View, StyleSheet, Dimensions } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { StatusBar } from 'expo-status-bar';
 
+// Tabs
 import FollowingRoute from '../components/tab-view/FollowingRoute';
 import ExploreRoute from '../components/tab-view/ExploreRoute';
 
@@ -39,6 +40,7 @@ const HomeScreen = ({ navigation }) => {
         style={styles.container}
         renderTabBar={renderTabBar}
       />
+      <StatusBar style="dark" />
     </>
   );
 };
