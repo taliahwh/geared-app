@@ -10,10 +10,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 
 // Components
 import TradingCardPost from '../TradingCardPost';
-import CarouselCards from '../carousel/CarouselCards';
+import Loader from '../Loader';
 
 // Actions
 import { getExplorePosts } from '../../actions/postActions';
@@ -30,8 +31,6 @@ const ExploreRoute = () => {
   } = useSelector((state) => state.explorePosts);
 
   const renderItem = ({ item }) => {
-    // console.log(item.images);
-    // console.log(item.images);
     return (
       <TradingCardPost
         username={item.listedBy.username}
@@ -43,20 +42,24 @@ const ExploreRoute = () => {
     );
   };
 
-  useEffect(() => {
-    dispatch(getExplorePosts());
-  }, [dispatch]);
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getExplorePosts());
+    }, [dispatch])
+  );
   return (
-    <View style={styles.container}>
+    <>
       {loadingExplorePosts && <ActivityIndicator />}
       {posts && posts.length > 0 && (
-        <FlatList
-          data={posts}
-          renderItem={renderItem}
-          keyExtractor={(item) => item._id}
-        />
+        <View style={styles.container}>
+          <FlatList
+            data={posts}
+            renderItem={renderItem}
+            keyExtractor={(item) => item._id}
+          />
+        </View>
       )}
-    </View>
+    </>
   );
 };
 
