@@ -10,9 +10,10 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useForm, Controller, Switch } from 'react-hook-form';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as ImagePicker from 'expo-image-picker';
+import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 // Component
 import ModalComponent from '../components/Modal';
@@ -20,15 +21,26 @@ import ModalComponent from '../components/Modal';
 //  Styles
 import styles from '../styles/CreateListingStyles';
 
+// Actions
+import { createPost, getExplorePosts } from '../actions/postActions';
+
 const CreateListingScreen = () => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+
   // Text input state
   const [description, setDescription] = useState('');
   const [descriptionCharRemaining, setDescriptionCharRemaining] = useState(
     1000 - description.length
   );
   const [tags, setTags] = useState({ tag1: '', tag2: '', tag3: '' });
-  const [itemPrice, setItemPrice] = useState('');
-  const [shippingPrice, setShippingPrice] = useState('');
+  const [itemPrice, setItemPrice] = useState(0);
+  const [shippingPrice, setShippingPrice] = useState(0);
+
+  // Tags
+  const [tag1, setTag1] = useState('');
+  const [tag2, setTag2] = useState('');
+  const [tag3, setTag3] = useState('');
 
   // Error handling state
   const [errorMessage, setErrorMessage] = useState(null);
@@ -79,7 +91,7 @@ const CreateListingScreen = () => {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (imageNum === 1) {
       if (!result.cancelled) {
@@ -100,8 +112,16 @@ const CreateListingScreen = () => {
     }
   };
 
+  const navigateToProfile = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Dashboard' }],
+    });
+
+    navigation.navigate('Home');
+  };
+
   const handleSubmit = () => {
-    const newPost = {};
     const images = [
       {
         title: 'IMAGE_1',
@@ -121,10 +141,17 @@ const CreateListingScreen = () => {
       },
     ];
 
+    const tags = [tag1, tag2, tag3];
+
+    const firstImageUploaded = images[0].imgUrl;
+
+    if (!firstImageUploaded) {
+      return setErrorMessage('Must upload at least one image');
+    }
     if (!description) {
       return setErrorMessage('A description of the item is required');
     }
-    if (!tags.tag1) {
+    if (!tag1) {
       return setErrorMessage('At least one tag is required');
     }
     if (sportValue === 'Select') {
@@ -136,17 +163,36 @@ const CreateListingScreen = () => {
     if (listingTypeValue === 'Select') {
       return setErrorMessage('Please choose a listing type');
     }
-    if (!itemPrice) {
-      return setErrorMessage('Item price is required');
-    }
-    if (!shippingPrice) {
-      return setErrorMessage('Shipping price is required');
-    }
-    if (!locationValue) {
-      return setErrorMessage('Location is required');
+
+    if (forSale) {
+      if (!itemPrice) {
+        return setErrorMessage('Item price is required');
+      }
+      if (!shippingPrice) {
+        return setErrorMessage('Shipping price is required');
+      }
+      if (!locationValue) {
+        return setErrorMessage('Location is required');
+      }
     }
 
-    console.log(!sportValue);
+    dispatch(
+      createPost(
+        images,
+        description,
+        tags,
+        sportValue,
+        conditionValue,
+        showcase,
+        forSale,
+        openToOffers,
+        itemPrice,
+        shippingPrice,
+        locationValue
+      )
+    );
+    dispatch(getExplorePosts());
+    navigateToProfile();
   };
 
   return (
@@ -257,9 +303,9 @@ const CreateListingScreen = () => {
           </Text>
           <TextInput
             style={[styles.tagInput]}
-            value={tags}
+            value={tag1}
             onChangeText={(value) => {
-              setTags({ tag1: value });
+              setTag1(value);
             }}
             placeholder="Tag 1"
             placeholderTextColor={'#a1a1aa'}
@@ -268,9 +314,9 @@ const CreateListingScreen = () => {
           />
           <TextInput
             style={[styles.tagInput]}
-            value={tags}
+            value={tag2}
             onChangeText={(value) => {
-              setTags({ tag2: value });
+              setTag2(value);
             }}
             placeholder="Tag 2"
             placeholderTextColor={'#a1a1aa'}
@@ -279,9 +325,9 @@ const CreateListingScreen = () => {
           />
           <TextInput
             style={[styles.tagInput]}
-            value={tags}
+            value={tag3}
             onChangeText={(value) => {
-              setTags({ tag3: value });
+              setTag3(value);
             }}
             placeholder="Tag 3"
             placeholderTextColor={'#a1a1aa'}
