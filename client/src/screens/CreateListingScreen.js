@@ -33,7 +33,6 @@ const CreateListingScreen = () => {
   const [descriptionCharRemaining, setDescriptionCharRemaining] = useState(
     1000 - description.length
   );
-  const [tags, setTags] = useState({ tag1: '', tag2: '', tag3: '' });
   const [itemPrice, setItemPrice] = useState(0);
   const [shippingPrice, setShippingPrice] = useState(0);
 
