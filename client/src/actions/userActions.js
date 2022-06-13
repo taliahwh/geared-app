@@ -41,3 +41,56 @@ export const signIn = (username, password) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   dispatch({ type: USER_LOGOUT });
 };
+
+export const signUp =
+  (
+    firstName,
+    lastName,
+    email,
+    username,
+    password,
+    confirmPassword,
+    dateOfBirth,
+    bio,
+    interests,
+    profileImage
+  ) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: USER_SIGN_UP_REQUEST });
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const { data } = await gearedApi.post(
+        '/api/users/signup',
+        {
+          firstName,
+          lastName,
+          email,
+          username,
+          password,
+          confirmPassword,
+          dateOfBirth,
+          bio,
+          interests,
+          profileImage,
+        },
+        config
+      );
+
+      dispatch({ type: USER_SIGN_UP_SUCCESS, payload: data });
+      // dispatch({ type: USER_SIGN_IN_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: USER_SIGN_UP_FAILURE,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };

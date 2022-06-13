@@ -9,12 +9,13 @@ import {
   explorePostsReducer,
 } from './reducers/postReducers';
 
-import { userSignInReducer } from './reducers/userReducers';
+import { userSignInReducer, userSignUpReducer } from './reducers/userReducers';
 
 const reducer = combineReducers({
   explorePosts: explorePostsReducer,
   createPost: createPostReducer,
   userSignIn: userSignInReducer,
+  userSignUp: userSignUpReducer,
 });
 
 const persistConfig = {
