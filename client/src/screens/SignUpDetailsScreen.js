@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
@@ -12,9 +11,9 @@ import {
   SafeAreaView,
   Image,
   Modal,
-  Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -22,20 +21,26 @@ import { Ionicons } from '@expo/vector-icons';
 import Alert from '../components/Alert';
 import ModalComponent from '../components/Modal';
 
-const modalHeight = Dimensions.get('window').height / 4;
+// Styles
+import styles from '../styles/SignUpDetailsScreenStyles';
+
+// Actions
+import { signUp } from '../actions/userActions';
 
 const SignUpDetailsScreen = ({ route }) => {
   // Hooks
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const { firstName, lastName, email, username, password, confirmPassword } =
     route.params;
 
   // Input state
   const [dateOfBirth, setDateOfBirth] = useState({
-    month: null,
-    day: null,
-    year: null,
+    month: '',
+    day: '',
+    year: '',
   });
+
   const [profileImage, setProfileImage] = useState(null);
   const [bio, setBio] = useState('');
   const [interests1, setInterests1] = useState('');
@@ -48,13 +53,13 @@ const SignUpDetailsScreen = ({ route }) => {
   // Input ref
   const dayRef = useRef();
   const yearRef = useRef();
-  const usernameRef = useRef();
-  const passwordRef = useRef();
-  const confirmPasswordRef = useRef();
 
   // Modals
   const [bioModalVisible, setBioModalVisible] = useState(false);
   const [interestsModalVisible, setInterestsModalVisible] = useState(false);
+
+  // State from redux store
+  const { error: errorSignUp } = useSelector((state) => state.userSignUp);
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -72,34 +77,62 @@ const SignUpDetailsScreen = ({ route }) => {
 
   const handleSubmit = () => {
     let currentYear = new Date().getFullYear();
-    const newUser = {
-      firstName,
-      lastName,
-      email,
-      username,
-      password,
-      confirmPassword,
-    };
-    console.log(dateOfBirth);
+    let dob;
 
     if (
       (dateOfBirth.month && dateOfBirth.month <= 0) ||
-      dateOfBirth.month > 12
+      dateOfBirth.month > 12 ||
+      (dateOfBirth.month && dateOfBirth.month.length < 2)
     ) {
       setAlertMessage('Invalid date');
       return setShowAlert(true);
     }
-    if ((dateOfBirth.day && dateOfBirth.day <= 0) || dateOfBirth.day > 31) {
+    if (
+      (dateOfBirth.day && dateOfBirth.day <= 0) ||
+      dateOfBirth.day > 31 ||
+      (dateOfBirth.day && dateOfBirth.day.length < 2)
+    ) {
       setAlertMessage('Invalid date');
       return setShowAlert(true);
     }
     if (
       (dateOfBirth.year && dateOfBirth.year <= 1920) ||
-      dateOfBirth.year > currentYear
+      dateOfBirth.year > currentYear ||
+      (dateOfBirth.year && dateOfBirth.year.length < 4)
     ) {
       setAlertMessage('Invalid date');
       return setShowAlert(true);
     }
+
+    if (!dateOfBirth.month || !dateOfBirth.day || !dateOfBirth.year) {
+      setAlertMessage('Invalid date');
+      return setShowAlert(true);
+    }
+
+    dob = `${dateOfBirth.month}/${dateOfBirth.day}/${dateOfBirth.year}`;
+
+    const interests = [];
+    interests1 && interests.push(interests1);
+    interests2 && interests.push(interests2);
+    interests3 && interests.push(interests3);
+    interests4 && interests.push(interests4);
+
+    dispatch(
+      signUp({
+        firstName,
+        lastName,
+        email,
+        username,
+        password,
+        confirmPassword,
+        dob,
+        bio,
+        interests,
+        profileImage:
+          profileImage ||
+          'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
+      })
+    );
   };
 
   return (
@@ -109,9 +142,10 @@ const SignUpDetailsScreen = ({ route }) => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.container}>
-            {showAlert && <Alert>{alertMessage}</Alert>}
+            <Text style={styles.header}>Set up your account</Text>
 
             <View style={styles.inputContainer}>
+              {errorSignUp && <Alert>{errorSignUp}</Alert>}
               <View style={styles.textInputContainer}>
                 <Text style={styles.inputTitle}>Date of birth</Text>
 
@@ -171,6 +205,8 @@ const SignUpDetailsScreen = ({ route }) => {
                 </View>
               </View>
 
+              {showAlert && <Text style={styles.dobAlert}>{alertMessage}</Text>}
+
               <View style={styles.textInputContainer}>
                 <Text style={styles.inputTitle}>Bio</Text>
 
@@ -210,29 +246,34 @@ const SignUpDetailsScreen = ({ route }) => {
               <View style={styles.profileImageSection}>
                 <Text style={styles.inputTitle}>Profile image</Text>
 
-                {!profileImage ? (
-                  <TouchableOpacity
-                    onPress={() => pickImage()}
-                    activeOpacity={1}
-                  >
-                    <Image
-                      style={styles.profileImageContainer}
-                      source={{
-                        uri: 'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
-                      }}
-                    />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => pickImage()}
-                    activeOpacity={1}
-                  >
-                    <Image
-                      source={{ uri: profileImage }}
-                      style={{ width: 30, height: 30, borderRadius: 100 }}
-                    />
-                  </TouchableOpacity>
-                )}
+                <View style={styles.imageAndOptionalText}>
+                  <Text style={[styles.optionalText, { paddingRight: 10 }]}>
+                    optional
+                  </Text>
+                  {!profileImage ? (
+                    <TouchableOpacity
+                      onPress={() => pickImage()}
+                      activeOpacity={1}
+                    >
+                      <Image
+                        style={styles.profileImageContainer}
+                        source={{
+                          uri: 'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
+                        }}
+                      />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => pickImage()}
+                      activeOpacity={1}
+                    >
+                      <Image
+                        source={{ uri: profileImage }}
+                        style={{ width: 30, height: 30, borderRadius: 100 }}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
 
               {/* Bio Modal */}
@@ -295,8 +336,7 @@ const SignUpDetailsScreen = ({ route }) => {
                             onChangeText={(value) => setInterests1(value)}
                             placeholder="Stephen Curry"
                             placeholderTextColor={'#a1a1aa'}
-                            // autoFocus={true}
-                            // returnKeyType="done"
+                            autoComplete={'off'}
                             maxLength={128}
                           />
                           <TextInput
@@ -305,8 +345,7 @@ const SignUpDetailsScreen = ({ route }) => {
                             onChangeText={(value) => setInterests2(value)}
                             placeholder="New York Yankees"
                             placeholderTextColor={'#a1a1aa'}
-                            // autoFocus={true}
-                            // returnKeyType="done"
+                            autoComplete={'off'}
                             maxLength={128}
                           />
                           <TextInput
@@ -315,8 +354,7 @@ const SignUpDetailsScreen = ({ route }) => {
                             onChangeText={(value) => setInterests3(value)}
                             placeholder="Atlanta Hawks"
                             placeholderTextColor={'#a1a1aa'}
-                            // autoFocus={true}
-                            // returnKeyType="done"
+                            autoComplete={'off'}
                             maxLength={128}
                           />
                           <TextInput
@@ -325,8 +363,7 @@ const SignUpDetailsScreen = ({ route }) => {
                             onChangeText={(value) => setInterests4(value)}
                             placeholder="Anthony Edwards"
                             placeholderTextColor={'#a1a1aa'}
-                            // autoFocus={true}
-                            // returnKeyType="done"
+                            autoComplete={'off'}
                             maxLength={128}
                           />
                         </View>
@@ -363,145 +400,5 @@ const SignUpDetailsScreen = ({ route }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  screenContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  logo: {
-    fontSize: 45,
-    fontWeight: '800',
-    fontStyle: 'italic',
-    // textAlign: 'center',
-  },
-  container: {
-    display: 'flex',
-    // backgroundColor: 'orange',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  inputContainer: {
-    width: '80%',
-  },
-  textInputContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-    borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
-    paddingBottom: 7,
-  },
-  inputTitle: {
-    fontSize: 16,
-  },
-  chevronContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  optionalText: {
-    fontSize: 13,
-    color: '#a1a1aa',
-    marginRight: 5,
-  },
-  dobContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  input: {
-    paddingHorizontal: 7,
-  },
-  profileImageSection: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    // marginVertical: 10,
-    borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
-    paddingBottom: 7,
-  },
-  profileImageContainer: {
-    borderWidth: 1,
-    borderColor: '#d4d4d4',
-    height: 30,
-    width: 30,
-    borderRadius: 100,
-  },
-  signUpBtn: {
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '600',
-    backgroundColor: '#3E5E7E',
-    color: '#fff',
-    paddingVertical: 11,
-    marginTop: 15,
-  },
-  signUpTextContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 13,
-  },
-  signUpText: {
-    textAlign: 'center',
-    paddingRight: 5,
-  },
-  // Modal
-
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    height: '100%',
-  },
-  modalView: {
-    backgroundColor: 'white',
-    borderRadius: 5,
-    paddingTop: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-    height: modalHeight,
-    width: '100%',
-  },
-  textInput: {
-    height: 40,
-    borderColor: '#000000',
-    paddingHorizontal: 10,
-  },
-  modalContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-  },
-  modalDisplayText: {
-    fontSize: 15,
-    color: '#3f3f46',
-    textAlign: 'center',
-  },
-  interestTagContainer: {
-    marginTop: 15,
-  },
-  interestInput: {
-    borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
-    marginVertical: 10,
-    paddingVertical: 7,
-    paddingHorizontal: 7,
-  },
-});
 
 export default SignUpDetailsScreen;
