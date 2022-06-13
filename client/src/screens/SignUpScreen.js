@@ -12,23 +12,101 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useForm, Controller } from 'react-hook-form';
+
+// Components
+import Alert from '../components/Alert';
 
 const SignUpScreen = () => {
+  // Hooks
   const navigation = useNavigation();
+  // Input state
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+
+  // Input ref
   const lastNameRef = useRef();
   const emailRef = useRef();
   const usernameRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
 
-  const {
-    control,
-    handleSubmit,
-    // formState: { errors, isValid },
-  } = useForm({
-    mode: 'onBlur',
-  });
+  const passwordStrengthCheck = (password) => {
+    // Password strength requirement (uppercase, lowercase, number and special char)
+    if (password.length < 8) {
+      setAlertMessage('Password must be at least 8 characters.');
+      return setShowAlert(true);
+    }
+
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasNonalphas = /\W/.test(password);
+    if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasNonalphas) {
+      setAlertMessage(
+        'Password must be at least 8 characters, contain an upper and lowercase letter, a number, and special character.'
+      );
+      return setShowAlert(true);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!firstName) {
+      setAlertMessage('First name is required');
+      return setShowAlert(true);
+    }
+    if (!lastName) {
+      setAlertMessage('Last name is required');
+      return setShowAlert(true);
+    }
+    if (!email) {
+      setAlertMessage('Email is required');
+      return setShowAlert(true);
+    }
+    if (!password) {
+      setAlertMessage('Password is required');
+      return setShowAlert(true);
+    }
+    if (!confirmPassword) {
+      setAlertMessage('Confirm password is required');
+      return setShowAlert(true);
+    }
+    if (password !== confirmPassword) {
+      setAlertMessage('Passwords do not match');
+      return setShowAlert(true);
+    }
+
+    // Password strength requirement (uppercase, lowercase, number and special char)
+    if (password.length < 8) {
+      setAlertMessage('Password must be at least 8 characters.');
+      return setShowAlert(true);
+    }
+
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasNonalphas = /\W/.test(password);
+    if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasNonalphas) {
+      setAlertMessage(
+        'Password must be at least 8 characters, contain an upper and lowercase letter, a number, and special character.'
+      );
+      return setShowAlert(true);
+    }
+
+    navigation.navigate('Sign Up Details', {
+      firstName,
+      lastName,
+      email,
+      username,
+      password,
+      confirmPassword,
+    });
+  };
 
   return (
     <SafeAreaView style={styles.screenContainer}>
@@ -40,124 +118,95 @@ const SignUpScreen = () => {
             <Text style={styles.logo}>geared</Text>
 
             <View style={styles.inputContainer}>
-              <Controller
-                control={control}
-                name="firstName"
-                render={({ field: { onChange, value, onBlur } }) => (
-                  <TextInput
-                    style={styles.input}
-                    value={value}
-                    onChangeText={(value) => onChange(value)}
-                    onBlur={onBlur}
-                    placeholder="First name"
-                    placeholderTextColor={'#a1a1aa'}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    onSubmitEditing={() => {
-                      lastNameRef.current.focus();
-                    }}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="lastName"
-                render={({ field: { onChange, value, onBlur } }) => (
-                  <TextInput
-                    style={styles.input}
-                    value={value}
-                    onChangeText={(value) => onChange(value)}
-                    onBlur={onBlur}
-                    placeholder="Last name"
-                    placeholderTextColor={'#a1a1aa'}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    ref={lastNameRef}
-                    onSubmitEditing={() => {
-                      emailRef.current.focus();
-                    }}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="email"
-                render={({ field: { onChange, value, onBlur } }) => (
-                  <TextInput
-                    style={styles.input}
-                    value={value}
-                    onChangeText={(value) => onChange(value)}
-                    onBlur={onBlur}
-                    placeholder="Email address"
-                    placeholderTextColor={'#a1a1aa'}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    ref={emailRef}
-                    onSubmitEditing={() => {
-                      usernameRef.current.focus();
-                    }}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="username"
-                render={({ field: { onChange, value, onBlur } }) => (
-                  <TextInput
-                    style={styles.input}
-                    value={value}
-                    onChangeText={(value) => onChange(value)}
-                    onBlur={onBlur}
-                    placeholder="Username"
-                    placeholderTextColor={'#a1a1aa'}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    ref={usernameRef}
-                    onSubmitEditing={() => {
-                      passwordRef.current.focus();
-                    }}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="password"
-                render={({ field: { onChange, value, onBlur } }) => (
-                  <TextInput
-                    style={styles.input}
-                    value={value}
-                    onChangeText={(value) => onChange(value)}
-                    onBlur={onBlur}
-                    placeholder="Password"
-                    placeholderTextColor={'#a1a1aa'}
-                    autoCapitalize="none"
-                    ref={passwordRef}
-                    secureTextEntry
-                    onSubmitEditing={() => {
-                      confirmPasswordRef.current.focus();
-                    }}
-                  />
-                )}
-              />
-              <Controller
-                control={control}
-                name="confirmPassword"
-                render={({ field: { onChange, value, onBlur } }) => (
-                  <TextInput
-                    style={styles.input}
-                    value={value}
-                    onChangeText={(value) => onChange(value)}
-                    onBlur={onBlur}
-                    placeholder="Confirm password"
-                    placeholderTextColor={'#a1a1aa'}
-                    autoCapitalize="none"
-                    ref={confirmPasswordRef}
-                    secureTextEntry
-                  />
-                )}
+              {showAlert && <Alert>{alertMessage}</Alert>}
+
+              <TextInput
+                style={styles.input}
+                value={firstName}
+                onChangeText={(value) => setFirstName(value)}
+                textContentType="name"
+                placeholder="First name"
+                placeholderTextColor={'#a1a1aa'}
+                autoCapitalize="words"
+                returnKeyType="next"
+                onSubmitEditing={() => {
+                  lastNameRef.current.focus();
+                }}
               />
 
-              <Text style={styles.loginBtn}>Sign Up</Text>
+              <TextInput
+                style={styles.input}
+                value={lastName}
+                onChangeText={(value) => setLastName(value)}
+                textContentType="familyName"
+                placeholder="Last name"
+                placeholderTextColor={'#a1a1aa'}
+                autoCapitalize="words"
+                returnKeyType="next"
+                ref={lastNameRef}
+                onSubmitEditing={() => {
+                  emailRef.current.focus();
+                }}
+              />
+
+              <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={(value) => setEmail(value)}
+                textContentType="emailAddress"
+                placeholder="Email address"
+                placeholderTextColor={'#a1a1aa'}
+                autoCapitalize="none"
+                returnKeyType="next"
+                ref={emailRef}
+                onSubmitEditing={() => {
+                  usernameRef.current.focus();
+                }}
+              />
+
+              <TextInput
+                style={styles.input}
+                value={username}
+                onChangeText={(value) => setUsername(value)}
+                placeholder="Username"
+                placeholderTextColor={'#a1a1aa'}
+                autoCapitalize="none"
+                returnKeyType="next"
+                ref={usernameRef}
+                onSubmitEditing={() => {
+                  passwordRef.current.focus();
+                }}
+              />
+
+              <TextInput
+                style={styles.input}
+                value={password}
+                onChangeText={(value) => setPassword(value)}
+                placeholder="Password"
+                placeholderTextColor={'#a1a1aa'}
+                autoCapitalize="none"
+                ref={passwordRef}
+                secureTextEntry
+                onSubmitEditing={() => {
+                  confirmPasswordRef.current.focus();
+                }}
+              />
+
+              <TextInput
+                style={styles.input}
+                value={confirmPassword}
+                onChangeText={(value) => setConfirmPassword(value)}
+                placeholder="Confirm password"
+                placeholderTextColor={'#a1a1aa'}
+                autoCapitalize="none"
+                ref={confirmPasswordRef}
+                secureTextEntry
+              />
+
+              <TouchableOpacity activeOpacity={0.5} onPress={handleSubmit}>
+                <Text style={styles.loginBtn}>Continue</Text>
+              </TouchableOpacity>
+
               <View style={styles.signUpTextContainer}>
                 <Text style={styles.signUpText}>Have an account?</Text>
                 <TouchableOpacity
