@@ -82,9 +82,19 @@ const signIn = asyncHandler(async (req, res) => {
  * @access Public
  */
 const signUp = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, username, password, confirmPassword } =
-    req.body;
-
+  const {
+    firstName,
+    lastName,
+    email,
+    username,
+    password,
+    confirmPassword,
+    dateOfBirth,
+    bio,
+    interests,
+    profileImage,
+  } = req.body;
+  console.log(req.body.firstName);
   // Find user by email
   const emailExists = await User.findOne({ email });
 
@@ -130,6 +140,10 @@ const signUp = asyncHandler(async (req, res) => {
     email,
     username,
     password: hashedPassword,
+    dateOfBirth,
+    bio: bio || '',
+    interests: interests || [],
+    profileImage,
   });
 
   if (user) {
@@ -138,6 +152,10 @@ const signUp = asyncHandler(async (req, res) => {
       name: `${firstName} ${lastName}`,
       username: user.username,
       email: user.email,
+      dateOfBirth,
+      bio,
+      interests,
+      profileImage,
       token: generateToken(user._id),
     });
   } else {
