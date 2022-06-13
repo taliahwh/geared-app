@@ -7,9 +7,10 @@ const Alert = ({ children }) => {
 
 const styles = StyleSheet.create({
   alert: {
-    backgroundColor: '#f87171',
-    color: '#fff',
-    paddingVertical: 7,
+    // backgroundColor: '#f87171',
+    color: '#f87171',
+    paddingTop: 20,
+    paddingBottom: 7,
     width: '100%',
     marginBottom: 10,
     textAlign: 'center',
