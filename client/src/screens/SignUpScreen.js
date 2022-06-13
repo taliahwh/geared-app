@@ -36,25 +36,6 @@ const SignUpScreen = () => {
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
 
-  const passwordStrengthCheck = (password) => {
-    // Password strength requirement (uppercase, lowercase, number and special char)
-    if (password.length < 8) {
-      setAlertMessage('Password must be at least 8 characters.');
-      return setShowAlert(true);
-    }
-
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    const hasNonalphas = /\W/.test(password);
-    if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasNonalphas) {
-      setAlertMessage(
-        'Password must be at least 8 characters, contain an upper and lowercase letter, a number, and special character.'
-      );
-      return setShowAlert(true);
-    }
-  };
-
   const handleSubmit = () => {
     if (!firstName) {
       setAlertMessage('First name is required');
