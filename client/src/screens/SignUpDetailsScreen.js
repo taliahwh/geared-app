@@ -118,7 +118,7 @@ const SignUpDetailsScreen = ({ route }) => {
     interests4 && interests.push(interests4);
 
     dispatch(
-      signUp({
+      signUp(
         firstName,
         lastName,
         email,
@@ -128,10 +128,8 @@ const SignUpDetailsScreen = ({ route }) => {
         dob,
         bio,
         interests,
-        profileImage:
-          profileImage ||
-          'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
-      })
+        profileImage
+      )
     );
   };
 
