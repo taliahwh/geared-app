@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Menu,
@@ -17,27 +18,13 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
-// Actions
-import { logout } from '../actions/userActions';
+// Components
+import Loader from './Loader';
+import ProfileHeaderLoader from './Loaders/ProfileHeaderLoader';
+import Alert from '../components/Alert';
 
-const TAG_NAMES = [
-  {
-    id: 1,
-    name: 'Cade Cunningham',
-  },
-  {
-    id: 2,
-    name: 'Pistons',
-  },
-  {
-    id: 3,
-    name: 'RJ Barrett',
-  },
-  {
-    id: 4,
-    name: 'Zion Williamson',
-  },
-];
+// Actions
+import { logout, getUserDetails } from '../actions/userActions';
 
 const TagRender = ({ name }) => <Text style={styles.tags}>{name}</Text>;
 const Separator = () => {
@@ -47,96 +34,119 @@ const Separator = () => {
 const ProfileHeader = () => {
   const dispatch = useDispatch();
 
+  // State from redux
+  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
+  const {
+    loading: loadingUserDetails,
+    userDetails,
+    error: errorUserDetails,
+  } = useSelector((state) => state.userDetails);
+
   const handleLogout = () => {
     dispatch(logout());
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getUserDetails(userId));
+    }, [dispatch])
+  );
+
   return (
     <View style={styles.container}>
-      <View style={styles.userInfoContainer}>
-        <Image
-          style={styles.userImage}
-          source={{
-            uri: 'https://i0.wp.com/sneakerhistory.com/wp-content/uploads/2019/03/fab-five-air-force-max-black-socks.jpg?fit=1280%2C1600&ssl=1',
-          }}
-        />
-        <View style={styles.userNameContainer}>
-          <Text style={styles.userDisplayName}>Dennis Rodman</Text>
-          <Text style={styles.username}>@fab_five</Text>
-          <View style={styles.ratingsContainer}>
-            <Ionicons name="star" size={15} color="#3E5E7E" />
-            <Ionicons name="star" size={15} color="#3E5E7E" />
-            <Ionicons name="star" size={15} color="#3E5E7E" />
-            <Ionicons name="star" size={15} color="#3E5E7E" />
-            <Ionicons name="star" size={15} color="#3E5E7E" />
-            <Text>(13)</Text>
-            {/* <Ionicons name="star-half" size={15} color="#3E5E7E" /> */}
+      {loadingUserDetails && <ProfileHeaderLoader />}
+      {errorUserDetails && <Alert>{errorUserDetails}</Alert>}
+
+      {userDetails && (
+        <>
+          <View style={styles.userInfoContainer}>
+            <Image
+              style={styles.userImage}
+              source={{
+                uri: userDetails.profileImage,
+              }}
+            />
+            <View style={styles.userNameContainer}>
+              <Text style={styles.userDisplayName}>{userDetails.name}</Text>
+              <Text style={styles.username}>{`@${userDetails.username}`}</Text>
+              <View style={styles.ratingsContainer}>
+                <Ionicons name="star" size={15} color="#3E5E7E" />
+                <Ionicons name="star" size={15} color="#3E5E7E" />
+                <Ionicons name="star" size={15} color="#3E5E7E" />
+                <Ionicons name="star" size={15} color="#3E5E7E" />
+                <Ionicons name="star" size={15} color="#3E5E7E" />
+                <Text>(13)</Text>
+                {/* <Ionicons name="star-half" size={15} color="#3E5E7E" /> */}
+              </View>
+            </View>
+
+            <View>
+              <Pressable
+                style={styles.pickerContainer}
+                onPress={() => MenuProvider.open}
+              >
+                <Menu>
+                  <MenuTrigger>
+                    <Ionicons
+                      name="ellipsis-horizontal"
+                      size={24}
+                      color="black"
+                    />
+                  </MenuTrigger>
+                  <MenuOptions style={styles.menu}>
+                    <MenuOption onSelect={handleLogout}>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          paddingVertical: 2,
+                          textAlign: 'center',
+                          fontWeight: '500',
+                        }}
+                      >
+                        Sign Out
+                      </Text>
+                    </MenuOption>
+                  </MenuOptions>
+                </Menu>
+              </Pressable>
+            </View>
           </View>
-        </View>
 
-        <View>
-          {/* <TouchableOpacity onPress={() => console.log('Pressed')}>
-            <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-          </TouchableOpacity> */}
-          <Pressable
-            style={styles.pickerContainer}
-            onPress={() => MenuProvider.open}
-          >
-            <Menu>
-              <MenuTrigger>
-                <Ionicons name="ellipsis-horizontal" size={24} color="black" />
-              </MenuTrigger>
-              <MenuOptions style={styles.menu}>
-                <MenuOption onSelect={handleLogout}>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      paddingVertical: 2,
-                      textAlign: 'center',
-                      fontWeight: '500',
-                    }}
-                  >
-                    Sign Out
-                  </Text>
-                </MenuOption>
-              </MenuOptions>
-            </Menu>
-          </Pressable>
-        </View>
-      </View>
+          {userDetails.bio !== '' && (
+            <Text style={styles.description}>{userDetails.bio}</Text>
+          )}
 
-      <Text style={styles.description}>
-        Detroit Pistons, Tigers, Lions fan. Open to some trading. Cards ship
-        within two days.
-      </Text>
+          {userDetails.interests && (
+            <View style={styles.tagsContainer}>
+              {/* <Text style={styles.lookingFor}>Collecting:</Text> */}
+              <FlatList
+                data={userDetails.interests}
+                renderItem={({ item }) => <TagRender name={item.name} />}
+                keyExtractor={(item) => item.id}
+                ItemSeparatorComponent={Separator}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+          )}
 
-      <View style={styles.tagsContainer}>
-        {/* <Text style={styles.lookingFor}>Collecting:</Text> */}
-        <FlatList
-          data={TAG_NAMES}
-          renderItem={({ item }) => <TagRender name={item.name} />}
-          keyExtractor={(item) => item.id}
-          ItemSeparatorComponent={Separator}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        />
-      </View>
-
-      <View style={styles.followersAndShareContainer}>
-        <View style={styles.followersContainer}>
-          <View>
-            <Text style={styles.count}>113</Text>
-            <Text>followers</Text>
+          <View style={styles.followersAndShareContainer}>
+            <View style={styles.followersContainer}>
+              <View>
+                <Text style={styles.count}>113</Text>
+                <Text>followers</Text>
+              </View>
+              <View>
+                <Text style={styles.count}>196</Text>
+                <Text>following</Text>
+              </View>
+            </View>
+            <View style={styles.shareBtnContainer}>
+              <Text style={styles.shareBtn}>Share collection</Text>
+            </View>
           </View>
-          <View>
-            <Text style={styles.count}>196</Text>
-            <Text>following</Text>
-          </View>
-        </View>
-        <View style={styles.shareBtnContainer}>
-          <Text style={styles.shareBtn}>Share collection</Text>
-        </View>
-      </View>
+        </>
+      )}
     </View>
   );
 };
