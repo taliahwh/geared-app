@@ -1,11 +1,19 @@
 import React, { useState, useRef } from 'react';
-import { View, Dimensions } from 'react-native';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import CarouselCardItem from './CarouselCardItem';
-import data from './data';
+import { View, Dimensions, Image, StyleSheet } from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+// import CarouselCardItem from './CarouselCardItem';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
-// const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.75);
+
+const CarouselCardItem = ({ item }) => {
+  return (
+    <Image
+      source={{ uri: item.imgUrl }}
+      style={styles.image}
+      // resizeMode="cover"
+    />
+  );
+};
 
 const FullWidthCarouselCards = ({ images }) => {
   const isCarousel = useRef(null);
@@ -16,7 +24,7 @@ const FullWidthCarouselCards = ({ images }) => {
       <Carousel
         layout="default"
         ref={isCarousel}
-        data={data}
+        data={images}
         renderItem={CarouselCardItem}
         sliderWidth={SLIDER_WIDTH}
         itemWidth={SLIDER_WIDTH}
@@ -27,22 +35,15 @@ const FullWidthCarouselCards = ({ images }) => {
         useScrollView={true}
         lockScrollWhileSnapping={true}
       />
-      {/* <Pagination
-        dotsLength={data.length}
-        activeDotIndex={index}
-        carouselRef={isCarousel}
-        dotStyle={{
-          width: 10,
-          height: 10,
-          borderRadius: 5,
-          marginHorizontal: 0,
-        }}
-        inactiveDotOpacity={0.4}
-        inactiveDotScale={0.6}
-        tappableDots={true}
-      /> */}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  image: {
+    height: SLIDER_WIDTH,
+    // width: 50,
+  },
+});
 
 export default FullWidthCarouselCards;

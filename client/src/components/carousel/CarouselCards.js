@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Dimensions, StyleSheet, Image } from 'react-native';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import data from './data';
+import Carousel from 'react-native-snap-carousel';
 
 const SLIDER_WIDTH = Dimensions.get('window').width + 98;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.75);
@@ -30,20 +29,6 @@ const CarouselCards = ({ images }) => {
         useScrollView={true}
         lockScrollWhileSnapping={true}
       />
-      {/* <Pagination
-        dotsLength={data.length}
-        activeDotIndex={index}
-        carouselRef={isCarousel}
-        dotStyle={{
-          width: 10,
-          height: 10,
-          borderRadius: 5,
-          marginHorizontal: 0,
-        }}
-        inactiveDotOpacity={0.4}
-        inactiveDotScale={0.6}
-        tappableDots={true}
-      /> */}
     </View>
   );
 };
