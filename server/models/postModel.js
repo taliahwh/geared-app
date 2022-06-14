@@ -69,6 +69,10 @@ export const postSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+      name: {
+        type: String,
+        required: true,
+      },
       profileImage: {
         type: String,
         required: true,
