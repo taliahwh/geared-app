@@ -8,13 +8,18 @@ import {
   CREATE_NEW_POST_REQUEST,
   CREATE_NEW_POST_SUCCESS,
   CREATE_NEW_POST_FAILURE,
+  POST_DETAILS_REQUEST,
+  POST_DETAILS_SUCCESS,
+  POST_DETAILS_FAILURE,
 } from '../constants/postConstants';
 
-export const getExplorePosts = () => async (dispatch) => {
+export const getExplorePosts = () => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
   try {
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
       },
     };
 
@@ -79,3 +84,24 @@ export const createPost =
       console.log(error.message);
     }
   };
+
+export const getPostDetails = (id) => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    dispatch({ type: POST_DETAILS_REQUEST });
+
+    const { data } = await geared.get(`/api/posts/${id}`, config);
+
+    dispatch({ type: POST_DETAILS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: POST_DETAILS_FAILURE });
+    console.log(error.message);
+  }
+};
