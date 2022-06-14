@@ -5,6 +5,12 @@ import {
   USER_SIGN_UP_REQUEST,
   USER_SIGN_UP_SUCCESS,
   USER_SIGN_UP_FAILURE,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_SUCCESS,
+  USER_DETAILS_FAILURE,
+  USER_POSTS_REQUEST,
+  USER_POSTS_SUCCESS,
+  USER_POSTS_FAILURE,
   USER_LOGOUT,
 } from '../constants/userConstants';
 
@@ -83,7 +89,7 @@ export const signUp =
       );
 
       dispatch({ type: USER_SIGN_UP_SUCCESS, payload: data });
-      // dispatch({ type: USER_SIGN_IN_SUCCESS, payload: data });
+      dispatch({ type: USER_SIGN_IN_SUCCESS, payload: data });
     } catch (error) {
       dispatch({
         type: USER_SIGN_UP_FAILURE,
@@ -94,3 +100,55 @@ export const signUp =
       });
     }
   };
+
+export const getUserDetails = (id) => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
+  try {
+    dispatch({ type: USER_DETAILS_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await gearedApi.get(`/api/users/${id}`, config);
+
+    dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_DETAILS_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getUserPosts = (id) => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
+  try {
+    dispatch({ type: USER_POSTS_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await gearedApi.get(`/api/users/collection/${id}`, config);
+
+    dispatch({ type: USER_POSTS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_POSTS_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
