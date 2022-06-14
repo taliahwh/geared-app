@@ -10,6 +10,7 @@ import User from '../models/userModel.js';
  */
 const getAllPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find({});
+
   const explorePosts = posts.reverse();
   res.status(200).json(explorePosts);
 });
@@ -58,6 +59,7 @@ const createNewPost = asyncHandler(async (req, res) => {
       userId,
       username: user.username,
       profileImage: user.profileImage,
+      name: user.name,
     },
   });
 
@@ -65,4 +67,19 @@ const createNewPost = asyncHandler(async (req, res) => {
   res.status(201).json(createdPost);
 });
 
-export { getAllPosts, createNewPost };
+/**
+ * @desc Fetch post details by post id
+ * @route GET /posts/:id
+ * @access Public
+ */
+const getPostById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const post = await Post.findById(id);
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+  res.status(200).json(post);
+});
+
+export { getAllPosts, createNewPost, getPostById };
