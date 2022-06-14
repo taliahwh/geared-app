@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import generateToken from '../utils/generateToken.js';
 
 import User from '../models/userModel.js';
-
+import Post from '../models/postModel.js';
 /**
  * @desc Authenticate user and get token
  * @route POST /user/signup
@@ -17,8 +17,7 @@ const signIn = asyncHandler(async (req, res) => {
     res.json({
       _id: user._id,
       name: user.name,
-      email: user.email,
-      profileImage: user.profileImage,
+      username: user.username,
       token: generateToken(user._id),
     });
   };
@@ -48,32 +47,6 @@ const signIn = asyncHandler(async (req, res) => {
       throw new Error('Invalid email or password');
     }
   }
-
-  if (email) {
-    const userByEmail = await User.find({ email });
-
-    if (!userByEmail) {
-      res.status(404);
-      throw new Error('No account with that email');
-    }
-
-    const correctPassword = await bcrypt.compare(
-      password,
-      userByEmail.password
-    );
-
-    if (!correctPassword) {
-      res.status(400);
-      throw new Error('Invalid password.');
-    }
-
-    if (userByEmail && correctPassword) {
-      sendUserData(userByEmail);
-    } else {
-      res.status(401);
-      throw new Error('Invalid email or password');
-    }
-  }
 });
 
 /**
@@ -94,7 +67,7 @@ const signUp = asyncHandler(async (req, res) => {
     interests,
     profileImage,
   } = req.body;
-  console.log(req.body.firstName);
+
   // Find user by email
   const emailExists = await User.findOne({ email });
 
@@ -143,7 +116,9 @@ const signUp = asyncHandler(async (req, res) => {
     dateOfBirth,
     bio: bio || '',
     interests: interests || [],
-    profileImage,
+    profileImage:
+      profileImage ||
+      'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
   });
 
   if (user) {
@@ -164,4 +139,46 @@ const signUp = asyncHandler(async (req, res) => {
   }
 });
 
-export { signIn, signUp };
+// @desc Get user details by id
+// @route GET /api/users/:id
+// @access Private
+const getUserDetails = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id).select('-password');
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+  res.status(200).json(user);
+});
+
+/**
+ * @desc Fetch all user's posts (collection) by their id
+ * @route GET /posts/collection/:id
+ * @access Public
+ */
+const getPostsByUserId = asyncHandler(async (req, res) => {
+  const { id } = req.user;
+  const user = await User.findById(id);
+
+  if (!user) {
+    res.status(403);
+    throw new Error('Unauthorized. Must be signed in.');
+  }
+
+  // dot notation for nested documents (mongoose)
+  const posts = await Post.find({
+    'listedBy.userId': String(user._id),
+  });
+
+  if (!posts) {
+    res.status(404);
+    throw new Error('User does not have any listings.');
+  }
+
+  const userCollection = posts.reverse();
+  res.status(200).json(userCollection);
+});
+
+export { signIn, signUp, getUserDetails, getPostsByUserId };
