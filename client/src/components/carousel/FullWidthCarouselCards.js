@@ -42,7 +42,6 @@ const FullWidthCarouselCards = ({ images }) => {
 const styles = StyleSheet.create({
   image: {
     height: SLIDER_WIDTH,
-    // width: 50,
   },
 });
 
