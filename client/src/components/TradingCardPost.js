@@ -14,8 +14,9 @@ import { Ionicons } from '@expo/vector-icons';
 // Components
 import CarouselCards from './carousel/CarouselCards';
 
+const SLIDER_HEIGHT = Dimensions.get('window').width + 10;
+
 const TradingCardPost = ({
-  imgSrc,
   forSale,
   offers,
   username,
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     paddingTop: 7,
     paddingHorizontal: 15,
-    height: 360,
+    height: SLIDER_HEIGHT,
     display: 'flex',
     alignItems: 'center',
   },
