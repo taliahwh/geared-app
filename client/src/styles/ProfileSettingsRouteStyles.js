@@ -58,6 +58,12 @@ const styles = StyleSheet.create({
     marginRight: 15,
     color: '#000',
   },
+  disabledInputSection: {
+    // backgroundColor: 'orange',
+    width: '70%',
+    marginRight: 15,
+    color: '#a1a1aa',
+  },
   flexInputContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -143,6 +149,26 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: '#000000',
     paddingHorizontal: 10,
+  },
+
+  modalContainer: {
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+  },
+  modalDisplayText: {
+    fontSize: 15,
+    color: '#3f3f46',
+    textAlign: 'center',
+  },
+  interestTagContainer: {
+    marginTop: 15,
+  },
+  interestInput: {
+    borderBottomWidth: 1,
+    borderColor: '#d4d4d4',
+    marginVertical: 10,
+    paddingVertical: 7,
+    paddingHorizontal: 7,
   },
 });
 
