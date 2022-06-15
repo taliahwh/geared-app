@@ -139,6 +139,72 @@ const signUp = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Update user profile
+// @route PUT /api/users/profile
+// @access Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const { id: userId } = req.user;
+  const { newProfileImage, newBio, newInterests, newFullName, newWebsite } =
+    req.body;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  // // Password check
+  // if (newPassword && !newConfirmPassword) {
+  //   res.status(401);
+  //   throw new Error('Confirm password is required');
+  // }
+
+  // if (newPassword && newPassword !== confirmPassword) {
+  //   res.status(400);
+  //   throw new Error('Passwords do not match. Please try again.');
+  // }
+
+  // // Password strength requirement (uppercase, lowercase, number and special char)
+  // if (newPassword && newPassword.length < 8) {
+  //   res.status(400);
+  //   throw new Error('Password must be at least 8 characters.');
+  // }
+
+  // const hasUpperCase = /[A-Z]/.test(newPassword);
+  // const hasLowerCase = /[a-z]/.test(newPassword);
+  // const hasNumbers = /\d/.test(newPassword);
+  // const hasNonalphas = /\W/.test(newPassword);
+  // if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasNonalphas) {
+  //   res.status(400);
+  //   throw new Error(
+  //     'Password must be at least 8 characters, contain an upper and lowercase letter, a number, and special character.'
+  //   );
+  // }
+
+  // const hashedPassword = await bcrypt.hash(password, 12);
+
+  user.profileImage = newProfileImage || user.profileImage;
+  user.bio = newBio || user.bio;
+  user.interests = newInterests || user.interests;
+  user.name = newFullName || user.name;
+  user.website = newWebsite || user.website;
+  // user.password = hashedPassword || user.password;
+
+  const updatedUser = await user.save();
+
+  res.status(200).json({
+    _id: updatedUser._id,
+    name: updatedUser.name,
+    email: updatedUser.email,
+    profileImage: updatedUser.profileImage,
+    bio: updatedUser.bio,
+    interests: updatedUser.interests,
+    website: updatedUser.website,
+    token: generateToken(updatedUser._id),
+  });
+});
+
 // @desc Get user details by id
 // @route GET /api/users/:id
 // @access Private
@@ -181,4 +247,4 @@ const getPostsByUserId = asyncHandler(async (req, res) => {
   res.status(200).json(userCollection);
 });
 
-export { signIn, signUp, getUserDetails, getPostsByUserId };
+export { signIn, signUp, getUserDetails, getPostsByUserId, updateUserProfile };
