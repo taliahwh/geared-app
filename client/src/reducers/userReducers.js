@@ -11,6 +11,9 @@ import {
   USER_POSTS_REQUEST,
   USER_POSTS_SUCCESS,
   USER_POSTS_FAILURE,
+  UPDATE_USER_PROFILE_REQUEST,
+  UPDATE_USER_PROFILE_SUCCESS,
+  UPDATE_USER_PROFILE_FAILURE,
   USER_LOGOUT,
 } from '../constants/userConstants';
 
@@ -88,6 +91,23 @@ export const userPostsReducer = (state = { posts: [] }, action) => {
         posts: action.payload,
       };
     case USER_POSTS_FAILURE:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const userUpdateProfileReducer = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_USER_PROFILE_REQUEST:
+      return { loading: true };
+    case UPDATE_USER_PROFILE_SUCCESS:
+      return {
+        loading: false,
+        updatedUser: action.payload,
+        success: true,
+      };
+    case UPDATE_USER_PROFILE_FAILURE:
       return { loading: false, error: action.payload };
     default:
       return state;
