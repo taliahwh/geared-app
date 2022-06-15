@@ -15,6 +15,7 @@ import {
   userPostsReducer,
   userSignInReducer,
   userSignUpReducer,
+  userUpdateProfileReducer,
 } from './reducers/userReducers';
 
 const reducer = combineReducers({
@@ -25,6 +26,7 @@ const reducer = combineReducers({
   userSignUp: userSignUpReducer,
   userDetails: userDetailsReducer,
   userPosts: userPostsReducer,
+  userUpdateProfile: userUpdateProfileReducer,
 });
 
 const persistConfig = {
