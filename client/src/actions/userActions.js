@@ -11,6 +11,9 @@ import {
   USER_POSTS_REQUEST,
   USER_POSTS_SUCCESS,
   USER_POSTS_FAILURE,
+  UPDATE_USER_PROFILE_REQUEST,
+  UPDATE_USER_PROFILE_SUCCESS,
+  UPDATE_USER_PROFILE_FAILURE,
   USER_LOGOUT,
 } from '../constants/userConstants';
 
@@ -152,3 +155,35 @@ export const getUserPosts = (id) => async (dispatch, getState) => {
     });
   }
 };
+
+export const updateProfile =
+  (newProfileImage, newBio, newInterests, newFullName, newWebsite) =>
+  async (dispatch, getState) => {
+    const { authToken } = getState().userSignIn;
+    try {
+      dispatch({ type: UPDATE_USER_PROFILE_REQUEST });
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      };
+
+      const { data } = await gearedApi.put(
+        '/api/users/profile',
+        { newProfileImage, newBio, newInterests, newFullName, newWebsite },
+        config
+      );
+
+      dispatch({ type: UPDATE_USER_PROFILE_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: UPDATE_USER_PROFILE_FAILURE,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
