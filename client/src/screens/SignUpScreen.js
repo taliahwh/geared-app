@@ -138,6 +138,7 @@ const SignUpScreen = () => {
                 placeholder="Email address"
                 placeholderTextColor={'#a1a1aa'}
                 autoCapitalize="none"
+                autoComplete="email"
                 returnKeyType="next"
                 ref={emailRef}
                 onSubmitEditing={() => {

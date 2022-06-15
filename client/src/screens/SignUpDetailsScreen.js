@@ -43,10 +43,10 @@ const SignUpDetailsScreen = ({ route }) => {
 
   const [profileImage, setProfileImage] = useState(null);
   const [bio, setBio] = useState('');
-  const [interests1, setInterests1] = useState('');
-  const [interests2, setInterests2] = useState('');
-  const [interests3, setInterests3] = useState('');
-  const [interests4, setInterests4] = useState('');
+  const [interest1, setInterest1] = useState('');
+  const [interest2, setInterest2] = useState('');
+  const [interest3, setInterest3] = useState('');
+  const [interest4, setInterest4] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState(null);
 
@@ -112,10 +112,28 @@ const SignUpDetailsScreen = ({ route }) => {
     dob = `${dateOfBirth.month}/${dateOfBirth.day}/${dateOfBirth.year}`;
 
     const interests = [];
-    interests1 && interests.push(interests1);
-    interests2 && interests.push(interests2);
-    interests3 && interests.push(interests3);
-    interests4 && interests.push(interests4);
+    interest1 &&
+      interests.push({
+        id: 1,
+        name: interest1,
+      });
+    interest2 &&
+      interests.push({
+        id: 2,
+        name: interest2,
+      });
+    interest3 &&
+      interests.push({
+        id: 3,
+        name: interest3,
+      });
+    interest4 &&
+      interests.push({
+        id: 4,
+        name: interest4,
+      });
+
+    // console.log(interests);
 
     dispatch(
       signUp(
@@ -305,7 +323,7 @@ const SignUpDetailsScreen = ({ route }) => {
                 </Modal>
               </View>
 
-              {/* Listing Type Modal */}
+              {/* Interests Modal */}
               <View style={styles.centeredView}>
                 <Modal
                   animationType="fade"
@@ -330,38 +348,42 @@ const SignUpDetailsScreen = ({ route }) => {
                         <View style={styles.interestTagContainer}>
                           <TextInput
                             style={styles.interestInput}
-                            value={interests1}
-                            onChangeText={(value) => setInterests1(value)}
+                            value={interest1}
+                            onChangeText={(value) => setInterest1(value)}
                             placeholder="Stephen Curry"
                             placeholderTextColor={'#a1a1aa'}
                             autoComplete={'off'}
+                            autoCapitalize="words"
                             maxLength={128}
                           />
                           <TextInput
                             style={styles.interestInput}
-                            value={interests2}
-                            onChangeText={(value) => setInterests2(value)}
+                            value={interest2}
+                            onChangeText={(value) => setInterest2(value)}
                             placeholder="New York Yankees"
                             placeholderTextColor={'#a1a1aa'}
                             autoComplete={'off'}
+                            autoCapitalize="words"
                             maxLength={128}
                           />
                           <TextInput
                             style={styles.interestInput}
-                            value={interests3}
-                            onChangeText={(value) => setInterests3(value)}
+                            value={interest3}
+                            onChangeText={(value) => setInterest3(value)}
                             placeholder="Atlanta Hawks"
                             placeholderTextColor={'#a1a1aa'}
                             autoComplete={'off'}
+                            autoCapitalize="words"
                             maxLength={128}
                           />
                           <TextInput
                             style={styles.interestInput}
-                            value={interests4}
-                            onChangeText={(value) => setInterests4(value)}
+                            value={interest4}
+                            onChangeText={(value) => setInterest4(value)}
                             placeholder="Anthony Edwards"
                             placeholderTextColor={'#a1a1aa'}
                             autoComplete={'off'}
+                            autoCapitalize="words"
                             maxLength={128}
                           />
                         </View>
