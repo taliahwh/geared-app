@@ -8,12 +8,17 @@ import {
   ImageBackground,
   Dimensions,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { useFocusEffect } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
 
+// Tab Screens
 import ManageRoute from '../components/tab-view/ManageRoutes';
 import PaymentsRoute from '../components/tab-view/PaymentsRoute';
 import ProfileSettingsRoute from '../components/tab-view/ProfileSettingsRoute';
+import { getUserDetails } from '../actions/userActions';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
@@ -22,6 +27,10 @@ const renderScene = SceneMap({
   payments: PaymentsRoute,
   settings: ProfileSettingsRoute,
 });
+
+const Header = ({ children }) => {
+  return <View style={styles.loadingHeader}>{children}</View>;
+};
 
 const renderTabBar = (props) => (
   <TabBar
@@ -33,6 +42,7 @@ const renderTabBar = (props) => (
 );
 
 const DashboardScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'manage', title: 'Manage' },
@@ -40,23 +50,50 @@ const DashboardScreen = ({ navigation }) => {
     { key: 'settings', title: 'Settings' },
   ]);
 
+  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
+  const {
+    loading: loadingUserDetails,
+    userDetails,
+    error: errorUserDetails,
+  } = useSelector((state) => state.userDetails);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getUserDetails(userId));
+    }, [dispatch])
+  );
+
   return (
     <>
-      <ImageBackground
-        style={styles.headerContainer}
-        blurRadius={80}
-        source={{
-          uri: 'https://i0.wp.com/sneakerhistory.com/wp-content/uploads/2019/03/fab-five-air-force-max-black-socks.jpg?fit=1280%2C1600&ssl=1',
-        }}
-      >
-        <Image
-          style={styles.userImage}
+      {loadingUserDetails && (
+        <Header>
+          <ActivityIndicator size={'small'} />
+        </Header>
+      )}
+      {errorUserDetails && (
+        <Header>
+          <Text>{errorUserDetails}</Text>
+        </Header>
+      )}
+      {userDetails && (
+        <ImageBackground
+          style={styles.headerContainer}
+          blurRadius={80}
           source={{
-            uri: 'https://i0.wp.com/sneakerhistory.com/wp-content/uploads/2019/03/fab-five-air-force-max-black-socks.jpg?fit=1280%2C1600&ssl=1',
+            uri: userDetails.profileImage,
           }}
-        />
-        <Text style={styles.welcomeTitle}>Hey, @fab_five</Text>
-      </ImageBackground>
+        >
+          <Image
+            style={styles.userImage}
+            source={{
+              uri: userDetails.profileImage,
+            }}
+          />
+          <Text style={styles.welcomeTitle}>
+            {`Hey, @${userDetails.username}`}
+          </Text>
+        </ImageBackground>
+      )}
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -81,7 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   headerContainer: {
-    backgroundColor: 'orange',
+    // backgroundColor: 'orange',
     height: 120,
     display: 'flex',
     flexDirection: 'row',
@@ -104,6 +141,12 @@ const styles = StyleSheet.create({
   },
   dashboardContainer: {
     paddingTop: 10,
+  },
+  loadingHeader: {
+    height: 120,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
