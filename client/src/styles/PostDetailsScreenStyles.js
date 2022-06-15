@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
-const SLIDER_WIDTH = Dimensions.get('window').width + 10;
+const SLIDER_HEIGHT = Dimensions.get('window').width + 10;
 
 const styles = StyleSheet.create({
   container: {
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     paddingTop: 7,
-    height: SLIDER_WIDTH,
+    height: SLIDER_HEIGHT,
     display: 'flex',
     alignItems: 'center',
   },
