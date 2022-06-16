@@ -18,7 +18,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 
 // Components
-import Alert from '../components/Alert';
+import AlertMessage from '../components/AlertMessage';
 import ModalComponent from '../components/Modal';
 
 // Styles
@@ -47,8 +47,8 @@ const SignUpDetailsScreen = ({ route }) => {
   const [interest2, setInterest2] = useState('');
   const [interest3, setInterest3] = useState('');
   const [interest4, setInterest4] = useState('');
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState(null);
+  const [showAlertMessage, setShowAlertMessage] = useState(false);
+  const [AlertMessageMessage, setAlertMessageMessage] = useState(null);
 
   // Input ref
   const dayRef = useRef();
@@ -84,29 +84,29 @@ const SignUpDetailsScreen = ({ route }) => {
       dateOfBirth.month > 12 ||
       (dateOfBirth.month && dateOfBirth.month.length < 2)
     ) {
-      setAlertMessage('Invalid date');
-      return setShowAlert(true);
+      setAlertMessageMessage('Invalid date');
+      return setShowAlertMessage(true);
     }
     if (
       (dateOfBirth.day && dateOfBirth.day <= 0) ||
       dateOfBirth.day > 31 ||
       (dateOfBirth.day && dateOfBirth.day.length < 2)
     ) {
-      setAlertMessage('Invalid date');
-      return setShowAlert(true);
+      setAlertMessageMessage('Invalid date');
+      return setShowAlertMessage(true);
     }
     if (
       (dateOfBirth.year && dateOfBirth.year <= 1920) ||
       dateOfBirth.year > currentYear ||
       (dateOfBirth.year && dateOfBirth.year.length < 4)
     ) {
-      setAlertMessage('Invalid date');
-      return setShowAlert(true);
+      setAlertMessageMessage('Invalid date');
+      return setShowAlertMessage(true);
     }
 
     if (!dateOfBirth.month || !dateOfBirth.day || !dateOfBirth.year) {
-      setAlertMessage('Invalid date');
-      return setShowAlert(true);
+      setAlertMessageMessage('Invalid date');
+      return setShowAlertMessage(true);
     }
 
     dob = `${dateOfBirth.month}/${dateOfBirth.day}/${dateOfBirth.year}`;
@@ -161,7 +161,7 @@ const SignUpDetailsScreen = ({ route }) => {
             <Text style={styles.header}>Set up your account</Text>
 
             <View style={styles.inputContainer}>
-              {errorSignUp && <Alert>{errorSignUp}</Alert>}
+              {errorSignUp && <AlertMessage>{errorSignUp}</AlertMessage>}
               <View style={styles.textInputContainer}>
                 <Text style={styles.inputTitle}>Date of birth</Text>
 
@@ -221,7 +221,11 @@ const SignUpDetailsScreen = ({ route }) => {
                 </View>
               </View>
 
-              {showAlert && <Text style={styles.dobAlert}>{alertMessage}</Text>}
+              {showAlertMessage && (
+                <Text style={styles.dobAlertMessage}>
+                  {AlertMessageMessage}
+                </Text>
+              )}
 
               <View style={styles.textInputContainer}>
                 <Text style={styles.inputTitle}>Bio</Text>
@@ -299,7 +303,7 @@ const SignUpDetailsScreen = ({ route }) => {
                   transparent={true}
                   visible={bioModalVisible}
                   onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
+                    AlertMessage.AlertMessage('Modal has been closed.');
                     setBioModalVisible(!bioModalVisible);
                   }}
                 >
@@ -330,7 +334,7 @@ const SignUpDetailsScreen = ({ route }) => {
                   transparent={true}
                   visible={interestsModalVisible}
                   onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
+                    AlertMessage.AlertMessage('Modal has been closed.');
                     setInterestsModalVisible(!interestsModalVisible);
                   }}
                 >
