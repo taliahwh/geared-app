@@ -15,7 +15,7 @@ import { useFocusEffect } from '@react-navigation/native';
 // Components
 import TradingCardPost from '../TradingCardPost';
 import Loader from '../Loader';
-import Alert from '../Alert';
+import AlertMessage from '../AlertMessage';
 
 // Actions
 import { getExplorePosts } from '../../actions/postActions';
@@ -50,7 +50,7 @@ const ExploreRoute = () => {
   );
   return (
     <>
-      {errorExplorePosts && <Alert>{errorExplorePosts}</Alert>}
+      {errorExplorePosts && <AlertMessage>{errorExplorePosts}</AlertMessage>}
       {loadingExplorePosts && <ActivityIndicator />}
       {posts && posts.length > 0 && (
         <View style={styles.container}>
