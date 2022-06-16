@@ -14,7 +14,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 // Components
 import Loader from './Loader';
-import Alert from './Alert';
+import AlertMessage from './AlertMessage';
 
 // Actions
 import { getUserPosts } from '../actions/userActions';
@@ -72,7 +72,7 @@ const CollectionGrid = () => {
   return (
     <>
       {loadingUserPosts && <Loader />}
-      {errorUserPosts && <Alert>{errorUserPosts}</Alert>}
+      {errorUserPosts && <AlertMessage>{errorUserPosts}</AlertMessage>}
       {posts && (
         <FlatList
           data={posts}
