@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   Pressable,
+  Linking,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
@@ -21,7 +22,7 @@ import {
 // Components
 import Loader from './Loader';
 import ProfileHeaderLoader from './Loaders/ProfileHeaderLoader';
-import Alert from '../components/Alert';
+import AlertMessage from '../components/AlertMessage';
 
 // Actions
 import { logout, getUserDetails } from '../actions/userActions';
@@ -55,7 +56,7 @@ const ProfileHeader = () => {
   return (
     <View style={styles.container}>
       {loadingUserDetails && <ProfileHeaderLoader />}
-      {errorUserDetails && <Alert>{errorUserDetails}</Alert>}
+      {errorUserDetails && <AlertMessage>{errorUserDetails}</AlertMessage>}
 
       {userDetails && (
         <>
@@ -114,6 +115,16 @@ const ProfileHeader = () => {
 
           {userDetails.bio !== '' && (
             <Text style={styles.description}>{userDetails.bio}</Text>
+          )}
+          {userDetails.website && (
+            <Text
+              style={styles.website}
+              onPress={() => {
+                Linking.openURL(`https://${userDetails.website}`);
+              }}
+            >
+              {userDetails.website}
+            </Text>
           )}
 
           {userDetails.interests && (
@@ -253,6 +264,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#d4d4d4',
     padding: 3,
+  },
+  website: {
+    color: '#3E5E7E',
+    fontWeight: '500',
+    marginTop: 3,
   },
 });
 
