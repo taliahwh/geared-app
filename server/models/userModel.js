@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
     },
+    website: {
+      type: String,
+    },
     interests: {
       type: [Object],
     },
