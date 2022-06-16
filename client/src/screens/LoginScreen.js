@@ -16,7 +16,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 
 // Components
-import Alert from '../components/Alert';
+import AlertMessage from '../components/AlertMessage';
 
 // Actions
 import { signIn } from '../actions/userActions';
@@ -51,7 +51,7 @@ const LoginScreen = () => {
             <Text style={styles.logo}>geared</Text>
 
             <View style={styles.inputContainer}>
-              {errorSignIn && <Alert>{errorSignIn}</Alert>}
+              {errorSignIn && <AlertMessage>{errorSignIn}</AlertMessage>}
 
               <Controller
                 control={control}
