@@ -14,7 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 // Components
-import Alert from '../components/Alert';
+import AlertMessage from '../components/AlertMessage';
 
 const SignUpScreen = () => {
   // Hooks
@@ -99,7 +99,7 @@ const SignUpScreen = () => {
             <Text style={styles.logo}>geared</Text>
 
             <View style={styles.inputContainer}>
-              {showAlert && <Alert>{alertMessage}</Alert>}
+              {showAlert && <AlertMessage>{AlertMessageMessage}</AlertMessage>}
 
               <TextInput
                 style={styles.input}
