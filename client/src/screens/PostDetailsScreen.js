@@ -17,7 +17,7 @@ import styles from '../styles/PostDetailsScreenStyles';
 // Components
 import FullWidthCarouselCards from '../components/carousel/FullWidthCarouselCards';
 import Loader from '../components/Loader';
-import Alert from '../components/Alert';
+import AlertMessage from '../components/AlertMessage';
 
 // Actions
 import { getPostDetails } from '../actions/postActions';
@@ -45,7 +45,7 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {loadingPostDetails && <Loader />}
-      {errorPostDetails && <Alert>{errorPostDetails}</Alert>}
+      {errorPostDetails && <AlertMessage>{errorPostDetails}</AlertMessage>}
       {postDetails && (
         <>
           <View style={styles.headingContainer}>
