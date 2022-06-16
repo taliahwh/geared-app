@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  Alert,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
@@ -18,7 +19,7 @@ import * as ImagePicker from 'expo-image-picker';
 // Components
 import ModalComponent from '../Modal';
 import Loader from '../Loader';
-import Alert from '../Alert';
+import AlertMessage from '../AlertMessage';
 
 // Styles
 import styles from '../../styles/ProfileSettingsRouteStyles';
@@ -39,7 +40,9 @@ const ProfileSettingsRoute = () => {
     error: errorUserDetails,
   } = useSelector((state) => state.userDetails);
   const { error: errorUpdateProfile, success: successUpdateProfile } =
-    useSelector((state) => state.userDetails);
+    useSelector((state) => state.userUpdateProfile);
+
+  // console.log(successUpdateProfile);
 
   // Modals
   const [interestsModalVisible, setInterestsModalVisible] = useState(false);
@@ -56,6 +59,12 @@ const ProfileSettingsRoute = () => {
   const [interest3, setInterest3] = useState('');
   const [interest4, setInterest4] = useState('');
   const [website, setWebsite] = useState('');
+
+  // const handleAlertMessage = () => {
+  //   Alert.alert('Profile Updated', 'Profile updated successfully', [
+  //     { text: 'OK', onPress: () => console.log('OK Pressed') },
+  //   ]);
+  // };
 
   const handleSubmit = (data) => {
     const interests = [];
@@ -106,10 +115,13 @@ const ProfileSettingsRoute = () => {
   return (
     <>
       {loadingUserDetails && <Loader />}
-      {errorUserDetails && <Alert>{errorUserDetails}</Alert>}
+      {errorUserDetails && <AlertMessage>{errorUserDetails}</AlertMessage>}
       {userDetails && (
         <KeyboardAwareScrollView style={styles.container} enableOnAndroid>
-          {errorUpdateProfile && <Alert>{errorUpdateProfile}</Alert>}
+          {/* {errorUpdateProfile && (
+            <AlertMessage>{errorUpdateProfile}</AlertMessage>
+          )} */}
+
           {/* <ScrollView > */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>User Details</Text>
@@ -193,7 +205,7 @@ const ProfileSettingsRoute = () => {
                 value={fullName}
                 onChangeText={(value) => setFullName(value)}
                 name="fullName"
-                placeholder={userDetails.fullName}
+                placeholder={userDetails.name}
                 placeholderTextColor={'#a1a1aa'}
                 maxLength={25}
                 // autoCapitalize="none"
@@ -251,7 +263,7 @@ const ProfileSettingsRoute = () => {
                 value={website}
                 onChangeText={(value) => setWebsite(value)}
                 name="website"
-                placeholder="yoursite.com"
+                placeholder={userDetails.website || 'yoursite.com'}
                 placeholderTextColor={'#a1a1aa'}
                 // maxLength={25}
                 autoCapitalize="none"
@@ -266,7 +278,7 @@ const ProfileSettingsRoute = () => {
                 transparent={true}
                 visible={bioModalVisible}
                 onRequestClose={() => {
-                  Alert.alert('Modal has been closed.');
+                  AlertMessage.AlertMessage('Modal has been closed.');
                   setBioModalVisible(!bioModalVisible);
                 }}
               >
@@ -303,7 +315,7 @@ const ProfileSettingsRoute = () => {
                 transparent={true}
                 visible={interestsModalVisible}
                 onRequestClose={() => {
-                  Alert.alert('Modal has been closed.');
+                  AlertMessage.AlertMessage('Modal has been closed.');
                   setInterestsModalVisible(!interestsModalVisible);
                 }}
               >
@@ -321,9 +333,17 @@ const ProfileSettingsRoute = () => {
                       <View style={styles.interestTagContainer}>
                         <TextInput
                           style={styles.interestInput}
-                          value={interest1}
+                          value={
+                            userDetails.interests.length > 1
+                              ? userDetails.interests[0].name
+                              : interest1
+                          }
                           onChangeText={(value) => setInterest1(value)}
-                          placeholder="Stephen Curry"
+                          placeholder={
+                            userDetails.interests.length > 1
+                              ? userDetails.interests[0].name
+                              : 'Stephen Curry'
+                          }
                           placeholderTextColor={'#a1a1aa'}
                           autoComplete={'off'}
                           autoCapitalize="words"
@@ -331,7 +351,11 @@ const ProfileSettingsRoute = () => {
                         />
                         <TextInput
                           style={styles.interestInput}
-                          value={interest2}
+                          value={
+                            userDetails.interests.length > 1
+                              ? userDetails.interests[1].name
+                              : interest2
+                          }
                           onChangeText={(value) => setInterest2(value)}
                           placeholder={
                             userDetails.interests.length > 1
@@ -345,7 +369,11 @@ const ProfileSettingsRoute = () => {
                         />
                         <TextInput
                           style={styles.interestInput}
-                          value={interest3}
+                          value={
+                            userDetails.interests.length > 1
+                              ? userDetails.interests[2].name
+                              : interest3
+                          }
                           onChangeText={(value) => setInterest3(value)}
                           placeholder={
                             userDetails.interests.length > 2
@@ -359,7 +387,11 @@ const ProfileSettingsRoute = () => {
                         />
                         <TextInput
                           style={styles.interestInput}
-                          value={interest4}
+                          value={
+                            userDetails.interests.length > 1
+                              ? userDetails.interests[3].name
+                              : interest4
+                          }
                           onChangeText={(value) => setInterest4(value)}
                           placeholder={
                             userDetails.interests.length > 3
