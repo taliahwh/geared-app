@@ -7,71 +7,142 @@ import {
   TouchableOpacity,
   Dimensions,
   FlatList,
+  Image,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+
+// Components
+import AlertMessage from '../AlertMessage';
+import Loader from '../Loader';
+
+// Actions
+import { getUserPosts } from '../../actions/userActions';
 
 const thirdWindowWidth = Dimensions.get('window').width / 3;
 
-const IEMS = [
-  {
-    id: 1,
-  },
-  {
-    id: 2,
-  },
-  {
-    id: 3,
-  },
-  {
-    id: 4,
-  },
-];
-const ItemSellingRender = () => <View style={styles.sellingItem} />;
 const Separator = () => {
   return <View style={{ width: 5, backgroundColor: '#fff' }} />;
 };
 
 const ManageRoute = () => {
+  // Hooks
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  // State from redux
+  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
+  const {
+    loading: loadingUserPosts,
+    posts,
+    error: errorUserPosts,
+  } = useSelector((state) => state.userPosts);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getUserPosts(userId));
+    }, [dispatch])
+  );
+
+  const ITEMS = [
+    posts && posts.length >= 1
+      ? {
+          id: 1,
+          src: posts[0].images[0].imgUrl,
+        }
+      : {
+          id: 1,
+          src: 'https://creative-quartz.co.uk/wp-content/uploads/2020/12/Quartzforms-Absolute-Light-Grey.jpg',
+        },
+    posts && posts.length >= 2
+      ? {
+          id: 2,
+          src: posts[1].images[0].imgUrl,
+        }
+      : {
+          id: 2,
+          src: 'https://creative-quartz.co.uk/wp-content/uploads/2020/12/Quartzforms-Absolute-Light-Grey.jpg',
+        },
+    posts && posts.length >= 3
+      ? {
+          id: 3,
+          src: posts[2].images[0].imgUrl,
+        }
+      : {
+          id: 3,
+          src: 'https://creative-quartz.co.uk/wp-content/uploads/2020/12/Quartzforms-Absolute-Light-Grey.jpg',
+        },
+    posts && posts.length >= 4
+      ? {
+          id: 4,
+          src: posts[3].images[0].imgUrl,
+        }
+      : {
+          id: 4,
+          src: 'https://creative-quartz.co.uk/wp-content/uploads/2020/12/Quartzforms-Absolute-Light-Grey.jpg',
+        },
+  ];
+
+  const ItemSellingRender = ({ image }) => (
+    <Image
+      style={styles.sellingItem}
+      source={{
+        uri: image,
+      }}
+    />
+  );
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.soldContainer}>
-        <Text style={styles.sectionTitle}>Sold</Text>
-        <View style={styles.soldItemsBtn}>
-          <View style={styles.leftOfBtn}>
-            <Ionicons
-              name="receipt-outline"
-              size={24}
-              color="black"
-              style={styles.btnIcon}
-            />
-            <Text style={styles.btnTitle}>All sold items</Text>
+    <>
+      {loadingUserPosts && <Loader />}
+      {errorUserPosts && <AlertMessage>{errorUserPosts}</AlertMessage>}
+      {posts && (
+        <ScrollView style={styles.container}>
+          <View style={styles.soldContainer}>
+            <Text style={styles.sectionTitle}>Sold</Text>
+            <View style={styles.soldItemsBtn}>
+              <View style={styles.leftOfBtn}>
+                <Ionicons
+                  name="receipt-outline"
+                  size={24}
+                  color="black"
+                  style={styles.btnIcon}
+                />
+                <Text style={styles.btnTitle}>All sold items</Text>
+              </View>
+              <Ionicons
+                name="chevron-forward-outline"
+                size={24}
+                color="black"
+              />
+            </View>
           </View>
-          <Ionicons name="chevron-forward-outline" size={24} color="black" />
-        </View>
-      </View>
-      <View style={styles.sellingContainer}>
-        <Text style={styles.sectionTitle}>Your collection</Text>
-        <View style={styles.flatlistContainer}>
-          <FlatList
-            data={IEMS}
-            renderItem={({ item }) => <ItemSellingRender />}
-            keyExtractor={(item) => item.id}
-            ItemSeparatorComponent={Separator}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Listing')}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.listAnItemBtn}>List an item</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          <View style={styles.sellingContainer}>
+            <Text style={styles.sectionTitle}>Your collection</Text>
+            <View style={styles.flatlistContainer}>
+              <FlatList
+                data={ITEMS}
+                renderItem={({ item }) => (
+                  <ItemSellingRender image={item.src} />
+                )}
+                keyExtractor={(item) => item.id}
+                ItemSeparatorComponent={Separator}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Listing')}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.listAnItemBtn}>List an item</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      )}
+    </>
   );
 };
 
