@@ -39,6 +39,7 @@ const ExploreRoute = () => {
         images={item.images}
         profileImage={item.listedBy.profileImage}
         location={item.listedBy.location}
+        id={item.listedBy.userId}
       />
     );
   };
