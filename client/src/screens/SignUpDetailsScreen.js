@@ -245,7 +245,7 @@ const SignUpDetailsScreen = ({ route }) => {
                 </TouchableOpacity>
               </View>
 
-              <View style={styles.textInputContainer}>
+              {/* <View style={styles.textInputContainer}>
                 <Text style={styles.inputTitle}>Interests</Text>
 
                 <TouchableOpacity
@@ -261,7 +261,7 @@ const SignUpDetailsScreen = ({ route }) => {
                     />
                   </View>
                 </TouchableOpacity>
-              </View>
+              </View> */}
 
               <View style={styles.profileImageSection}>
                 <Text style={styles.inputTitle}>Profile image</Text>
@@ -328,7 +328,7 @@ const SignUpDetailsScreen = ({ route }) => {
               </View>
 
               {/* Interests Modal */}
-              <View style={styles.centeredView}>
+              {/* <View style={styles.centeredView}>
                 <Modal
                   animationType="fade"
                   transparent={true}
@@ -395,7 +395,7 @@ const SignUpDetailsScreen = ({ route }) => {
                     }
                   />
                 </Modal>
-              </View>
+              </View> */}
 
               <TouchableOpacity onPress={handleSubmit}>
                 <Text style={styles.signUpBtn}>Sign Up</Text>

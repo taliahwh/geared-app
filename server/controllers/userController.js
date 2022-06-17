@@ -64,7 +64,6 @@ const signUp = asyncHandler(async (req, res) => {
     confirmPassword,
     dateOfBirth,
     bio,
-    interests,
     profileImage,
   } = req.body;
 
@@ -115,7 +114,6 @@ const signUp = asyncHandler(async (req, res) => {
     password: hashedPassword,
     dateOfBirth,
     bio: bio || '',
-    interests: interests || [],
     profileImage:
       profileImage ||
       'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
@@ -129,7 +127,6 @@ const signUp = asyncHandler(async (req, res) => {
       email: user.email,
       dateOfBirth,
       bio,
-      interests,
       profileImage,
       token: generateToken(user._id),
     });
@@ -144,8 +141,16 @@ const signUp = asyncHandler(async (req, res) => {
 // @access Private
 const updateUserProfile = asyncHandler(async (req, res) => {
   const { id: userId } = req.user;
-  const { newProfileImage, newBio, newInterests, newFullName, newWebsite } =
-    req.body;
+  const {
+    newProfileImage,
+    newBio,
+    interest1,
+    interest2,
+    interest3,
+    interest4,
+    newFullName,
+    newWebsite,
+  } = req.body;
 
   const user = await User.findById(userId);
 
@@ -186,12 +191,15 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
   user.profileImage = newProfileImage || user.profileImage;
   user.bio = newBio || user.bio;
-  user.interests = newInterests || user.interests;
+  // user.interests[0].name = interest1 || user.interests[0].name;
+  // user.interests[1].name = interest2 || user.interests[1].name;
+  // user.interests[2].name = interest3 || user.interests[2].name;
+  // user.interests[3].name = interest4 || user.interests[3].name;
   user.name = newFullName || user.name;
   user.website = newWebsite || user.website;
-  // user.password = hashedPassword || user.password;
 
   const updatedUser = await user.save();
+  // console.log(updatedUser);
 
   res.status(200).json({
     _id: updatedUser._id,

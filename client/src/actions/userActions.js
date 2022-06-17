@@ -157,7 +157,16 @@ export const getUserPosts = (id) => async (dispatch, getState) => {
 };
 
 export const updateProfile =
-  (newProfileImage, newBio, newInterests, newFullName, newWebsite) =>
+  (
+    newProfileImage,
+    newBio,
+    interest1,
+    interest2,
+    interest3,
+    interest4,
+    newFullName,
+    newWebsite
+  ) =>
   async (dispatch, getState) => {
     const { authToken } = getState().userSignIn;
     try {
@@ -172,7 +181,16 @@ export const updateProfile =
 
       const { data } = await gearedApi.put(
         '/api/users/profile',
-        { newProfileImage, newBio, newInterests, newFullName, newWebsite },
+        {
+          newProfileImage,
+          newBio,
+          interest1,
+          interest2,
+          interest3,
+          interest4,
+          newFullName,
+          newWebsite,
+        },
         config
       );
 
