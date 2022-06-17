@@ -24,7 +24,7 @@ const HomeScreenNavigator = () => {
         }}
       />
       <Stack.Screen
-        name="User Profile"
+        name="Profile Details"
         component={ViewUserProfileScreen}
         options={{
           headerTitle: '',
