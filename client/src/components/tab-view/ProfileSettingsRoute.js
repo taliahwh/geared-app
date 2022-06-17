@@ -60,36 +60,87 @@ const ProfileSettingsRoute = () => {
   const [interest4, setInterest4] = useState('');
   const [website, setWebsite] = useState('');
 
-  // const handleAlertMessage = () => {
-  //   Alert.alert('Profile Updated', 'Profile updated successfully', [
-  //     { text: 'OK', onPress: () => console.log('OK Pressed') },
-  //   ]);
-  // };
+  const handleAlertMessage = () => {
+    successUpdateProfile &&
+      Alert.alert('Profile Updated', 'Profile updated successfully', [
+        { text: 'OK', onPress: () => console.log('OK Pressed') },
+      ]);
+  };
+
+  const clearInterests = () => {
+    setInterest1('');
+    setInterest2('');
+    setInterest3('');
+    setInterest4('');
+  };
 
   const handleSubmit = (data) => {
-    const interests = [];
-    interest1 &&
-      interests.push({
-        id: 1,
-        name: interest1,
-      });
-    interest2 &&
-      interests.push({
-        id: 2,
-        name: interest2,
-      });
-    interest3 &&
-      interests.push({
-        id: 3,
-        name: interest3,
-      });
-    interest4 &&
-      interests.push({
-        id: 4,
-        name: interest4,
-      });
+    // const interests = [];
+    // interest1
+    //   ? interests.push({
+    //       id: 1,
+    //       name: interest1,
+    //     })
+    //   : userDetails.interests.length >= 1
+    //   ? interests.push({
+    //       id: 1,
+    //       name: userDetails.interests[0].name,
+    //     })
+    //   : null;
 
-    dispatch(updateProfile(profileImage, bio, interests, fullName, website));
+    // interest2
+    //   ? interests.push({
+    //       id: 2,
+    //       name: interest2,
+    //     })
+    //   : userDetails.interests.length >= 2
+    //   ? interests.push({
+    //       id: 2,
+    //       name: userDetails.interests[1].name,
+    //     })
+    //   : null;
+
+    // interest3
+    //   ? interests.push({
+    //       id: 3,
+    //       name: interest3,
+    //     })
+    //   : userDetails.interests.length >= 3
+    //   ? interests.push({
+    //       id: 3,
+    //       name: userDetails.interests[2].name,
+    //     })
+    //   : null;
+
+    // interest4
+    //   ? interests.push({
+    //       id: 4,
+    //       name: interest4,
+    //     })
+    //   : userDetails.interests.length === 4
+    //   ? interests.push({
+    //       id: 4,
+    //       name: userDetails.interests[3].name,
+    //     })
+    //   : null;
+
+    console.log(interest1);
+    console.log(interest2);
+    console.log(interest3);
+    console.log(interest4);
+    dispatch(
+      updateProfile(
+        profileImage,
+        bio,
+        interest1,
+        interest2,
+        interest3,
+        interest4,
+        fullName,
+        website
+      )
+    );
+    // handleAlertMessage();
   };
 
   const pickImage = async () => {
@@ -106,6 +157,14 @@ const ProfileSettingsRoute = () => {
     }
   };
 
+  // Will be called right before leaving the dashboard tab
+  // useEffect(() => {
+  //   return () => {
+  //     console.log('Leaving screen');
+  //   };
+  // }, []);
+
+  // Will be called every time the dashboard tab is focused
   useFocusEffect(
     React.useCallback(() => {
       dispatch(getUserDetails(userId));
@@ -202,7 +261,7 @@ const ProfileSettingsRoute = () => {
 
               <TextInput
                 style={styles.inputSection}
-                value={fullName}
+                defaultValue={userDetails.name}
                 onChangeText={(value) => setFullName(value)}
                 name="fullName"
                 placeholder={userDetails.name}
@@ -218,7 +277,7 @@ const ProfileSettingsRoute = () => {
 
               <TextInput
                 style={styles.disabledInputSection}
-                value={userDetails.dateOfBirth}
+                defaultValue={userDetails.dateOfBirth}
                 onChangeText={(value) => onChange(value)}
                 placeholderTextColor={'#a1a1aa'}
                 editable={false}
@@ -260,14 +319,15 @@ const ProfileSettingsRoute = () => {
 
               <TextInput
                 style={styles.inputSection}
-                value={website}
+                defaultValue={
+                  userDetails.website ? userDetails.website : website
+                }
                 onChangeText={(value) => setWebsite(value)}
                 name="website"
                 placeholder={userDetails.website || 'yoursite.com'}
                 placeholderTextColor={'#a1a1aa'}
-                // maxLength={25}
+                autoComplete={'off'}
                 autoCapitalize="none"
-                // textContentType="familyName"
               />
             </View>
 
@@ -289,7 +349,7 @@ const ProfileSettingsRoute = () => {
                   input={
                     <TextInput
                       style={styles.textInput}
-                      value={bio}
+                      defaultValue={userDetails.bio ? userDetails.bio : bio}
                       onChangeText={(value) => setBio(value)}
                       placeholder={
                         userDetails.bio.length > 5
@@ -321,6 +381,14 @@ const ProfileSettingsRoute = () => {
               >
                 <ModalComponent
                   header={'Interests'}
+                  clearModalIcon={
+                    <Ionicons
+                      name="ios-close-outline"
+                      size={24}
+                      color="black"
+                    />
+                  }
+                  clearInterestInputs={clearInterests}
                   closeModal={() => setInterestsModalVisible(false)}
                   modal={true}
                   input={
@@ -333,14 +401,14 @@ const ProfileSettingsRoute = () => {
                       <View style={styles.interestTagContainer}>
                         <TextInput
                           style={styles.interestInput}
-                          value={
-                            userDetails.interests.length > 1
+                          defaultValue={
+                            userDetails.interests[0].name
                               ? userDetails.interests[0].name
                               : interest1
                           }
                           onChangeText={(value) => setInterest1(value)}
                           placeholder={
-                            userDetails.interests.length > 1
+                            userDetails.interests[0].name
                               ? userDetails.interests[0].name
                               : 'Stephen Curry'
                           }
@@ -351,14 +419,14 @@ const ProfileSettingsRoute = () => {
                         />
                         <TextInput
                           style={styles.interestInput}
-                          value={
-                            userDetails.interests.length > 1
+                          defaultValue={
+                            userDetails.interests[1].name
                               ? userDetails.interests[1].name
                               : interest2
                           }
                           onChangeText={(value) => setInterest2(value)}
                           placeholder={
-                            userDetails.interests.length > 1
+                            userDetails.interests[1].name
                               ? userDetails.interests[1].name
                               : 'New York Yankees'
                           }
@@ -369,14 +437,14 @@ const ProfileSettingsRoute = () => {
                         />
                         <TextInput
                           style={styles.interestInput}
-                          value={
-                            userDetails.interests.length > 1
+                          defaultValue={
+                            userDetails.interests[2].name
                               ? userDetails.interests[2].name
                               : interest3
                           }
                           onChangeText={(value) => setInterest3(value)}
                           placeholder={
-                            userDetails.interests.length > 2
+                            userDetails.interests[2].name
                               ? userDetails.interests[2].name
                               : 'Anthony Edwards'
                           }
@@ -387,14 +455,14 @@ const ProfileSettingsRoute = () => {
                         />
                         <TextInput
                           style={styles.interestInput}
-                          value={
-                            userDetails.interests.length > 1
+                          defaultValue={
+                            userDetails.interests[3].name
                               ? userDetails.interests[3].name
                               : interest4
                           }
                           onChangeText={(value) => setInterest4(value)}
                           placeholder={
-                            userDetails.interests.length > 3
+                            userDetails.interests[3].name
                               ? userDetails.interests[3].name
                               : 'Phoenix Mercury'
                           }
