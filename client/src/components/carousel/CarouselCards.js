@@ -1,12 +1,18 @@
 import React, { useState, useRef } from 'react';
 import { View, Dimensions, StyleSheet, Image } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Dimensions.get('window').width - 30;
 
 const CarouselCardItem = ({ item }) => {
-  return <Image source={{ uri: item.imgUrl }} style={styles.image} />;
+  return (
+    <Image
+      source={{ uri: item.imgUrl }}
+      style={styles.image}
+      resizeMode="contain"
+    />
+  );
 };
 
 const CarouselCards = ({ images }) => {
@@ -35,7 +41,12 @@ const CarouselCards = ({ images }) => {
 
 const styles = StyleSheet.create({
   image: {
-    height: SLIDER_WIDTH,
+    // height: SLIDER_WIDTH,
+    // width: ITEM_WIDTH,
+    height: ITEM_WIDTH,
+    // backgroundColor: 'orange',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
