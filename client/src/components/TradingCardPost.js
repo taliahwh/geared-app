@@ -14,7 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 // Components
 import CarouselCards from './carousel/CarouselCards';
 
-const SLIDER_HEIGHT = Dimensions.get('window').width + 10;
+const ITEM_WIDTH = Dimensions.get('window').width - 30;
 
 const TradingCardPost = ({
   forSale,
@@ -24,6 +24,7 @@ const TradingCardPost = ({
   description,
   location,
   profileImage,
+  id,
 }) => {
   // const [comment, setComment] = useState('');
   const navigation = useNavigation();
@@ -43,15 +44,14 @@ const TradingCardPost = ({
             <TouchableOpacity
               onPress={() => {
                 /* 1. Navigate to the Details route with params */
-                navigation.navigate('User Profile', {
-                  itemId: 86,
-                  otherParam: 'anything you want here',
+                navigation.navigate('Profile Details', {
+                  userId: id,
                 });
               }}
             >
               <Text style={styles.username}>{username}</Text>
             </TouchableOpacity>
-            <Text style={styles.location}>{location}</Text>
+            {location && <Text style={styles.location}>{location}</Text>}
           </View>
         </View>
         <View style={styles.info}>
@@ -109,7 +109,9 @@ const TradingCardPost = ({
       )}
 
       <Text style={styles.viewComments}>View all 13 comments</Text>
-      <View style={styles.commentsContainer}>
+
+      <Text style={styles.timePosted}>1 HOUR AGO</Text>
+      {/* <View style={styles.commentsContainer}>
         <Image
           style={styles.commentingUserImage}
           source={{
@@ -120,7 +122,7 @@ const TradingCardPost = ({
           <Text style={styles.placeholder}>Say something..</Text>
         </View>
         <Text style={styles.sendBtn}>SEND</Text>
-      </View>
+      </View> */}
       {/* <Text>tags</Text> */}
     </View>
   );
@@ -148,6 +150,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginHorizontal: 15,
     paddingTop: 11,
+    paddingBottom: 20,
     marginTop: 15,
     borderRadius: 5,
     display: 'flex',
@@ -207,13 +210,13 @@ const styles = StyleSheet.create({
   imageContainer: {
     paddingTop: 7,
     paddingHorizontal: 15,
-    height: SLIDER_HEIGHT,
+    height: ITEM_WIDTH,
     display: 'flex',
     alignItems: 'center',
   },
   buttonContainer: {
     paddingHorizontal: 15,
-    paddingTop: 5,
+    paddingTop: 10,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -237,7 +240,7 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     paddingHorizontal: 15,
-    paddingTop: 7,
+    paddingTop: 10,
   },
   usernameFont: {
     fontWeight: '500',
@@ -247,6 +250,12 @@ const styles = StyleSheet.create({
   viewComments: {
     paddingTop: 7,
     paddingHorizontal: 15,
+    color: '#A8A8A8',
+  },
+  timePosted: {
+    paddingTop: 10,
+    paddingHorizontal: 15,
+    fontSize: 11,
     color: '#A8A8A8',
   },
   commentsContainer: {
