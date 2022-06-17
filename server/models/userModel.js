@@ -36,6 +36,24 @@ const userSchema = new mongoose.Schema(
     },
     interests: {
       type: [Object],
+      default: [
+        {
+          id: 1,
+          name: null,
+        },
+        {
+          id: 2,
+          name: null,
+        },
+        {
+          id: 3,
+          name: null,
+        },
+        {
+          id: 4,
+          name: null,
+        },
+      ],
     },
     savedPosts: {
       type: [postSchema],
