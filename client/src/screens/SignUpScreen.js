@@ -139,6 +139,7 @@ const SignUpScreen = () => {
                 placeholderTextColor={'#a1a1aa'}
                 autoCapitalize="none"
                 autoComplete="email"
+                autoCorrect={false}
                 returnKeyType="next"
                 ref={emailRef}
                 onSubmitEditing={() => {
@@ -153,6 +154,7 @@ const SignUpScreen = () => {
                 placeholder="Username"
                 placeholderTextColor={'#a1a1aa'}
                 autoCapitalize="none"
+                autoCorrect={false}
                 returnKeyType="next"
                 ref={usernameRef}
                 onSubmitEditing={() => {
