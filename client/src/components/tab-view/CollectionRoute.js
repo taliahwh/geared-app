@@ -7,7 +7,7 @@ import CollectionGrid from '../CollectionGrid';
 
 const CollectionRoute = () => {
   return (
-    <View style={styles.container}>
+    <View style={styles.collectionContainter}>
       <ProfileHeader />
       <CollectionGrid />
     </View>
@@ -15,7 +15,7 @@ const CollectionRoute = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  collectionContainter: {
     flex: 1,
   },
 });
