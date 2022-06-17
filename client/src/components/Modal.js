@@ -16,7 +16,14 @@ import { Ionicons } from '@expo/vector-icons';
 
 const containerHeight = Dimensions.get('window').height / 2;
 
-const Modal = ({ modal = false, closeModal, header, input }) => {
+const Modal = ({
+  modal = false,
+  closeModal,
+  header,
+  input,
+  clearModalIcon,
+  clearInterestInputs,
+}) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -26,9 +33,15 @@ const Modal = ({ modal = false, closeModal, header, input }) => {
         {modal && (
           <View style={[styles.inner, { height: containerHeight }]}>
             <View style={styles.headerContainer}>
-              <Pressable onPress={closeModal}>
-                <Ionicons name="close-outline" size={26} color="#ef4444" />
-              </Pressable>
+              {clearModalIcon ? (
+                <Pressable onPress={clearInterestInputs}>
+                  <Text style={{ color: '#ef4444', fontSize: 13 }}>CLEAR</Text>
+                </Pressable>
+              ) : (
+                <Pressable onPress={closeModal}>
+                  <Ionicons name="close-outline" size={26} color="#ef4444" />
+                </Pressable>
+              )}
 
               <Text style={styles.headerTitle}>{header}</Text>
               <Pressable onPress={closeModal}>
