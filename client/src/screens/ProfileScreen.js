@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Text, View, StyleSheet, Dimensions, StatusBar } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
-import CollectionRoute from '../components/tab-view/CollectionRoute';
+import AuthCollectionRoute from '../components/AuthProfile/AuthCollectionRoute';
 import LikesRoute from '../components/tab-view/LikesRoute';
 import SavedRoute from '../components/tab-view/SavedRoute';
 import ReviewsRoute from '../components/tab-view/ReviewsRoute';
@@ -12,7 +12,7 @@ import TestRoute from '../components/tab-view/TestRoute';
 const initialLayout = { width: Dimensions.get('window').width };
 
 const renderScene = SceneMap({
-  collection: CollectionRoute,
+  collection: AuthCollectionRoute,
   likes: LikesRoute,
   saved: SavedRoute,
   reviews: ReviewsRoute,
