@@ -23,6 +23,7 @@ const Modal = ({
   input,
   clearModalIcon,
   clearInterestInputs,
+  hideCheckBtn,
 }) => {
   return (
     <KeyboardAvoidingView
@@ -44,9 +45,17 @@ const Modal = ({
               )}
 
               <Text style={styles.headerTitle}>{header}</Text>
-              <Pressable onPress={closeModal}>
-                <Ionicons name="ios-checkmark-sharp" size={24} color="black" />
-              </Pressable>
+              {hideCheckBtn ? (
+                <Ionicons name="ios-checkmark-sharp" size={24} color="white" />
+              ) : (
+                <Pressable onPress={closeModal}>
+                  <Ionicons
+                    name="ios-checkmark-sharp"
+                    size={24}
+                    color="black"
+                  />
+                </Pressable>
+              )}
             </View>
             <ScrollView>{input}</ScrollView>
           </View>
