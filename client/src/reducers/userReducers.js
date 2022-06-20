@@ -14,7 +14,12 @@ import {
   UPDATE_USER_PROFILE_REQUEST,
   UPDATE_USER_PROFILE_SUCCESS,
   UPDATE_USER_PROFILE_FAILURE,
+  UPDATE_PASSWORD_REQUEST,
+  UPDATE_PASSWORD_SUCCESS,
+  UPDATE_PASSWORD_FAILURE,
   CLEAR_PROFILE_DATA,
+  CLEAR_PASSWORD_DATA,
+  CLEAR_POSTS_DATA,
   USER_LOGOUT,
 } from '../constants/userConstants';
 
@@ -93,6 +98,8 @@ export const userPostsReducer = (state = { posts: [] }, action) => {
       };
     case USER_POSTS_FAILURE:
       return { loading: false, error: action.payload };
+    case CLEAR_POSTS_DATA:
+      return {};
     default:
       return state;
   }
@@ -111,10 +118,27 @@ export const userUpdateProfileReducer = (state = {}, action) => {
     case UPDATE_USER_PROFILE_FAILURE:
       return { loading: false, error: action.payload };
     case CLEAR_PROFILE_DATA:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const userUpdatePasswordReducer = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_PASSWORD_REQUEST:
+      return { loading: true };
+    case UPDATE_PASSWORD_SUCCESS:
       return {
         loading: false,
-        success: false,
+        success: true,
+        message: action.payload.message,
       };
+    case UPDATE_PASSWORD_FAILURE:
+      return { loading: false, error: action.payload };
+    case CLEAR_PASSWORD_DATA:
+      return {};
+
     default:
       return state;
   }
