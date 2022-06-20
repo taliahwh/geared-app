@@ -159,47 +159,46 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 
-  // // Password check
-  // if (newPassword && !newConfirmPassword) {
-  //   res.status(401);
-  //   throw new Error('Confirm password is required');
-  // }
-
-  // if (newPassword && newPassword !== confirmPassword) {
-  //   res.status(400);
-  //   throw new Error('Passwords do not match. Please try again.');
-  // }
-
-  // // Password strength requirement (uppercase, lowercase, number and special char)
-  // if (newPassword && newPassword.length < 8) {
-  //   res.status(400);
-  //   throw new Error('Password must be at least 8 characters.');
-  // }
-
-  // const hasUpperCase = /[A-Z]/.test(newPassword);
-  // const hasLowerCase = /[a-z]/.test(newPassword);
-  // const hasNumbers = /\d/.test(newPassword);
-  // const hasNonalphas = /\W/.test(newPassword);
-  // if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasNonalphas) {
-  //   res.status(400);
-  //   throw new Error(
-  //     'Password must be at least 8 characters, contain an upper and lowercase letter, a number, and special character.'
-  //   );
-  // }
-
-  // const hashedPassword = await bcrypt.hash(password, 12);
-
+  // Update user's profile image, bio, name, and website if entered in form
   user.profileImage = newProfileImage || user.profileImage;
   user.bio = newBio || user.bio;
-  // user.interests[0].name = interest1 || user.interests[0].name;
-  // user.interests[1].name = interest2 || user.interests[1].name;
-  // user.interests[2].name = interest3 || user.interests[2].name;
-  // user.interests[3].name = interest4 || user.interests[3].name;
   user.name = newFullName || user.name;
   user.website = newWebsite || user.website;
-
   const updatedUser = await user.save();
-  // console.log(updatedUser);
+
+  // Update user's interests
+  await User.updateMany(
+    { _id: userId },
+    {
+      $set: {
+        'interests.0.name': interest1 || user.interests[0].name,
+      },
+    }
+  );
+  await User.updateMany(
+    { _id: userId },
+    {
+      $set: {
+        'interests.1.name': interest2 || user.interests[1].name,
+      },
+    }
+  );
+  await User.updateMany(
+    { _id: userId },
+    {
+      $set: {
+        'interests.2.name': interest3 || user.interests[2].name,
+      },
+    }
+  );
+  await User.updateMany(
+    { _id: userId },
+    {
+      $set: {
+        'interests.3.name': interest4 || user.interests[3].name,
+      },
+    }
+  );
 
   res.status(200).json({
     _id: updatedUser._id,
@@ -211,6 +210,54 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     website: updatedUser.website,
     token: generateToken(updatedUser._id),
   });
+});
+
+// @desc Update user password
+// @route PUT /api/users/password
+// @access Private
+const updateUserPassword = asyncHandler(async (req, res) => {
+  const { id: userId } = req.user;
+  const { newPassword, confirmPassword } = req.body;
+  const user = await User.findById(userId);
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  // Password check
+  if (newPassword && !confirmPassword) {
+    res.status(401);
+    throw new Error('Confirm password is required');
+  }
+
+  if (newPassword && newPassword !== confirmPassword) {
+    res.status(400);
+    throw new Error('Passwords do not match.');
+  }
+
+  // Password strength requirement (uppercase, lowercase, number and special char)
+  if (newPassword && newPassword.length < 8) {
+    res.status(400);
+    throw new Error('Password must be at least 8 characters.');
+  }
+
+  const hasUpperCase = /[A-Z]/.test(newPassword);
+  const hasLowerCase = /[a-z]/.test(newPassword);
+  const hasNumbers = /\d/.test(newPassword);
+  const hasNonalphas = /\W/.test(newPassword);
+  if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasNonalphas) {
+    res.status(400);
+    throw new Error(
+      'Password must be at least 8 characters, contain an upper and lowercase letter, a number, and special character.'
+    );
+  }
+
+  const newHashedPassword = await bcrypt.hash(newPassword, 12);
+  user.password = newHashedPassword;
+  await user.save();
+
+  res.status(200).json({ message: 'Password successfully updated' });
 });
 
 // @desc Get user details by id
@@ -233,7 +280,7 @@ const getUserDetails = asyncHandler(async (req, res) => {
  * @access Public
  */
 const getPostsByUserId = asyncHandler(async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.params;
   const user = await User.findById(id);
 
   if (!user) {
@@ -255,4 +302,11 @@ const getPostsByUserId = asyncHandler(async (req, res) => {
   res.status(200).json(userCollection);
 });
 
-export { signIn, signUp, getUserDetails, getPostsByUserId, updateUserProfile };
+export {
+  signIn,
+  signUp,
+  getUserDetails,
+  getPostsByUserId,
+  updateUserProfile,
+  updateUserPassword,
+};
