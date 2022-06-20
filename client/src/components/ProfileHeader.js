@@ -28,15 +28,16 @@ import AlertMessage from '../components/AlertMessage';
 import { logout, getUserDetails } from '../actions/userActions';
 
 const TagRender = ({ name }) => <Text style={styles.tags}>{name}</Text>;
+
 const Separator = () => {
   return <View style={{ width: 1, backgroundColor: '#fff' }} />;
 };
 
-const ProfileHeader = () => {
+const ProfileHeader = ({ userId }) => {
   const dispatch = useDispatch();
 
   // State from redux
-  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
+  // const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
   const {
     loading: loadingUserDetails,
     userDetails,
@@ -132,7 +133,9 @@ const ProfileHeader = () => {
               {/* <Text style={styles.lookingFor}>Collecting:</Text> */}
               <FlatList
                 data={userDetails.interests}
-                renderItem={({ item }) => <TagRender name={item.name} />}
+                renderItem={({ item }) =>
+                  item.name !== null && <TagRender name={item.name} />
+                }
                 keyExtractor={(item) => item.id}
                 ItemSeparatorComponent={Separator}
                 horizontal={true}
