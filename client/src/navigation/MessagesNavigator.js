@@ -40,11 +40,6 @@ const MessagesNavigator = () => {
           },
         }}
       />
-      <Stack.Screen
-        name="Post Details"
-        component={PostDetailsScreen}
-        options={{ headerTitle: '', headerBackTitleVisible: false }}
-      />
     </Stack.Navigator>
   );
 };
