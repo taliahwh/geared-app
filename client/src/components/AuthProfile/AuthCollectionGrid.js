@@ -21,23 +21,7 @@ import { getUserPosts } from '../../actions/userActions';
 
 const thirdWindowWidth = Dimensions.get('window').width / 3;
 
-const bam = Asset.fromModule(require('../../assets/test-images/IMG_1676.jpg'));
-const tatum = Asset.fromModule(
-  require('../../assets/test-images/IMG_1676.jpg')
-);
-
-const IMAGES = [
-  {
-    id: 1,
-    name: 'Bam Adebayo',
-    src: bam,
-  },
-  {
-    id: 2,
-    name: 'Jayson Tatum',
-    src: tatum,
-  },
-];
+import { CLEAR_POSTS_DATA } from '../../constants/userConstants';
 
 const ImageRender = ({ src }) => {
   return (
