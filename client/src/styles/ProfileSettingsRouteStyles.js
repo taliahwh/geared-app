@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    // justifyContent: 'space-between',
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderColor: '#d4d4d4',
@@ -150,6 +151,12 @@ const styles = StyleSheet.create({
     borderColor: '#000000',
     paddingHorizontal: 10,
   },
+  modalInputTitle: {
+    textAlign: 'center',
+    fontSize: 13,
+    fontWeight: '500',
+    textTransform: 'uppercase',
+  },
 
   modalContainer: {
     paddingHorizontal: 20,
@@ -169,6 +176,30 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingVertical: 7,
     paddingHorizontal: 7,
+  },
+  modalInputContainer: {
+    display: 'flex',
+    // flexDirection: 'row',
+    alignItems: 'center',
+    // backgroundColor: 'orange',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: '#d4d4d4',
+  },
+  modalInputTitle: {
+    width: '100%',
+    // backgroundColor: 'pink',
+    // textAlign: 'center',
+    // fontSize: 13,
+    marginBottom: 5,
+    fontWeight: '500',
+    color: '#525252',
+  },
+  modalInputSection: {
+    // backgroundColor: 'orange',
+    width: '100%',
+    // marginRight: 15,
+    color: '#000',
   },
 });
 
