@@ -18,24 +18,9 @@ import AlertMessage from './AlertMessage';
 
 // Actions
 import { getUserPosts } from '../actions/userActions';
+import { CLEAR_POSTS_DATA } from '../constants/userConstants';
 
 const thirdWindowWidth = Dimensions.get('window').width / 3;
-
-const bam = Asset.fromModule(require('../assets/test-images/IMG_1676.jpg'));
-const tatum = Asset.fromModule(require('../assets/test-images/tatum.jpg'));
-
-const IMAGES = [
-  {
-    id: 1,
-    name: 'Bam Adebayo',
-    src: bam,
-  },
-  {
-    id: 2,
-    name: 'Jayson Tatum',
-    src: tatum,
-  },
-];
 
 const ImageRender = ({ src }) => {
   return (
@@ -48,13 +33,12 @@ const Separator = () => {
   return <View style={{ width: 1, backgroundColor: '#fff' }} />;
 };
 
-const CollectionGrid = () => {
+const CollectionGrid = ({ userId }) => {
   // Hooks
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   // State from redux
-  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
   const {
     loading: loadingUserPosts,
     posts,
@@ -66,8 +50,6 @@ const CollectionGrid = () => {
       dispatch(getUserPosts(userId));
     }, [dispatch])
   );
-
-  // console.log(userId);
 
   return (
     <>
