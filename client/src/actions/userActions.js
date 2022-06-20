@@ -14,6 +14,9 @@ import {
   UPDATE_USER_PROFILE_REQUEST,
   UPDATE_USER_PROFILE_SUCCESS,
   UPDATE_USER_PROFILE_FAILURE,
+  UPDATE_PASSWORD_REQUEST,
+  UPDATE_PASSWORD_SUCCESS,
+  UPDATE_PASSWORD_FAILURE,
   USER_LOGOUT,
 } from '../constants/userConstants';
 
@@ -198,6 +201,40 @@ export const updateProfile =
     } catch (error) {
       dispatch({
         type: UPDATE_USER_PROFILE_FAILURE,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const updatePassword =
+  (newPassword, confirmPassword) => async (dispatch, getState) => {
+    const { authToken } = getState().userSignIn;
+    try {
+      dispatch({ type: UPDATE_PASSWORD_REQUEST });
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      };
+
+      const { data } = await gearedApi.put(
+        '/api/users/password',
+        {
+          newPassword,
+          confirmPassword,
+        },
+        config
+      );
+
+      dispatch({ type: UPDATE_PASSWORD_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: UPDATE_PASSWORD_FAILURE,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message
