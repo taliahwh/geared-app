@@ -1,43 +1,18 @@
 import React, { useState } from 'react';
 
-import { Text, View, StyleSheet, Dimensions, StatusBar } from 'react-native';
-import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { View, StyleSheet, Dimensions, StatusBar } from 'react-native';
 
-import CollectionRoute from '../components/tab-view/CollectionRoute';
-import ReviewsRoute from '../components/tab-view/ReviewsRoute';
+// Components
+import ProfileHeader from '../components/ProfileHeader';
+import CollectionGrid from '../components/CollectionGrid';
 
-const initialLayout = { width: Dimensions.get('window').width };
-
-const renderScene = SceneMap({
-  collection: CollectionRoute,
-  reviews: ReviewsRoute,
-});
-
-const renderTabBar = (props) => (
-  <TabBar
-    {...props}
-    indicatorStyle={styles.indicator}
-    style={styles.tabBar}
-    renderLabel={({ route }) => <Text style={styles.label}>{route.title}</Text>}
-  />
-);
-
-const ViewUserProfileScreen = () => {
-  const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    { key: 'collection', title: 'Collection' },
-    { key: 'reviews', title: 'Reviews' },
-  ]);
-
+const ViewUserProfileScreen = ({ route }) => {
+  const { userId } = route.params;
   return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={initialLayout}
-      style={styles.container}
-      renderTabBar={renderTabBar}
-    />
+    <View style={styles.collectionContainter}>
+      <ProfileHeader userId={userId} />
+      <CollectionGrid userId={userId} />
+    </View>
   );
 };
 
@@ -57,6 +32,9 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     backgroundColor: '#fff',
+  },
+  collectionContainter: {
+    flex: 1,
   },
 });
 
