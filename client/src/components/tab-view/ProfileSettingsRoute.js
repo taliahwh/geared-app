@@ -8,8 +8,6 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-import { useForm, Controller } from 'react-hook-form';
-import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -25,33 +23,50 @@ import AlertMessage from '../AlertMessage';
 import styles from '../../styles/ProfileSettingsRouteStyles';
 
 // Actions
-import { getUserDetails, updateProfile } from '../../actions/userActions';
+import {
+  getUserDetails,
+  updateProfile,
+  updatePassword,
+} from '../../actions/userActions';
+import {
+  CLEAR_PASSWORD_DATA,
+  CLEAR_POSTS_DATA,
+  CLEAR_PROFILE_DATA,
+} from '../../constants/userConstants';
 
 const ProfileSettingsRoute = () => {
   // Hooks
-  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   // Redux state
   const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
+
   const {
     loading: loadingUserDetails,
     userDetails,
     error: errorUserDetails,
   } = useSelector((state) => state.userDetails);
+
   const { error: errorUpdateProfile, success: successUpdateProfile } =
     useSelector((state) => state.userUpdateProfile);
+
+  const {
+    error: errorUpdatePassword,
+    success: successUpdatePassword,
+    message: messageUpdatePassword,
+  } = useSelector((state) => state.userUpdatePassword);
 
   // console.log(successUpdateProfile);
 
   // Modals
   const [interestsModalVisible, setInterestsModalVisible] = useState(false);
   const [bioModalVisible, setBioModalVisible] = useState(false);
+  const [passwordModalVisible, setPasswordModalVisible] = useState(false);
 
   // Form state
   const [bio, setBio] = useState('');
   const [fullName, setFullName] = useState('');
-  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [profileImage, setProfileImage] = useState(null);
   const [interest1, setInterest1] = useState('');
@@ -65,6 +80,11 @@ const ProfileSettingsRoute = () => {
       Alert.alert('Profile Updated', 'Profile updated successfully', [
         { text: 'OK', onPress: () => console.log('OK Pressed') },
       ]);
+
+    errorUpdateProfile &&
+      Alert.alert('Something went wrong', errorUpdateProfile, [
+        { text: 'OK', onPress: () => console.log('OK Pressed') },
+      ]);
   };
 
   const clearInterests = () => {
@@ -74,60 +94,11 @@ const ProfileSettingsRoute = () => {
     setInterest4('');
   };
 
+  const handleNewPassword = (newPassword, confirmPassword) => {
+    dispatch(updatePassword(newPassword, confirmPassword));
+  };
+
   const handleSubmit = (data) => {
-    // const interests = [];
-    // interest1
-    //   ? interests.push({
-    //       id: 1,
-    //       name: interest1,
-    //     })
-    //   : userDetails.interests.length >= 1
-    //   ? interests.push({
-    //       id: 1,
-    //       name: userDetails.interests[0].name,
-    //     })
-    //   : null;
-
-    // interest2
-    //   ? interests.push({
-    //       id: 2,
-    //       name: interest2,
-    //     })
-    //   : userDetails.interests.length >= 2
-    //   ? interests.push({
-    //       id: 2,
-    //       name: userDetails.interests[1].name,
-    //     })
-    //   : null;
-
-    // interest3
-    //   ? interests.push({
-    //       id: 3,
-    //       name: interest3,
-    //     })
-    //   : userDetails.interests.length >= 3
-    //   ? interests.push({
-    //       id: 3,
-    //       name: userDetails.interests[2].name,
-    //     })
-    //   : null;
-
-    // interest4
-    //   ? interests.push({
-    //       id: 4,
-    //       name: interest4,
-    //     })
-    //   : userDetails.interests.length === 4
-    //   ? interests.push({
-    //       id: 4,
-    //       name: userDetails.interests[3].name,
-    //     })
-    //   : null;
-
-    console.log(interest1);
-    console.log(interest2);
-    console.log(interest3);
-    console.log(interest4);
     dispatch(
       updateProfile(
         profileImage,
@@ -140,7 +111,7 @@ const ProfileSettingsRoute = () => {
         website
       )
     );
-    // handleAlertMessage();
+    handleAlertMessage();
   };
 
   const pickImage = async () => {
@@ -157,17 +128,19 @@ const ProfileSettingsRoute = () => {
     }
   };
 
-  // Will be called right before leaving the dashboard tab
-  // useEffect(() => {
-  //   return () => {
-  //     console.log('Leaving screen');
-  //   };
-  // }, []);
-
   // Will be called every time the dashboard tab is focused
   useFocusEffect(
     React.useCallback(() => {
       dispatch(getUserDetails(userId));
+
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+        console.log('UNFOCUSED');
+        dispatch({ type: CLEAR_PASSWORD_DATA });
+        dispatch({ type: CLEAR_PROFILE_DATA });
+        dispatch({ type: CLEAR_POSTS_DATA });
+      };
     }, [dispatch])
   );
 
@@ -215,22 +188,18 @@ const ProfileSettingsRoute = () => {
               />
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.inputTitle}>Password</Text>
+            <TouchableOpacity onPress={() => setPasswordModalVisible(true)}>
+              <View style={styles.flexInputContainer}>
+                <Text style={styles.flexInputTitle}>Password</Text>
 
-              <TextInput
-                style={styles.inputSection}
-                value={password}
-                onChangeText={(value) => setPassword(value)}
-                name="password"
-                placeholder="•••••••••••"
-                placeholderTextColor={'#a1a1aa'}
-                // maxLength={25}
-                secureTextEntry={true}
-                autoCapitalize="none"
-                // textContentType="emailAddress"
-              />
-            </View>
+                <Text style={styles.flexPlaceholderSection}>•••••••</Text>
+                <Ionicons
+                  name="ios-chevron-forward-outline"
+                  size={24}
+                  color="black"
+                />
+              </View>
+            </TouchableOpacity>
 
             <View style={styles.imageInputContainer}>
               <Text style={styles.inputTitle}>Picture</Text>
@@ -472,6 +441,77 @@ const ProfileSettingsRoute = () => {
                           maxLength={128}
                         />
                       </View>
+                    </View>
+                  }
+                />
+              </Modal>
+            </View>
+
+            {/* Password Modal */}
+            <View style={styles.centeredView}>
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={passwordModalVisible}
+                onRequestClose={() => {
+                  AlertMessage.AlertMessage('Modal has been closed.');
+                  setPasswordModalVisible(!passwordModalVisible);
+                }}
+              >
+                <ModalComponent
+                  header={'Password'}
+                  hideCheckBtn
+                  closeModal={() => setPasswordModalVisible(false)}
+                  modal={true}
+                  input={
+                    <View style={styles.modalContainer}>
+                      <View style={styles.interestTagContainer}>
+                        <View style={styles.modalInputContainer}>
+                          {errorUpdatePassword && (
+                            <AlertMessage>{errorUpdatePassword}</AlertMessage>
+                          )}
+
+                          {successUpdatePassword && (
+                            <AlertMessage success>
+                              {messageUpdatePassword}
+                            </AlertMessage>
+                          )}
+                          <Text style={styles.modalInputTitle}>
+                            New password
+                          </Text>
+
+                          <TextInput
+                            style={styles.modalInputSection}
+                            secureTextEntry
+                            onChangeText={(value) => setNewPassword(value)}
+                            name="newPassword"
+                            placeholderTextColor={'#a1a1aa'}
+                            maxLength={25}
+                          />
+                        </View>
+                        <View style={styles.modalInputContainer}>
+                          <Text style={styles.modalInputTitle}>
+                            Confirm password
+                          </Text>
+
+                          <TextInput
+                            style={styles.modalInputSection}
+                            secureTextEntry
+                            onChangeText={(value) => setConfirmPassword(value)}
+                            name="confirmNewPassword"
+                            placeholderTextColor={'#a1a1aa'}
+                            maxLength={25}
+                          />
+                        </View>
+                      </View>
+
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleNewPassword(newPassword, confirmPassword)
+                        }
+                      >
+                        <Text style={styles.btn}>Set new password</Text>
+                      </TouchableOpacity>
                     </View>
                   }
                 />
