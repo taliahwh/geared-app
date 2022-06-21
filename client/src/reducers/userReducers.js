@@ -20,6 +20,7 @@ import {
   CLEAR_PROFILE_DATA,
   CLEAR_PASSWORD_DATA,
   CLEAR_POSTS_DATA,
+  CLEAR_SIGN_UP_DATA,
   USER_LOGOUT,
 } from '../constants/userConstants';
 
@@ -65,7 +66,7 @@ export const userSignUpReducer = (state = {}, action) => {
       return { loading: false, success: true, userInfo: action.payload };
     case USER_SIGN_UP_FAILURE:
       return { loading: false, error: action.payload };
-    case USER_LOGOUT:
+    case CLEAR_SIGN_UP_DATA:
       return {};
     default:
       return state;
