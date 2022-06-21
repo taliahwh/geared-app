@@ -40,6 +40,10 @@ const ExploreRoute = () => {
         profileImage={item.listedBy.profileImage}
         location={item.listedBy.location}
         id={item.listedBy.userId}
+        tags={item.tags}
+        showcase={item.showcase}
+        offers={item.openToOffers}
+        forSale={item.forSale}
       />
     );
   };
