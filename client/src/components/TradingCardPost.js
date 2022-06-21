@@ -6,7 +6,7 @@ import {
   Image,
   StyleSheet,
   Dimensions,
-  Button,
+  FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,19 +16,27 @@ import CarouselCards from './carousel/CarouselCards';
 
 const ITEM_WIDTH = Dimensions.get('window').width - 30;
 
+const TagRender = ({ item }) => {
+  return <Text style={styles.postTags}>{item}</Text>;
+};
+const Separator = () => {
+  return <View style={{ width: 1, backgroundColor: '#fff' }} />;
+};
+
 const TradingCardPost = ({
   forSale,
   offers,
   username,
   images,
   description,
-  location,
   profileImage,
   id,
+  tags,
+  showcase,
 }) => {
   // const [comment, setComment] = useState('');
   const navigation = useNavigation();
-  // console.log(username);
+
   return (
     <View style={styles.container}>
       <View style={styles.headingContainer}>
@@ -51,7 +59,9 @@ const TradingCardPost = ({
             >
               <Text style={styles.username}>{username}</Text>
             </TouchableOpacity>
-            {location && <Text style={styles.location}>{location}</Text>}
+            {forSale && <Text style={styles.listingType}>FOR SALE</Text>}
+            {offers && <Text style={styles.listingType}>OPEN TO OFFERS</Text>}
+            {showcase && <Text style={styles.listingType}>SHOWCASE</Text>}
           </View>
         </View>
         <View style={styles.info}>
@@ -93,57 +103,28 @@ const TradingCardPost = ({
         </View>
       </View>
 
-      <Text style={styles.descriptionContainer}>{description}</Text>
+      <Text style={styles.descriptionContainer}>
+        <Text style={styles.usernameInDescription}>{`${username} `}</Text>
+        {description}
+      </Text>
 
-      {forSale && (
-        <View style={styles.priceContainer}>
-          <Text style={styles.priceLabel}>PRICE:</Text>
-          <Text style={styles.price}>$110</Text>
-        </View>
-      )}
-
-      {offers && (
-        <View>
-          <Text style={styles.tag}>Open to offers</Text>
-        </View>
-      )}
+      <View style={styles.tagsContainer}>
+        <FlatList
+          data={tags}
+          renderItem={({ item }) => item !== '' && <TagRender item={item} />}
+          keyExtractor={(item) => item.id}
+          ItemSeparatorComponent={Separator}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
 
       <Text style={styles.viewComments}>View all 13 comments</Text>
 
       <Text style={styles.timePosted}>1 HOUR AGO</Text>
-      {/* <View style={styles.commentsContainer}>
-        <Image
-          style={styles.commentingUserImage}
-          source={{
-            uri: 'https://i.pinimg.com/originals/d8/aa/8f/d8aa8f6987714957e06ce0fb416641ef.jpg',
-          }}
-        />
-        <View style={styles.commentInput}>
-          <Text style={styles.placeholder}>Say something..</Text>
-        </View>
-        <Text style={styles.sendBtn}>SEND</Text>
-      </View> */}
-      {/* <Text>tags</Text> */}
     </View>
   );
 };
-
-// {/* <View style={styles.descriptionContainer}>
-// <Text>
-//   <TouchableOpacity
-//     onPress={() => {
-//       /* 1. Navigate to the Details route with params */
-//       navigation.navigate('User Profile', {
-//         itemId: 86,
-//         otherParam: 'anything you want here',
-//       });
-//     }}
-//   >
-//     <Text style={styles.usernameFont}>{username}</Text>
-//   </TouchableOpacity>
-//   2017-2018 Bam Adebayo Panini Contenders Rookie Auto 49/65
-// </Text>
-// </View> */}
 
 const styles = StyleSheet.create({
   container: {
@@ -161,8 +142,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.18,
     shadowRadius: 1.0,
-
     elevation: 1,
+    zIndex: 1,
   },
   headingContainer: {
     paddingHorizontal: 15,
@@ -204,7 +185,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
   },
-  location: {
+  usernameInDescription: {
+    fontWeight: '500',
+    paddingRight: 5,
+  },
+  listingType: {
     fontSize: 13,
   },
   imageContainer: {
@@ -311,15 +296,21 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 15,
   },
-  tag: {
-    marginTop: 5,
-    marginLeft: 13,
-    width: 105,
+
+  tagsContainer: {
+    // backgroundColor: 'pink',
+    marginTop: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
+  postTags: {
     marginRight: 10,
     fontSize: 13,
     fontWeight: '500',
-    color: 'white',
-    backgroundColor: '#3E5E7E',
+    color: '#7390AD',
+    backgroundColor: '#F1F1F1',
     paddingHorizontal: 7,
     paddingVertical: 3,
     borderRadius: 10,
