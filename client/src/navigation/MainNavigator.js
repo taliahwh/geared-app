@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-native';
+import { createNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -17,6 +17,14 @@ import HomeScreenNavigator from './HomeScreenNavigator';
 import ProfileNavigator from './ProfileNavigator';
 import DashboardNavigator from './DashboardNavigator';
 import MessagesNavigator from './MessagesNavigator';
+
+export const navigationRef = createNavigationContainerRef();
+
+export const navigate = (name, params) => {
+  if (navigationRef.isReady()) {
+    navigationRef.navigate(name, params);
+  }
+};
 
 const Tab = createBottomTabNavigator();
 
