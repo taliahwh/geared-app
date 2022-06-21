@@ -127,12 +127,14 @@ const AuthProfileHeader = () => {
             </Text>
           )}
 
-          {userDetails.interests && (
+          {/* Checks if the interests arr is empty */}
+          {userDetails.interests && userDetails.interests[0].name !== null && (
             <View style={styles.tagsContainer}>
-              {/* <Text style={styles.lookingFor}>Collecting:</Text> */}
               <FlatList
                 data={userDetails.interests}
-                renderItem={({ item }) => <TagRender name={item.name} />}
+                renderItem={({ item }) =>
+                  item.name !== null && <TagRender name={item.name} />
+                }
                 keyExtractor={(item) => item.id}
                 ItemSeparatorComponent={Separator}
                 horizontal={true}
@@ -210,13 +212,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    paddingBottom: 3,
   },
-  lookingFor: { marginRight: 7 },
   tags: {
     marginRight: 10,
     fontSize: 13,
     fontWeight: '500',
-    color: '#a3a3a3',
+    color: '#7390AD',
+    // color: '#a3a3a3',
     backgroundColor: '#F1F1F1',
     paddingHorizontal: 7,
     paddingVertical: 3,
@@ -230,7 +233,7 @@ const styles = StyleSheet.create({
   followersAndShareContainer: {
     display: 'flex',
     flexDirection: 'row',
-    paddingTop: 10,
+    paddingTop: 7,
     paddingBottom: 3,
   },
   followersContainer: {
