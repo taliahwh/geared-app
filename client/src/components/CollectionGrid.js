@@ -7,6 +7,7 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,7 +56,7 @@ const CollectionGrid = ({ userId }) => {
     <>
       {loadingUserPosts && <Loader />}
       {errorUserPosts && <AlertMessage>{errorUserPosts}</AlertMessage>}
-      {posts && (
+      {posts && posts.length > 0 && (
         <FlatList
           data={posts}
           renderItem={({ item }) => (
@@ -74,6 +75,11 @@ const CollectionGrid = ({ userId }) => {
           keyExtractor={(item) => item.id}
           ItemSeparatorComponent={Separator}
         />
+      )}
+      {posts && posts.length === 0 && (
+        <View style={styles.noPostsContainer}>
+          <Text>No posts yet.</Text>
+        </View>
       )}
     </>
   );
