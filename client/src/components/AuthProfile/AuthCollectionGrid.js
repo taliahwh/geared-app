@@ -1,5 +1,4 @@
 import React from 'react';
-import { Asset } from 'expo-asset';
 import {
   FlatList,
   Image,
@@ -7,6 +6,7 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -59,7 +59,7 @@ const AuthCollectionGrid = () => {
     <>
       {loadingUserPosts && <Loader />}
       {errorUserPosts && <AlertMessage>{errorUserPosts}</AlertMessage>}
-      {posts && (
+      {posts && posts.length > 0 && (
         <FlatList
           data={posts}
           renderItem={({ item }) => (
@@ -79,6 +79,11 @@ const AuthCollectionGrid = () => {
           ItemSeparatorComponent={Separator}
         />
       )}
+      {posts && posts.length === 0 && (
+        <View style={styles.noPostsContainer}>
+          <Text>No posts yet.</Text>
+        </View>
+      )}
     </>
   );
 };
@@ -93,6 +98,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: thirdWindowWidth,
     width: thirdWindowWidth,
+  },
+  noPostsContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
 });
 
