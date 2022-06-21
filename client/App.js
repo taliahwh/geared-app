@@ -9,6 +9,7 @@ import store, { persistor } from './src/store';
 import Loader from './src/components/Loader';
 
 // Navigators
+import { navigationRef } from './src/navigation/RootNavigation';
 import MainNavigator from './src/navigation/MainNavigator';
 import AuthNavigator from './src/navigation/AuthNavigator';
 
@@ -28,7 +29,7 @@ const App = () => {
   const { authToken } = useSelector((state) => state.userSignIn);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       {authToken === null ? <AuthNavigator /> : <MainNavigator />}
     </NavigationContainer>
   );
