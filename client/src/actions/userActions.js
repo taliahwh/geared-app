@@ -22,6 +22,8 @@ import {
 
 import gearedApi from '../api/geared';
 
+import * as RootNavigation from '../navigation/RootNavigation';
+
 export const signIn = (username, password) => async (dispatch) => {
   try {
     dispatch({ type: USER_SIGN_IN_REQUEST });
@@ -55,18 +57,7 @@ export const logout = () => async (dispatch) => {
 };
 
 export const signUp =
-  (
-    firstName,
-    lastName,
-    email,
-    username,
-    password,
-    confirmPassword,
-    dateOfBirth,
-    bio,
-    interests,
-    profileImage
-  ) =>
+  (firstName, lastName, email, username, password, confirmPassword) =>
   async (dispatch) => {
     try {
       dispatch({ type: USER_SIGN_UP_REQUEST });
@@ -86,16 +77,19 @@ export const signUp =
           username,
           password,
           confirmPassword,
-          dateOfBirth,
-          bio,
-          interests,
-          profileImage,
         },
         config
       );
 
       dispatch({ type: USER_SIGN_UP_SUCCESS, payload: data });
-      dispatch({ type: USER_SIGN_IN_SUCCESS, payload: data });
+      RootNavigation.navigate('Sign Up Details', {
+        firstName,
+        lastName,
+        email,
+        username,
+        password,
+        confirmPassword,
+      });
     } catch (error) {
       dispatch({
         type: USER_SIGN_UP_FAILURE,
@@ -235,6 +229,59 @@ export const updatePassword =
     } catch (error) {
       dispatch({
         type: UPDATE_PASSWORD_FAILURE,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const completeSignUp =
+  (
+    dateOfBirth,
+    newProfileImage,
+    newBio,
+    interest1,
+    interest2,
+    interest3,
+    interest4,
+    newFullName,
+    newWebsite
+  ) =>
+  async (dispatch, getState) => {
+    const { token: authToken } = getState().userSignUp.userInfo;
+    try {
+      dispatch({ type: UPDATE_USER_PROFILE_REQUEST });
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      };
+
+      const { data } = await gearedApi.put(
+        '/api/users/profile',
+        {
+          dateOfBirth,
+          newProfileImage,
+          newBio,
+          interest1,
+          interest2,
+          interest3,
+          interest4,
+          newFullName,
+          newWebsite,
+        },
+        config
+      );
+
+      dispatch({ type: USER_SIGN_IN_SUCCESS, payload: data });
+      dispatch({ type: UPDATE_USER_PROFILE_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: UPDATE_USER_PROFILE_FAILURE,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message
