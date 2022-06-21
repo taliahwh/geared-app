@@ -55,17 +55,8 @@ const signIn = asyncHandler(async (req, res) => {
  * @access Public
  */
 const signUp = asyncHandler(async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    username,
-    password,
-    confirmPassword,
-    dateOfBirth,
-    bio,
-    profileImage,
-  } = req.body;
+  const { firstName, lastName, email, username, password, confirmPassword } =
+    req.body;
 
   // Find user by email
   const emailExists = await User.findOne({ email });
@@ -112,11 +103,6 @@ const signUp = asyncHandler(async (req, res) => {
     email,
     username,
     password: hashedPassword,
-    dateOfBirth,
-    bio: bio || '',
-    profileImage:
-      profileImage ||
-      'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
   });
 
   if (user) {
@@ -125,9 +111,6 @@ const signUp = asyncHandler(async (req, res) => {
       name: `${firstName} ${lastName}`,
       username: user.username,
       email: user.email,
-      dateOfBirth,
-      bio,
-      profileImage,
       token: generateToken(user._id),
     });
   } else {
@@ -142,6 +125,7 @@ const signUp = asyncHandler(async (req, res) => {
 const updateUserProfile = asyncHandler(async (req, res) => {
   const { id: userId } = req.user;
   const {
+    dateOfBirth,
     newProfileImage,
     newBio,
     interest1,
@@ -164,6 +148,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   user.bio = newBio || user.bio;
   user.name = newFullName || user.name;
   user.website = newWebsite || user.website;
+  user.dateOfBirth = dateOfBirth;
   const updatedUser = await user.save();
 
   // Update user's interests
@@ -206,6 +191,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     email: updatedUser.email,
     profileImage: updatedUser.profileImage,
     bio: updatedUser.bio,
+    dateOfBirth: updatedUser.dateOfBirth,
     interests: updatedUser.interests,
     website: updatedUser.website,
     token: generateToken(updatedUser._id),
