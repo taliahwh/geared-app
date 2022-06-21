@@ -105,14 +105,12 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
             </View>
           </View>
 
-          <View style={styles.descriptionContainer}>
-            <Text>
-              {/* <Text style={styles.usernameFont}>
-                {postDetails.listedBy.username}
-              </Text> */}
-              {postDetails.description}
-            </Text>
-          </View>
+          <Text style={styles.descriptionContainer}>
+            <Text
+              style={styles.usernameInDescription}
+            >{`${postDetails.listedBy.username} `}</Text>
+            {postDetails.description}
+          </Text>
 
           <Text style={styles.viewComments}>View all 13 comments</Text>
 
