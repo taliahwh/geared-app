@@ -12,7 +12,7 @@ import {
   Image,
   Modal,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,7 +25,8 @@ import ModalComponent from '../components/Modal';
 import styles from '../styles/SignUpDetailsScreenStyles';
 
 // Actions
-import { signUp } from '../actions/userActions';
+import { completeSignUp } from '../actions/userActions';
+import { CLEAR_PROFILE_DATA } from '../constants/userConstants';
 
 const SignUpDetailsScreen = ({ route }) => {
   // Hooks
@@ -59,7 +60,17 @@ const SignUpDetailsScreen = ({ route }) => {
   const [interestsModalVisible, setInterestsModalVisible] = useState(false);
 
   // State from redux store
-  const { error: errorSignUp } = useSelector((state) => state.userSignUp);
+  const { error: errorSignIn } = useSelector((state) => state.userSignIn);
+
+  const { error: errorUpdateProfile } = useSelector(
+    (state) => state.userUpdateProfile
+  );
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => dispatch({ type: CLEAR_PROFILE_DATA });
+    }, [dispatch])
+  );
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -111,42 +122,15 @@ const SignUpDetailsScreen = ({ route }) => {
 
     dob = `${dateOfBirth.month}/${dateOfBirth.day}/${dateOfBirth.year}`;
 
-    const interests = [];
-    interest1 &&
-      interests.push({
-        id: 1,
-        name: interest1,
-      });
-    interest2 &&
-      interests.push({
-        id: 2,
-        name: interest2,
-      });
-    interest3 &&
-      interests.push({
-        id: 3,
-        name: interest3,
-      });
-    interest4 &&
-      interests.push({
-        id: 4,
-        name: interest4,
-      });
-
-    // console.log(interests);
-
     dispatch(
-      signUp(
-        firstName,
-        lastName,
-        email,
-        username,
-        password,
-        confirmPassword,
+      completeSignUp(
         dob,
+        profileImage,
         bio,
-        interests,
-        profileImage
+        interest1,
+        interest2,
+        interest3,
+        interest4
       )
     );
   };
@@ -161,7 +145,10 @@ const SignUpDetailsScreen = ({ route }) => {
             <Text style={styles.header}>Set up your account</Text>
 
             <View style={styles.inputContainer}>
-              {errorSignUp && <AlertMessage>{errorSignUp}</AlertMessage>}
+              {errorSignIn && <AlertMessage>{errorSignIn}</AlertMessage>}
+              {errorUpdateProfile && (
+                <AlertMessage>{errorUpdateProfile}</AlertMessage>
+              )}
               <View style={styles.textInputContainer}>
                 <Text style={styles.inputTitle}>Date of birth</Text>
 

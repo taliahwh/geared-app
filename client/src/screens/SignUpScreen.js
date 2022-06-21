@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,14 +11,21 @@ import {
   Keyboard,
   SafeAreaView,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 // Components
 import AlertMessage from '../components/AlertMessage';
+import Loader from '../components/Loader';
+
+// Actions
+import { signUp } from '../actions/userActions';
+import { CLEAR_SIGN_UP_DATA } from '../constants/userConstants';
 
 const SignUpScreen = () => {
   // Hooks
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   // Input state
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -36,58 +43,33 @@ const SignUpScreen = () => {
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
 
+  // Redux state
+  const {
+    loading: loadingSignUp,
+    success: successSignUp,
+    error: errorSignUp,
+  } = useSelector((state) => state.userSignUp);
+
   const handleSubmit = () => {
-    if (!firstName) {
-      setAlertMessage('First name is required');
-      return setShowAlert(true);
-    }
-    if (!lastName) {
-      setAlertMessage('Last name is required');
-      return setShowAlert(true);
-    }
-    if (!email) {
-      setAlertMessage('Email is required');
-      return setShowAlert(true);
-    }
-    if (!password) {
-      setAlertMessage('Password is required');
-      return setShowAlert(true);
-    }
-    if (!confirmPassword) {
-      setAlertMessage('Confirm password is required');
-      return setShowAlert(true);
-    }
-    if (password !== confirmPassword) {
-      setAlertMessage('Passwords do not match');
-      return setShowAlert(true);
-    }
-
-    // Password strength requirement (uppercase, lowercase, number and special char)
-    if (password.length < 8) {
-      setAlertMessage('Password must be at least 8 characters.');
-      return setShowAlert(true);
-    }
-
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    const hasNonalphas = /\W/.test(password);
-    if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasNonalphas) {
-      setAlertMessage(
-        'Password must be at least 8 characters, contain an upper and lowercase letter, a number, and special character.'
-      );
-      return setShowAlert(true);
-    }
-
-    navigation.navigate('Sign Up Details', {
-      firstName,
-      lastName,
-      email,
-      username,
-      password,
-      confirmPassword,
-    });
+    dispatch(
+      signUp(firstName, lastName, email, username, password, confirmPassword)
+    );
+    successSignUp &&
+      navigation.navigate('Sign Up Details', {
+        firstName,
+        lastName,
+        email,
+        username,
+        password,
+        confirmPassword,
+      });
   };
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     return () => dispatch({ type: CLEAR_SIGN_UP_DATA });
+  //   }, [dispatch])
+  // );
 
   return (
     <SafeAreaView style={styles.screenContainer}>
@@ -99,7 +81,8 @@ const SignUpScreen = () => {
             <Text style={styles.logo}>geared</Text>
 
             <View style={styles.inputContainer}>
-              {showAlert && <AlertMessage>{AlertMessageMessage}</AlertMessage>}
+              {loadingSignUp && <Loader />}
+              {errorSignUp && <AlertMessage>{errorSignUp}</AlertMessage>}
 
               <TextInput
                 style={styles.input}
