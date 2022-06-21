@@ -48,6 +48,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
   },
+  usernameInDescription: {
+    fontWeight: '500',
+    paddingRight: 5,
+  },
   location: {
     fontSize: 13,
   },
