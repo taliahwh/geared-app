@@ -18,13 +18,14 @@ const CarouselCardItem = ({ item }) => {
 const CarouselCards = ({ images }) => {
   const isCarousel = useRef(null);
   const [index, setIndex] = useState(0);
+  const uploadedImages = images.filter((image) => image.imgUrl !== null);
 
   return (
     <View>
       <Carousel
         layout="default"
         ref={isCarousel}
-        data={images}
+        data={uploadedImages}
         renderItem={CarouselCardItem}
         sliderWidth={SLIDER_WIDTH}
         itemWidth={ITEM_WIDTH}
