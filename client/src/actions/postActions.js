@@ -11,9 +11,14 @@ import {
   POST_DETAILS_REQUEST,
   POST_DETAILS_SUCCESS,
   POST_DETAILS_FAILURE,
+  LIKE_POST_REQUEST,
+  LIKE_POST_SUCCESS,
+  LIKE_POST_FAILURE,
 } from '../constants/postConstants';
 
 export const getExplorePosts = () => async (dispatch, getState) => {
+  dispatch({ type: EXPLORE_POSTS_REQUEST });
+
   const { authToken } = getState().userSignIn;
   try {
     const config = {
@@ -22,8 +27,6 @@ export const getExplorePosts = () => async (dispatch, getState) => {
         Authorization: `Bearer ${authToken}`,
       },
     };
-
-    dispatch({ type: EXPLORE_POSTS_REQUEST });
 
     const { data } = await geared.get('/api/posts/explore', config);
 
@@ -49,6 +52,8 @@ export const createPost =
     locationValue
   ) =>
   async (dispatch, getState) => {
+    dispatch({ type: CREATE_NEW_POST_REQUEST });
+
     const { authToken } = getState().userSignIn;
     try {
       const config = {
@@ -57,8 +62,6 @@ export const createPost =
           Authorization: `Bearer ${authToken}`,
         },
       };
-
-      dispatch({ type: CREATE_NEW_POST_REQUEST });
 
       const { data } = await geared.post(
         '/api/posts/',
@@ -86,6 +89,8 @@ export const createPost =
   };
 
 export const getPostDetails = (id) => async (dispatch, getState) => {
+  dispatch({ type: POST_DETAILS_REQUEST });
+
   const { authToken } = getState().userSignIn;
   try {
     const config = {
@@ -95,13 +100,36 @@ export const getPostDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    dispatch({ type: POST_DETAILS_REQUEST });
-
     const { data } = await geared.get(`/api/posts/${id}`, config);
 
     dispatch({ type: POST_DETAILS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: POST_DETAILS_FAILURE });
+    console.log(error.message);
+  }
+};
+
+export const likePost = (post) => async (dispatch, getState) => {
+  dispatch({ type: LIKE_POST_REQUEST });
+
+  const { authToken } = getState().userSignIn;
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await geared.put(
+      `/api/posts/${post._id}/likepost`,
+      post,
+      config
+    );
+
+    dispatch({ type: LIKE_POST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: LIKE_POST_FAILURE });
     console.log(error.message);
   }
 };
