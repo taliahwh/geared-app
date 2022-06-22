@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loading: {
-    fontSize: 19,
+    fontSize: 18,
     fontWeight: '600',
     color: '#737373',
     marginTop: 15,
