@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,12 +7,19 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
+import moment from 'moment';
 
 // Components
 import CarouselCards from './carousel/CarouselCards';
+
+// Actions
+import { likePost } from '../actions/postActions';
+import { CLEAR_LIKE_POST_DATA } from '../constants/postConstants';
 
 const ITEM_WIDTH = Dimensions.get('window').width - 30;
 
@@ -30,12 +37,61 @@ const TradingCardPost = ({
   images,
   description,
   profileImage,
-  id,
+  postId,
   tags,
   showcase,
+  datePosted,
+  likesCount,
+  likesIds,
+  post,
 }) => {
-  // const [comment, setComment] = useState('');
+  // Hooks
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  // Redux state
+  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
+  const { success: successLikePost, error: errorLikePost } = useSelector(
+    (state) => state.likePost
+  );
+
+  const Likes = () => {
+    const userLikedPost = likesIds.includes(userId);
+    return (
+      <>
+        {userLikedPost ? (
+          <View style={styles.likeBtnContainer}>
+            <Ionicons name="thumbs-up" size={26} color="black" />
+            <Text style={styles.likeCount}>{likesCount}</Text>
+          </View>
+        ) : (
+          <View style={styles.likeBtnContainer}>
+            <Ionicons name="thumbs-up-outline" size={26} color="black" />
+            <Text style={styles.likeCount}>{likesCount}</Text>
+          </View>
+        )}
+      </>
+    );
+  };
+
+  const handleAlertMessage = () => {
+    errorLikePost &&
+      Alert.alert('Something went wrong', errorLikePost, [
+        {
+          text: 'OK',
+          onPress: () => {
+            console.log('ok pressed');
+          },
+        },
+      ]);
+  };
+
+  const handleLikePost = () => {
+    dispatch(likePost(post));
+    handleAlertMessage();
+  };
+
+  useEffect(() => {}, [successLikePost, errorLikePost]);
 
   return (
     <View style={styles.container}>
@@ -53,15 +109,15 @@ const TradingCardPost = ({
               onPress={() => {
                 /* 1. Navigate to the Details route with params */
                 navigation.navigate('Profile Details', {
-                  userId: id,
+                  userId: postId,
                 });
               }}
             >
               <Text style={styles.username}>{username}</Text>
             </TouchableOpacity>
-            {forSale && <Text style={styles.listingType}>FOR SALE</Text>}
-            {offers && <Text style={styles.listingType}>OPEN TO OFFERS</Text>}
-            {showcase && <Text style={styles.listingType}>SHOWCASE</Text>}
+            {forSale && <Text style={styles.listingType}>FOR SALE 💸</Text>}
+            {offers && <Text style={styles.listingType}>OPEN TO OFFERS❓</Text>}
+            {showcase && <Text style={styles.listingType}>SHOWCASE 🌟</Text>}
           </View>
         </View>
         <View style={styles.info}>
@@ -77,10 +133,9 @@ const TradingCardPost = ({
         <CarouselCards images={images} />
       </View>
       <View style={styles.buttonContainer}>
-        <View style={styles.likeBtnContainer}>
-          <Ionicons name="thumbs-up-outline" size={26} color="black" />
-          <Text style={styles.likeCount}>34</Text>
-        </View>
+        <TouchableOpacity onPress={() => handleLikePost()}>
+          <Likes />
+        </TouchableOpacity>
         <View style={styles.shareBtns}>
           <Ionicons
             style={styles.btn}
@@ -121,7 +176,9 @@ const TradingCardPost = ({
 
       <Text style={styles.viewComments}>View all 13 comments</Text>
 
-      <Text style={styles.timePosted}>1 HOUR AGO</Text>
+      <Text style={styles.timePosted}>
+        {moment(datePosted).startOf('hour').fromNow().toUpperCase()}
+      </Text>
     </View>
   );
 };
@@ -149,6 +206,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     dispay: 'flex',
     flexDirection: 'row',
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderColor: '#d4d4d4',
   },
   userInformation: {
     paddingVertical: 5,
@@ -193,7 +253,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   imageContainer: {
-    paddingTop: 7,
     paddingHorizontal: 15,
     height: ITEM_WIDTH,
     display: 'flex',
