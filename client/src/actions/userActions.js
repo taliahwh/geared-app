@@ -82,14 +82,14 @@ export const signUp =
       );
 
       dispatch({ type: USER_SIGN_UP_SUCCESS, payload: data });
-      RootNavigation.navigate('Sign Up Details', {
-        firstName,
-        lastName,
-        email,
-        username,
-        password,
-        confirmPassword,
-      });
+      // RootNavigation.navigate('Sign Up Details', {
+      //   firstName,
+      //   lastName,
+      //   email,
+      //   username,
+      //   password,
+      //   confirmPassword,
+      // });
     } catch (error) {
       dispatch({
         type: USER_SIGN_UP_FAILURE,
