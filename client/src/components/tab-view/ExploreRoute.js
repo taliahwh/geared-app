@@ -1,16 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Dimensions,
-  Text,
-  FlatList,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
+import React, { useRef } from 'react';
+import { StyleSheet, Dimensions, FlatList, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 
 // Components
 import TradingCardPost from '../TradingCardPost';
@@ -23,6 +14,8 @@ import { getExplorePosts } from '../../actions/postActions';
 const windowWidth = Dimensions.get('window').width;
 
 const ExploreRoute = () => {
+  const scrollRef = useRef(null);
+  useScrollToTop(scrollRef);
   const dispatch = useDispatch();
 
   const {
@@ -34,16 +27,20 @@ const ExploreRoute = () => {
   const renderItem = ({ item }) => {
     return (
       <TradingCardPost
+        post={item}
         username={item.listedBy.username}
         description={item.description}
         images={item.images}
         profileImage={item.listedBy.profileImage}
         location={item.listedBy.location}
-        id={item.listedBy.userId}
+        postId={item.listedBy.userId}
         tags={item.tags}
         showcase={item.showcase}
         offers={item.openToOffers}
         forSale={item.forSale}
+        datePosted={item.createdAt}
+        likesCount={item.likes.length}
+        likesIds={item.likes}
       />
     );
   };
@@ -56,10 +53,11 @@ const ExploreRoute = () => {
   return (
     <>
       {errorExplorePosts && <AlertMessage>{errorExplorePosts}</AlertMessage>}
-      {loadingExplorePosts && <ActivityIndicator />}
+      {loadingExplorePosts && <Loader />}
       {posts && posts.length > 0 && (
         <View style={styles.container}>
           <FlatList
+            ref={scrollRef}
             data={posts}
             renderItem={renderItem}
             keyExtractor={(item) => item._id}
@@ -75,12 +73,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F1F1F1',
     width: windowWidth,
-  },
-  footer: {
-    paddingVertical: 20,
-    fontWeight: '300',
-    fontStyle: 'italic',
-    textAlign: 'center',
   },
 });
 
