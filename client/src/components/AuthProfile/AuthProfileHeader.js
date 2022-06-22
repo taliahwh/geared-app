@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -116,6 +116,7 @@ const AuthProfileHeader = () => {
           {userDetails.bio !== '' && (
             <Text style={styles.description}>{userDetails.bio}</Text>
           )}
+
           {userDetails.website && (
             <Text
               style={styles.website}
