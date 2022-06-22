@@ -7,6 +7,7 @@ import { composeWithDevTools } from '@redux-devtools/extension';
 import {
   createPostReducer,
   explorePostsReducer,
+  likePostReducer,
   postDetailsReducer,
 } from './reducers/postReducers';
 
@@ -23,6 +24,7 @@ const reducer = combineReducers({
   explorePosts: explorePostsReducer,
   createPost: createPostReducer,
   postDetails: postDetailsReducer,
+  likePost: likePostReducer,
   userSignIn: userSignInReducer,
   userSignUp: userSignUpReducer,
   userDetails: userDetailsReducer,
