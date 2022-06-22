@@ -78,12 +78,46 @@ const ProfileSettingsRoute = () => {
   const handleAlertMessage = () => {
     successUpdateProfile &&
       Alert.alert('Profile Updated', 'Profile updated successfully', [
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(getUserDetails(userId));
+            dispatch({ type: CLEAR_PROFILE_DATA });
+          },
+        },
       ]);
 
     errorUpdateProfile &&
       Alert.alert('Something went wrong', errorUpdateProfile, [
-        { text: 'OK', onPress: () => console.log('OK Pressed') },
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(getUserDetails(userId));
+            dispatch({ type: CLEAR_PROFILE_DATA });
+          },
+        },
+      ]);
+
+    successUpdatePassword &&
+      Alert.alert('Password Updated', 'Password updated successfully', [
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(getUserDetails(userId));
+            dispatch({ type: CLEAR_PASSWORD_DATA });
+          },
+        },
+      ]);
+
+    errorUpdatePassword &&
+      Alert.alert('Something went wrong', errorUpdatePassword, [
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(getUserDetails(userId));
+            dispatch({ type: CLEAR_PASSWORD_DATA });
+          },
+        },
       ]);
   };
 
@@ -96,6 +130,7 @@ const ProfileSettingsRoute = () => {
 
   const handleNewPassword = (newPassword, confirmPassword) => {
     dispatch(updatePassword(newPassword, confirmPassword));
+    // handleAlertMessage();
   };
 
   const handleSubmit = (data) => {
@@ -111,7 +146,7 @@ const ProfileSettingsRoute = () => {
         website
       )
     );
-    handleAlertMessage();
+    // handleAlertMessage();
   };
 
   const pickImage = async () => {
@@ -128,6 +163,16 @@ const ProfileSettingsRoute = () => {
     }
   };
 
+  useEffect(() => {
+    console.log('useEffect');
+    handleAlertMessage();
+  }, [
+    successUpdateProfile,
+    errorUpdateProfile,
+    successUpdatePassword,
+    errorUpdatePassword,
+  ]);
+
   // Will be called every time the dashboard tab is focused
   useFocusEffect(
     React.useCallback(() => {
@@ -139,7 +184,7 @@ const ProfileSettingsRoute = () => {
         console.log('UNFOCUSED');
         dispatch({ type: CLEAR_PASSWORD_DATA });
         dispatch({ type: CLEAR_PROFILE_DATA });
-        dispatch({ type: CLEAR_POSTS_DATA });
+        // dispatch({ type: CLEAR_POSTS_DATA });
       };
     }, [dispatch])
   );
@@ -147,7 +192,6 @@ const ProfileSettingsRoute = () => {
   return (
     <>
       {loadingUserDetails && <Loader />}
-      {errorUserDetails && <AlertMessage>{errorUserDetails}</AlertMessage>}
       {userDetails && (
         <KeyboardAwareScrollView style={styles.container} enableOnAndroid>
           {/* {errorUpdateProfile && (
@@ -467,15 +511,10 @@ const ProfileSettingsRoute = () => {
                     <View style={styles.modalContainer}>
                       <View style={styles.interestTagContainer}>
                         <View style={styles.modalInputContainer}>
-                          {errorUpdatePassword && (
+                          {/* {errorUpdatePassword && (
                             <AlertMessage>{errorUpdatePassword}</AlertMessage>
-                          )}
+                          )} */}
 
-                          {successUpdatePassword && (
-                            <AlertMessage success>
-                              {messageUpdatePassword}
-                            </AlertMessage>
-                          )}
                           <Text style={styles.modalInputTitle}>
                             New password
                           </Text>
