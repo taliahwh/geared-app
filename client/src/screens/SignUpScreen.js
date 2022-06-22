@@ -54,6 +54,9 @@ const SignUpScreen = () => {
     dispatch(
       signUp(firstName, lastName, email, username, password, confirmPassword)
     );
+  };
+
+  useEffect(() => {
     successSignUp &&
       navigation.navigate('Sign Up Details', {
         firstName,
@@ -63,7 +66,7 @@ const SignUpScreen = () => {
         password,
         confirmPassword,
       });
-  };
+  }, [successSignUp]);
 
   // useFocusEffect(
   //   React.useCallback(() => {
