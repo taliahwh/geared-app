@@ -8,6 +8,10 @@ import {
   POST_DETAILS_REQUEST,
   POST_DETAILS_SUCCESS,
   POST_DETAILS_FAILURE,
+  LIKE_POST_REQUEST,
+  LIKE_POST_SUCCESS,
+  LIKE_POST_FAILURE,
+  CLEAR_LIKE_POST_DATA,
 } from '../constants/postConstants';
 
 export const explorePostsReducer = (state = { posts: [] }, action) => {
@@ -53,6 +57,24 @@ export const postDetailsReducer = (state = {}, action) => {
       };
     case POST_DETAILS_FAILURE:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const likePostReducer = (state = {}, action) => {
+  switch (action.type) {
+    case LIKE_POST_REQUEST:
+      return { loading: true };
+    case LIKE_POST_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+      };
+    case LIKE_POST_FAILURE:
+      return { loading: false, error: action.payload };
+    case CLEAR_LIKE_POST_DATA:
+      return {};
     default:
       return state;
   }
