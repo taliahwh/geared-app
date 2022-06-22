@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   FlatList,
   Image,
@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 
 // Components
 import Loader from '../Loader';
@@ -38,6 +38,8 @@ const AuthCollectionGrid = () => {
   // Hooks
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const scrollRef = useRef(null);
+  useScrollToTop(scrollRef);
 
   // State from redux
   const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
@@ -61,6 +63,7 @@ const AuthCollectionGrid = () => {
       {errorUserPosts && <AlertMessage>{errorUserPosts}</AlertMessage>}
       {posts && posts.length > 0 && (
         <FlatList
+          ref={scrollRef}
           data={posts}
           renderItem={({ item }) => (
             <TouchableOpacity

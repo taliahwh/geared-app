@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Asset } from 'expo-asset';
 import {
   FlatList,
@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 
 // Components
 import Loader from './Loader';
@@ -38,6 +38,8 @@ const CollectionGrid = ({ userId }) => {
   // Hooks
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const scrollRef = useRef(null);
+  useScrollToTop(scrollRef);
 
   // State from redux
   const {
@@ -58,6 +60,7 @@ const CollectionGrid = ({ userId }) => {
       {errorUserPosts && <AlertMessage>{errorUserPosts}</AlertMessage>}
       {posts && posts.length > 0 && (
         <FlatList
+          ref={scrollRef}
           data={posts}
           renderItem={({ item }) => (
             <TouchableOpacity
