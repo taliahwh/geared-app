@@ -148,7 +148,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   user.bio = newBio || user.bio;
   user.name = newFullName || user.name;
   user.website = newWebsite || user.website;
-  user.dateOfBirth = dateOfBirth;
+  user.dateOfBirth = dateOfBirth || user.dateOfBirth;
   const updatedUser = await user.save();
 
   // Update user's interests
@@ -156,7 +156,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     { _id: userId },
     {
       $set: {
-        'interests.0.name': interest1 || user.interests[0].name,
+        'interests.0.name': interest1 === '' ? null : interest1,
       },
     }
   );
@@ -164,7 +164,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     { _id: userId },
     {
       $set: {
-        'interests.1.name': interest2 || user.interests[1].name,
+        'interests.1.name': interest2 === '' ? null : interest2,
       },
     }
   );
@@ -172,7 +172,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     { _id: userId },
     {
       $set: {
-        'interests.2.name': interest3 || user.interests[2].name,
+        'interests.2.name': interest3 === '' ? null : interest3,
       },
     }
   );
@@ -180,7 +180,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     { _id: userId },
     {
       $set: {
-        'interests.3.name': interest4 || user.interests[3].name,
+        'interests.3.name': interest4 === '' ? null : interest4,
       },
     }
   );
