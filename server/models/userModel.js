@@ -27,9 +27,11 @@ const userSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: String,
+      default: '',
     },
     bio: {
       type: String,
+      default: '',
     },
     website: {
       type: String,
@@ -56,11 +58,11 @@ const userSchema = new mongoose.Schema(
       ],
     },
     savedPosts: {
-      type: [postSchema],
+      type: [String],
       default: [],
     },
     likedPosts: {
-      type: [postSchema],
+      type: [String],
       default: [],
     },
   },
