@@ -19,7 +19,6 @@ import AlertMessage from './AlertMessage';
 
 // Actions
 import { getUserPosts } from '../actions/userActions';
-import { CLEAR_POSTS_DATA } from '../constants/userConstants';
 
 const thirdWindowWidth = Dimensions.get('window').width / 3;
 
@@ -81,7 +80,7 @@ const CollectionGrid = ({ userId }) => {
       )}
       {posts && posts.length === 0 && (
         <View style={styles.noPostsContainer}>
-          <Text>No posts yet.</Text>
+          <Text>No posts.</Text>
         </View>
       )}
     </>
