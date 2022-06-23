@@ -3,13 +3,15 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Pressable,
   Image,
   StyleSheet,
   Dimensions,
   FlatList,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
@@ -18,8 +20,7 @@ import moment from 'moment';
 import CarouselCards from './carousel/CarouselCards';
 
 // Actions
-import { likePost } from '../actions/postActions';
-import { CLEAR_LIKE_POST_DATA } from '../constants/postConstants';
+import { likePost, savePost } from '../actions/postActions';
 
 const ITEM_WIDTH = Dimensions.get('window').width - 30;
 
@@ -29,6 +30,10 @@ const TagRender = ({ item }) => {
 const Separator = () => {
   return <View style={{ width: 1, backgroundColor: '#fff' }} />;
 };
+
+/**
+ * todo - Create a skeleton loader for TradingCardComponent to show instead on ActivityIndicator
+ */
 
 const TradingCardPost = ({
   forSale,
@@ -44,14 +49,17 @@ const TradingCardPost = ({
   likesCount,
   likesIds,
   post,
+  savedPosts,
 }) => {
+  // console.log(savedPosts);
+
   // Hooks
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   // Redux state
   const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
-  const { success: successLikePost, error: errorLikePost } = useSelector(
+  const { loading: loadingLikePost, success: successLikePost } = useSelector(
     (state) => state.likePost
   );
 
@@ -74,24 +82,28 @@ const TradingCardPost = ({
     );
   };
 
-  const handleAlertMessage = () => {
-    errorLikePost &&
-      Alert.alert('Something went wrong', errorLikePost, [
-        {
-          text: 'OK',
-          onPress: () => {
-            console.log('ok pressed');
-          },
-        },
-      ]);
+  const Saved = () => {
+    const userSavedPost = savedPosts && savedPosts.includes(post._id);
+
+    return (
+      <>
+        {loadingLikePost && <ActivityIndicator />}
+        {userSavedPost ? (
+          <Ionicons name="ios-bookmark" size={26} color="black" />
+        ) : (
+          <Ionicons name="bookmark-outline" size={26} color="black" />
+        )}
+      </>
+    );
   };
 
   const handleLikePost = () => {
     dispatch(likePost(post));
-    handleAlertMessage();
   };
 
-  useEffect(() => {}, [successLikePost, errorLikePost]);
+  const handleSavePost = () => {
+    dispatch(savePost(post));
+  };
 
   return (
     <View style={styles.container}>
@@ -133,16 +145,18 @@ const TradingCardPost = ({
         <CarouselCards images={images} />
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => handleLikePost()}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => handleLikePost()}>
           <Likes />
         </TouchableOpacity>
+
         <View style={styles.shareBtns}>
-          <Ionicons
-            style={styles.btn}
-            name="bookmark-outline"
-            size={26}
-            color="black"
-          />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => handleSavePost()}
+          >
+            <Saved />
+          </TouchableOpacity>
+
           <Ionicons
             style={styles.btn}
             name="paper-plane-outline"
