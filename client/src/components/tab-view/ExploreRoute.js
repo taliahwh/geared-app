@@ -1,7 +1,15 @@
 import React, { useRef } from 'react';
-import { StyleSheet, Dimensions, FlatList, View } from 'react-native';
+import {
+  StyleSheet,
+  Dimensions,
+  FlatList,
+  View,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 // Components
 import TradingCardPost from '../TradingCardPost';
@@ -10,6 +18,7 @@ import AlertMessage from '../AlertMessage';
 
 // Actions
 import { getExplorePosts } from '../../actions/postActions';
+import { getUserDetails } from '../../actions/userActions';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -18,11 +27,24 @@ const ExploreRoute = () => {
   useScrollToTop(scrollRef);
   const dispatch = useDispatch();
 
+  // Redux state
+  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
   const {
     loading: loadingExplorePosts,
     posts,
     error: errorExplorePosts,
   } = useSelector((state) => state.explorePosts);
+
+  const {
+    loading: loadingUserDetails,
+    userDetails,
+    error: errorUserDetails,
+  } = useSelector((state) => state.userDetails);
+
+  const { success: successLikePost } = useSelector((state) => state.likePost);
+  const { success: successSavePost } = useSelector((state) => state.savePost);
+
+  const savedPosts = userDetails && userDetails.savedPosts;
 
   const renderItem = ({ item }) => {
     return (
@@ -41,6 +63,7 @@ const ExploreRoute = () => {
         datePosted={item.createdAt}
         likesCount={item.likes.length}
         likesIds={item.likes}
+        savedPosts={savedPosts}
       />
     );
   };
@@ -48,12 +71,15 @@ const ExploreRoute = () => {
   useFocusEffect(
     React.useCallback(() => {
       dispatch(getExplorePosts());
-    }, [dispatch])
+      dispatch(getUserDetails(userId));
+    }, [dispatch, successLikePost, successSavePost])
   );
+
   return (
     <>
       {errorExplorePosts && <AlertMessage>{errorExplorePosts}</AlertMessage>}
-      {loadingExplorePosts && <Loader />}
+
+      {loadingExplorePosts && <ActivityIndicator />}
       {posts && posts.length > 0 && (
         <View style={styles.container}>
           <FlatList
