@@ -11,6 +11,15 @@ import {
   LIKE_POST_REQUEST,
   LIKE_POST_SUCCESS,
   LIKE_POST_FAILURE,
+  GET_LIKED_POSTS_REQUEST,
+  GET_LIKED_POSTS_SUCCESS,
+  GET_LIKED_POSTS_FAILURE,
+  SAVE_POST_REQUEST,
+  SAVE_POST_SUCCESS,
+  SAVE_POST_FAILURE,
+  GET_SAVED_POSTS_REQUEST,
+  GET_SAVED_POSTS_SUCCESS,
+  GET_SAVED_POSTS_FAILURE,
   CLEAR_LIKE_POST_DATA,
 } from '../constants/postConstants';
 
@@ -75,6 +84,59 @@ export const likePostReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case CLEAR_LIKE_POST_DATA:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const viewLikedPostsReducer = (state = { posts: {} }, action) => {
+  switch (action.type) {
+    case GET_LIKED_POSTS_REQUEST:
+      return { loading: true };
+    case GET_LIKED_POSTS_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        posts: action.payload,
+      };
+    case GET_LIKED_POSTS_FAILURE:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+export const savePostsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SAVE_POST_REQUEST:
+      return { loading: true };
+    case SAVE_POST_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+      };
+    case SAVE_POST_FAILURE:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+export const viewSavedPostsReducer = (state = { posts: {} }, action) => {
+  switch (action.type) {
+    case GET_SAVED_POSTS_REQUEST:
+      return { loading: true };
+    case GET_SAVED_POSTS_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        posts: action.payload,
+      };
+    case GET_SAVED_POSTS_FAILURE:
+      return { loading: false, error: action.payload };
+
     default:
       return state;
   }
