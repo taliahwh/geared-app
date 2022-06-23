@@ -14,6 +14,15 @@ import {
   LIKE_POST_REQUEST,
   LIKE_POST_SUCCESS,
   LIKE_POST_FAILURE,
+  GET_LIKED_POSTS_REQUEST,
+  GET_LIKED_POSTS_SUCCESS,
+  GET_LIKED_POSTS_FAILURE,
+  SAVE_POST_REQUEST,
+  SAVE_POST_SUCCESS,
+  SAVE_POST_FAILURE,
+  GET_SAVED_POSTS_REQUEST,
+  GET_SAVED_POSTS_SUCCESS,
+  GET_SAVED_POSTS_FAILURE,
 } from '../constants/postConstants';
 
 export const getExplorePosts = () => async (dispatch, getState) => {
@@ -130,6 +139,73 @@ export const likePost = (post) => async (dispatch, getState) => {
     dispatch({ type: LIKE_POST_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: LIKE_POST_FAILURE });
+    console.log(error.message);
+  }
+};
+
+export const getLikedPosts = () => async (dispatch, getState) => {
+  dispatch({ type: GET_LIKED_POSTS_REQUEST });
+
+  const { authToken } = getState().userSignIn;
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await geared.get(`/api/posts/likedposts`, config);
+
+    dispatch({ type: GET_LIKED_POSTS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: GET_LIKED_POSTS_FAILURE });
+    console.log(error.message);
+  }
+};
+
+export const savePost = (post) => async (dispatch, getState) => {
+  dispatch({ type: SAVE_POST_REQUEST });
+
+  const { authToken } = getState().userSignIn;
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await geared.put(
+      `/api/posts/${post._id}/savepost`,
+      post,
+      config
+    );
+
+    dispatch({ type: SAVE_POST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: SAVE_POST_FAILURE });
+    console.log(error.message);
+  }
+};
+
+export const getSavedPosts = () => async (dispatch, getState) => {
+  dispatch({ type: GET_SAVED_POSTS_REQUEST });
+
+  const { authToken } = getState().userSignIn;
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await geared.get(`/api/posts/savedposts`, config);
+
+    dispatch({ type: GET_SAVED_POSTS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: GET_SAVED_POSTS_FAILURE });
     console.log(error.message);
   }
 };
