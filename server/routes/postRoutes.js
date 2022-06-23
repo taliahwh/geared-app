@@ -5,6 +5,9 @@ import {
   createNewPost,
   getPostById,
   likePost,
+  getLikedPosts,
+  savePost,
+  getSavedPosts,
 } from '../controllers/postController.js';
 
 // Middleware
@@ -16,8 +19,14 @@ router.post('/', authMiddleware, createNewPost);
 
 router.get('/explore', authMiddleware, getAllPosts);
 
+router.get('/likedposts', authMiddleware, getLikedPosts);
+
+router.get('/savedposts', authMiddleware, getSavedPosts);
+
 router.get('/:id', authMiddleware, getPostById);
 
 router.put('/:id/likepost', authMiddleware, likePost);
+
+router.put('/:id/savepost', authMiddleware, savePost);
 
 export default router;
