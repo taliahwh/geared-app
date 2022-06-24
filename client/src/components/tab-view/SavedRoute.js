@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Asset } from 'expo-asset';
 import {
   FlatList,
@@ -7,10 +7,20 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  Text,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 
-const thirdWindowWidth = Dimensions.get('window').width / 3;
+// Components
+import AlertMessage from '../AlertMessage';
+
+// Actions
+import { getSavedPosts } from '../../actions/postActions';
+
+const cardWidth = Dimensions.get('window').width / 4;
 
 const marcus = Asset.fromModule(require('../../assets/test-images/marcus.jpg'));
 const ayton = Asset.fromModule(require('../../assets/test-images/ayton.jpg'));
@@ -53,26 +63,54 @@ const Separator = () => {
 
 const SavedRoute = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const scrollRef = useRef(null);
+  useScrollToTop(scrollRef);
+
+  // State from redux
+  const {
+    loading: loadingSavedPosts,
+    posts,
+    errpr: errorSavedPosts,
+  } = useSelector((state) => state.savedPosts);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getSavedPosts());
+    }, [dispatch])
+  );
+
   return (
-    <FlatList
-      data={IMAGES}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => {
-            /* 1. Navigate to the Details route with params */
-            navigation.navigate('Post Details', {
-              itemId: item.id,
-              name: item.name,
-            });
-          }}
-        >
-          <ImageRender src={item.src} />
-        </TouchableOpacity>
+    <>
+      {loadingSavedPosts && <ActivityIndicator />}
+      {errorSavedPosts && <AlertMessage>{errorSavedPosts}</AlertMessage>}
+      {posts && posts.length > 0 && (
+        <FlatList
+          ref={scrollRef}
+          data={posts}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => {
+                /* 1. Navigate to the Details route with params */
+                navigation.navigate('Post Details', {
+                  postId: item._id,
+                });
+              }}
+            >
+              <ImageRender src={{ uri: item.images[0].imgUrl }} />
+            </TouchableOpacity>
+          )}
+          numColumns={4}
+          keyExtractor={(item) => `${item.id} 02135`}
+          ItemSeparatorComponent={Separator}
+        />
       )}
-      numColumns={3}
-      keyExtractor={(item) => item.id}
-      ItemSeparatorComponent={Separator}
-    />
+      {posts && posts.length === 0 && (
+        <View style={styles.noPostsContainer}>
+          <Text>No saved posts.</Text>
+        </View>
+      )}
+    </>
   );
 };
 
@@ -84,8 +122,15 @@ const styles = StyleSheet.create({
   image: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: thirdWindowWidth,
-    width: thirdWindowWidth,
+    height: cardWidth,
+    width: cardWidth,
+  },
+  noPostsContainer: {
+    // backgroundColor: 'orange',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 15,
   },
 });
 
