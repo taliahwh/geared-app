@@ -69,7 +69,7 @@ const AuthCollectionGrid = () => {
             <TouchableOpacity
               onPress={() => {
                 /* 1. Navigate to the Details route with params */
-                navigation.navigate('Post Details', {
+                navigation.navigate('User Post Details', {
                   postId: item._id,
                 });
               }}
