@@ -4,14 +4,18 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Image,
   TextInput,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
 } from 'react-native';
 
 // Components
 import Comment from '../components/Comment';
 
-const containerHeight = Dimensions.get('window').height / 2;
+const commentContainerHeight = Dimensions.get('window').height / 15;
 
 const CommentsScreen = () => {
   return (
@@ -45,8 +49,29 @@ const CommentsScreen = () => {
           }
         />
       </ScrollView>
+
+      {/* Create comment section */}
       <View style={styles.createCommentSection}>
-        <Text>Create Comment</Text>
+        <Image
+          style={styles.userImage}
+          source={{
+            uri: 'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
+          }}
+        />
+
+        <TextInput
+          style={styles.textInput}
+          // ref={register.username}
+          // value={userDetails.username}
+          placeholder={'Say something...'}
+          placeholderTextColor={'#a1a1aa'}
+          // maxLength={25}
+          // autoCapitalize="none"
+          // textContentType="username"
+          // editable={false}
+          // selectTextOnFocus={false}
+        />
+        <Text style={styles.sendBtn}>SEND</Text>
       </View>
     </View>
   );
@@ -61,7 +86,35 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   createCommentSection: {
+    height: commentContainerHeight,
+    paddingHorizontal: 15,
+    marginBottom: 10,
+    borderTopWidth: 1,
+    borderColor: '#d4d4d4',
+    paddingVertical: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  userImage: {
     height: 30,
-    backgroundColor: 'orange',
+    width: 30,
+    borderRadius: 30 / 2,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#d4d4d4',
+  },
+  textInput: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    marginHorizontal: 10,
+    borderRadius: 20,
+  },
+  sendBtn: {
+    color: '#a1a1aa',
+    fontWeight: '500',
   },
 });
