@@ -1,5 +1,8 @@
 import React from 'react';
-import { createNavigationContainerRef } from '@react-navigation/native';
+import {
+  createNavigationContainerRef,
+  getFocusedRouteNameFromRoute,
+} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -58,6 +61,7 @@ const MainNavigator = () => {
         component={HomeScreenNavigator}
         options={{
           headerShown: false,
+          tabBarVisible: false,
         }}
       />
       <Tab.Screen
