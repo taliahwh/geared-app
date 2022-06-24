@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -6,21 +6,22 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 
 // Styles
 import styles from '../styles/PostDetailsScreenStyles';
 
 // Components
 import FullWidthCarouselCards from '../components/carousel/FullWidthCarouselCards';
-import Loader from '../components/Loader';
 import AlertMessage from '../components/AlertMessage';
 
 // Actions
-import { getPostDetails } from '../actions/postActions';
+import { getPostDetails, likePost, savePost } from '../actions/postActions';
 
 const PostDetailsScreen = ({ route, forSale, offers }) => {
   // Hooks
@@ -30,21 +31,49 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
   const { postId } = route.params;
 
   // Redux state
+  const { _id: signedInUserId } = useSelector(
+    (state) => state.userSignIn.userInfo
+  );
+  const { success: successLikePost } = useSelector((state) => state.likePost);
   const {
     loading: loadingPostDetails,
     postDetails,
     error: errorPostDetails,
   } = useSelector((state) => state.postDetails);
 
+  const Likes = () => {
+    const userLikedPost =
+      postDetails && postDetails.likes.includes(signedInUserId);
+    return (
+      <>
+        {userLikedPost ? (
+          <View style={styles.likeBtnContainer}>
+            <Ionicons name="thumbs-up" size={26} color="black" />
+            <Text style={styles.likeCount}>{postDetails.likes.length}</Text>
+          </View>
+        ) : (
+          <View style={styles.likeBtnContainer}>
+            <Ionicons name="thumbs-up-outline" size={26} color="black" />
+            <Text style={styles.likeCount}>{postDetails.likes.length}</Text>
+          </View>
+        )}
+      </>
+    );
+  };
+
+  const handleLikePost = () => {
+    dispatch(likePost(postDetails));
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       dispatch(getPostDetails(postId));
-    }, [dispatch])
+    }, [dispatch, successLikePost])
   );
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {loadingPostDetails && <Loader />}
+      {loadingPostDetails && <ActivityIndicator />}
       {errorPostDetails && <AlertMessage>{errorPostDetails}</AlertMessage>}
       {postDetails && (
         <>
@@ -79,10 +108,17 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
           </View>
 
           <View style={styles.buttonContainer}>
-            <View style={styles.likeBtnContainer}>
+            {/* <View style={styles.likeBtnContainer}>
               <Ionicons name="thumbs-up-outline" size={26} color="black" />
               <Text style={styles.likeCount}>{postDetails.likes.length}</Text>
-            </View>
+            </View> */}
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => handleLikePost()}
+            >
+              <Likes />
+            </TouchableOpacity>
+
             <View style={styles.shareBtns}>
               <Ionicons
                 style={styles.btn}
@@ -138,7 +174,12 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
             </View>
           )}
 
-          <Text style={styles.uploadDate}>3 DAYS AGO</Text>
+          <Text style={styles.uploadDate}>
+            {moment(postDetails.createdAt)
+              .startOf('hour')
+              .fromNow()
+              .toUpperCase()}
+          </Text>
 
           {/* <View style={styles.commentsContainer}>
         <Image
