@@ -11,7 +11,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
@@ -59,9 +59,9 @@ const TradingCardPost = ({
 
   // Redux state
   const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
-  const { loading: loadingLikePost, success: successLikePost } = useSelector(
-    (state) => state.likePost
-  );
+
+  // Component state -> from parent component's redux state
+  const userSavedPost = savedPosts && savedPosts.includes(post._id);
 
   const Likes = () => {
     const userLikedPost = likesIds.includes(userId);
@@ -83,11 +83,9 @@ const TradingCardPost = ({
   };
 
   const Saved = () => {
-    const userSavedPost = savedPosts && savedPosts.includes(post._id);
-
     return (
       <>
-        {loadingLikePost && <ActivityIndicator />}
+        {/* {loadingSavePost && <ActivityIndicator />} */}
         {userSavedPost ? (
           <Ionicons name="ios-bookmark" size={26} color="black" />
         ) : (
@@ -105,6 +103,18 @@ const TradingCardPost = ({
     dispatch(savePost(post));
   };
 
+  const navigateToProfileDetails = (id) => {
+    navigation.navigate('Profile Details', {
+      userId: id,
+    });
+  };
+
+  const navigateToComments = () => {
+    navigation.navigate('CommentScreenFromHome', {
+      postId,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headingContainer}>
@@ -117,14 +127,7 @@ const TradingCardPost = ({
           />
 
           <View style={styles.usernameContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                /* 1. Navigate to the Details route with params */
-                navigation.navigate('Profile Details', {
-                  userId: postId,
-                });
-              }}
-            >
+            <TouchableOpacity onPress={() => navigateToProfileDetails(postId)}>
               <Text style={styles.username}>{username}</Text>
             </TouchableOpacity>
             {forSale && <Text style={styles.listingType}>FOR SALE 💸</Text>}
@@ -181,14 +184,16 @@ const TradingCardPost = ({
         <FlatList
           data={tags}
           renderItem={({ item }) => item !== '' && <TagRender item={item} />}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => index}
           ItemSeparatorComponent={Separator}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         />
       </View>
 
-      <Text style={styles.viewComments}>View all 13 comments</Text>
+      <TouchableOpacity onPress={navigateToComments} activeOpacity={0.9}>
+        <Text style={styles.viewComments}>View all 13 comments</Text>
+      </TouchableOpacity>
 
       <Text style={styles.timePosted}>
         {moment(datePosted).startOf('hour').fromNow().toUpperCase()}
