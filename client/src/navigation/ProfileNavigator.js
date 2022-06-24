@@ -23,7 +23,7 @@ const ProfileNavigator = () => {
         }}
       />
       <Stack.Screen
-        name="Post Details"
+        name="User Post Details"
         component={PostDetailsScreen}
         options={{ headerTitle: '', headerBackTitleVisible: false }}
       />
