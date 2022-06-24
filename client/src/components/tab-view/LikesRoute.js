@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import { Asset } from 'expo-asset';
 import {
   FlatList,
   Image,
@@ -15,29 +14,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 
 // Components
-import Loader from '../Loader';
 import AlertMessage from '../AlertMessage';
 
 // Actions
 import { getLikedPosts } from '../../actions/postActions';
 
-const thirdWindowWidth = Dimensions.get('window').width / 4;
-
-const bam = Asset.fromModule(require('../../assets/test-images/IMG_1676.jpg'));
-const tatum = Asset.fromModule(require('../../assets/test-images/tatum.jpg'));
-
-const IMAGES = [
-  {
-    id: 1,
-    name: 'Bam Adebayo',
-    src: bam,
-  },
-  {
-    id: 2,
-    name: 'Jayson Tatum',
-    src: tatum,
-  },
-];
+const cardWidth = Dimensions.get('window').width / 4;
 
 const ImageRender = ({ src }) => {
   return (
@@ -112,8 +94,15 @@ const styles = StyleSheet.create({
   image: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: thirdWindowWidth,
-    width: thirdWindowWidth,
+    height: cardWidth,
+    width: cardWidth,
+  },
+  noPostsContainer: {
+    // backgroundColor: 'orange',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 15,
   },
 });
 
