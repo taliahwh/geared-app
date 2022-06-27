@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   userInfoContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'center',
   },
   displayName: {
     fontWeight: '500',
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   timePosted: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#a3a3a3',
   },
   commentMessage: {
