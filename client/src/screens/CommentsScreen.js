@@ -6,18 +6,54 @@ import {
   ScrollView,
   Image,
   TextInput,
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
+  ActivityIndicator,
+  FlatList,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
 
 // Components
 import Comment from '../components/Comment';
+import AlertMessage from '../components/AlertMessage';
 
-const commentContainerHeight = Dimensions.get('window').height / 17;
+// Actions
+import { getPostDetails } from '../actions/postActions';
 
-const CommentsScreen = () => {
+const CommentsScreen = ({ route }) => {
+  // Hooks
+  const dispatch = useDispatch();
+  const { postId } = route.params;
+
+  // Redux state
+  const {
+    loading: loadingPostDetails,
+    postDetails,
+    error: errorPostDetails,
+  } = useSelector((state) => state.postDetails);
+
+  const renderItem = ({ item }) => {
+    const [first, last] = item.sender.name.split(' ');
+    return (
+      <Comment
+        displayName={first}
+        username={`${item.sender.username}`}
+        timePosted={moment(item.createdAt)
+          .startOf('hour')
+          .fromNow()
+          .toUpperCase()}
+        commentMessage={item.content}
+        userImage={item.sender.profileImage}
+      />
+    );
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getPostDetails(postId));
+    }, [dispatch])
+  );
+
   return (
     <View style={styles.container}>
       {/* Create comment section */}
@@ -41,35 +77,30 @@ const CommentsScreen = () => {
         <Text style={styles.sendBtn}>SEND</Text>
       </View>
 
-      <ScrollView style={styles.commentsSection}>
-        <Comment
-          displayName={'Andrew'}
-          username={'wiggsthechamp'}
-          timePosted={'30min'}
-          commentMessage={`Man this card is sick.. I've been looking for it for years and could never find one in good enough condition`}
-          userImage={
-            'https://cdn.vox-cdn.com/thumbor/w5BNsbYSy8kcYYdhoCX4kzqrMu8=/1400x1400/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/23635671/1241356583.jpg'
-          }
-        />
-        <Comment
-          displayName={'Zach'}
-          username={'newbulls'}
-          timePosted={'2hr'}
-          commentMessage={`Tough 🔥🔥🔥`}
-          userImage={
-            'https://img.bleacherreport.net/img/images/photos/003/920/637/hi-res-733640ed083eb4ba2e47ba143ab5fb78_crop_north.jpg?1645759696&w=3072&h=2048'
-          }
-        />
-        <Comment
-          displayName={'Ty'}
-          username={'halihoops'}
-          timePosted={'YESTERDAY'}
-          commentMessage={`now this is a classic!!`}
-          userImage={
-            'https://www.gannett-cdn.com/presto/2022/02/12/PIND/cc483fbc-fcc6-42e9-adea-65c9d765df90-USATSI_17663737.jpg'
-          }
-        />
-      </ScrollView>
+      {loadingPostDetails && <ActivityIndicator />}
+
+      {errorPostDetails && (
+        <View style={styles.alertContainer}>
+          <AlertMessage>{errorPostDetails}</AlertMessage>
+        </View>
+      )}
+
+      {postDetails && postDetails.comments.length > 0 && (
+        <View style={styles.commentsSection}>
+          <FlatList
+            // ref={scrollRef}
+            data={postDetails.comments}
+            renderItem={renderItem}
+            keyExtractor={(item) => item._id}
+          />
+        </View>
+      )}
+
+      {postDetails && postDetails.comments.length === 0 && (
+        <View style={styles.alertContainer}>
+          <Text style={styles.alert}>No comments</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -123,5 +154,14 @@ const styles = StyleSheet.create({
   },
   commentsSection: {
     marginTop: 10,
+  },
+  alertContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alert: {
+    color: '#a1a1aa',
+    fontStyle: 'italic',
   },
 });
