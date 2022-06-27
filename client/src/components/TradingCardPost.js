@@ -43,6 +43,7 @@ const TradingCardPost = ({
   description,
   profileImage,
   postId,
+  userProfileId,
   tags,
   showcase,
   datePosted,
@@ -127,7 +128,9 @@ const TradingCardPost = ({
           />
 
           <View style={styles.usernameContainer}>
-            <TouchableOpacity onPress={() => navigateToProfileDetails(postId)}>
+            <TouchableOpacity
+              onPress={() => navigateToProfileDetails(userProfileId)}
+            >
               <Text style={styles.username}>{username}</Text>
             </TouchableOpacity>
             {forSale && <Text style={styles.listingType}>FOR SALE 💸</Text>}
