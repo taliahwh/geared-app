@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { postSchema } from './postModel.js';
+import { notificationSchema } from './notificationModel.js';
 
 const userSchema = new mongoose.Schema(
   {
@@ -63,6 +64,10 @@ const userSchema = new mongoose.Schema(
     },
     likedPosts: {
       type: [String],
+      default: [],
+    },
+    notifications: {
+      type: [notificationSchema],
       default: [],
     },
   },

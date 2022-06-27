@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+import { commentSchema } from './commentModel.js';
+
 export const postSchema = new mongoose.Schema(
   {
     images: {
@@ -61,7 +63,7 @@ export const postSchema = new mongoose.Schema(
       default: [],
     },
     comments: {
-      type: [String],
+      type: [commentSchema],
       default: [],
     },
     listedBy: {

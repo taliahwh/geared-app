@@ -14,6 +14,10 @@ export const notificationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    postId: {
+      type: String,
+      required: true,
+    },
     requestTo: {
       type: String,
       required: true,

@@ -3,6 +3,8 @@ import asyncHandler from 'express-async-handler';
 
 import Post from '../models/postModel.js';
 import User from '../models/userModel.js';
+import Comment from '../models/commentModel.js';
+import Notification from '../models/notificationModel.js';
 
 /**
  * @desc Fetch all posts to display in Explore tab
@@ -222,6 +224,64 @@ const getSavedPosts = asyncHandler(async (req, res) => {
   res.status(200).json(savedPostsInOrder);
 });
 
+/**
+ * @desc Create a new comment by post id
+ * @route POST /posts/comment/:id
+ * @access Public
+ */
+const createNewComment = asyncHandler(async (req, res) => {
+  const { id: userId } = req.user;
+  const { id: postId } = req.params;
+  const { commentBody } = req.body;
+
+  const commentingUser = await User.findById(userId);
+  if (!commentingUser) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  const post = await Post.findById(postId);
+  if (!post) {
+    res.status(404);
+    throw new Error('Post not found');
+  }
+  const userOfPostId = post.listedBy.userId;
+  const userOfPost = await User.findById(userOfPostId);
+  if (!userOfPost) {
+    res.status(404);
+    throw new Error('User of post not found');
+  }
+
+  const newComment = await Comment.create({
+    sender: {
+      username: commentingUser.username,
+      name: commentingUser.name,
+      profileImage: commentingUser.profileImage,
+      userId: commentingUser._id,
+    },
+    post: String(postId),
+    content: commentBody,
+  });
+  await newComment.save();
+  post.comments.push(newComment);
+  await post.save();
+
+  const newNotification = await Notification.create({
+    notificationType: 'Liked Post',
+    notificationBody: `@${commentingUser.username} liked your post`,
+    postId: String(postId),
+    requestTo: String(userOfPostId),
+    requestFrom: String(userId),
+  });
+  await newNotification.save();
+  userOfPost.notifications.push(newNotification);
+  await userOfPost.save();
+
+  // res.json(newNotification);
+
+  res.status(200).json(newComment);
+});
+
 export {
   getAllPosts,
   createNewPost,
@@ -230,4 +290,5 @@ export {
   getLikedPosts,
   savePost,
   getSavedPosts,
+  createNewComment,
 };

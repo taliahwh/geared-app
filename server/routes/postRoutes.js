@@ -8,6 +8,7 @@ import {
   getLikedPosts,
   savePost,
   getSavedPosts,
+  createNewComment,
 } from '../controllers/postController.js';
 
 // Middleware
@@ -16,6 +17,8 @@ import { authMiddleware } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 router.post('/', authMiddleware, createNewPost);
+
+router.post('/comment/:id', authMiddleware, createNewComment);
 
 router.get('/explore', authMiddleware, getAllPosts);
 
