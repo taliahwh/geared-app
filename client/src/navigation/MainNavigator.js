@@ -1,25 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   createNavigationContainerRef,
   getFocusedRouteNameFromRoute,
 } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useDispatch, useSelector } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // Components
 import LogoTitle from '../components/LogoTitle';
 
 // Screens
-import HomeScreen from '../screens/HomeScreen';
 import SearchScreen from '../screens/SearchScreen';
-import DashboardScreen from '../screens/DashboardScreen';
-import MessagesScreen from '../screens/MessagesScreen';
-import ProfileScreen from '../screens/ProfileScreen';
 
 import HomeScreenNavigator from './HomeScreenNavigator';
 import ProfileNavigator from './ProfileNavigator';
 import DashboardNavigator from './DashboardNavigator';
 import MessagesNavigator from './MessagesNavigator';
+
+// Actions
+import { getProfileDetails } from '../actions/userActions';
 
 export const navigationRef = createNavigationContainerRef();
 
@@ -31,8 +31,18 @@ export const navigate = (name, params) => {
 
 const Tab = createBottomTabNavigator();
 
-const MainNavigator = ({ routeName }) => {
-  const hide = routeName != 'CommentScreenFromHome';
+const MainNavigator = () => {
+  // User info from redux state
+  const {
+    loading: loadingProfileDetails,
+    profileDetails,
+    error: errorProfileDetails,
+  } = useSelector((state) => state.userDetails);
+
+  // const notifications =
+  //   userDetails && userDetails.notifications.length === 0
+  //     ? ''
+  //     : userDetails.notifications.length;
 
   return (
     <Tab.Navigator
@@ -61,9 +71,6 @@ const MainNavigator = ({ routeName }) => {
       <Tab.Screen
         name="Feed"
         component={HomeScreenNavigator}
-        // options={{
-        //   headerShown: false,
-        // }}
         options={({ route }) => {
           const focusedRouteName = getFocusedRouteNameFromRoute(route);
           if (focusedRouteName === 'CommentScreenFromHome') {
@@ -119,6 +126,13 @@ const MainNavigator = ({ routeName }) => {
             elevation: 0,
             shadowOpacity: 0,
             borderBottomWidth: 0,
+          },
+          tabBarBadge: 1,
+          tabBarBadgeStyle: {
+            backgroundColor: '#3E5E7E',
+            fontSize: 12,
+            fontWeight: '500',
+            color: '#fff',
           },
         }}
       />
