@@ -13,7 +13,6 @@ import { Ionicons } from '@expo/vector-icons';
 
 // Components
 import TradingCardPost from '../TradingCardPost';
-import Loader from '../Loader';
 import AlertMessage from '../AlertMessage';
 
 // Actions
@@ -55,7 +54,7 @@ const ExploreRoute = () => {
         images={item.images}
         profileImage={item.listedBy.profileImage}
         location={item.listedBy.location}
-        postId={item.listedBy.userId}
+        userProfileId={item.listedBy.userId}
         tags={item.tags}
         showcase={item.showcase}
         offers={item.openToOffers}
@@ -64,6 +63,7 @@ const ExploreRoute = () => {
         likesCount={item.likes.length}
         likesIds={item.likes}
         savedPosts={savedPosts}
+        postId={item._id}
       />
     );
   };
