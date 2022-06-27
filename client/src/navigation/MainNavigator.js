@@ -31,7 +31,9 @@ export const navigate = (name, params) => {
 
 const Tab = createBottomTabNavigator();
 
-const MainNavigator = () => {
+const MainNavigator = ({ routeName }) => {
+  const hide = routeName != 'CommentScreenFromHome';
+
   return (
     <Tab.Navigator
       initialRouteName="Feed"
@@ -59,9 +61,22 @@ const MainNavigator = () => {
       <Tab.Screen
         name="Feed"
         component={HomeScreenNavigator}
-        options={{
-          headerShown: false,
-          tabBarVisible: false,
+        // options={{
+        //   headerShown: false,
+        // }}
+        options={({ route }) => {
+          const focusedRouteName = getFocusedRouteNameFromRoute(route);
+          if (focusedRouteName === 'CommentScreenFromHome') {
+            return {
+              tabBarStyle: { display: 'none' },
+              headerShown: false,
+            };
+          }
+
+          return {
+            tabBarStyle: { display: 'flex' },
+            headerShown: false,
+          };
         }}
       />
       <Tab.Screen
