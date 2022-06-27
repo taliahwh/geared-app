@@ -9,11 +9,9 @@ import PostDetailsScreen from '../screens/PostDetailsScreen';
 import CommentsScreen from '../screens/CommentsScreen';
 
 import { Ionicons } from '@expo/vector-icons';
-<Ionicons name="ios-bookmark" size={24} color="black" />;
-
 const Stack = createStackNavigator();
 
-const HomeScreenNavigator = () => {
+const HomeScreenNavigator = ({ routeName }) => {
   return (
     <Stack.Navigator>
       <Stack.Group>
