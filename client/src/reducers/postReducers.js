@@ -17,6 +17,9 @@ import {
   SAVE_POST_REQUEST,
   SAVE_POST_SUCCESS,
   SAVE_POST_FAILURE,
+  COMMENT_POST_REQUEST,
+  COMMENT_POST_SUCCESS,
+  COMMENT_POST_FAILURE,
   GET_SAVED_POSTS_REQUEST,
   GET_SAVED_POSTS_SUCCESS,
   GET_SAVED_POSTS_FAILURE,
@@ -84,6 +87,22 @@ export const likePostReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case CLEAR_LIKE_POST_DATA:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const commentPostReducer = (state = {}, action) => {
+  switch (action.type) {
+    case COMMENT_POST_REQUEST:
+      return { loading: true };
+    case COMMENT_POST_SUCCESS:
+      return {
+        success: true,
+        comment: action.payload,
+      };
+    case COMMENT_POST_FAILURE:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

@@ -20,6 +20,9 @@ import {
   SAVE_POST_REQUEST,
   SAVE_POST_SUCCESS,
   SAVE_POST_FAILURE,
+  COMMENT_POST_REQUEST,
+  COMMENT_POST_SUCCESS,
+  COMMENT_POST_FAILURE,
   GET_SAVED_POSTS_REQUEST,
   GET_SAVED_POSTS_SUCCESS,
   GET_SAVED_POSTS_FAILURE,
@@ -206,6 +209,31 @@ export const getSavedPosts = () => async (dispatch, getState) => {
     dispatch({ type: GET_SAVED_POSTS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: GET_SAVED_POSTS_FAILURE });
+    console.log(error.message);
+  }
+};
+
+export const comment = (postId, commentBody) => async (dispatch, getState) => {
+  dispatch({ type: COMMENT_POST_REQUEST });
+
+  const { authToken } = getState().userSignIn;
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await geared.post(
+      `/api/posts/comment/${postId}`,
+      { commentBody },
+      config
+    );
+
+    dispatch({ type: COMMENT_POST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: COMMENT_POST_FAILURE });
     console.log(error.message);
   }
 };

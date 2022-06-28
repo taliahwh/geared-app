@@ -107,6 +107,12 @@ const likePost = asyncHandler(async (req, res) => {
   }
 
   const post = await Post.findById(postId);
+  const userOfPostId = post.listedBy.userId;
+  const userOfPost = await User.findById(userOfPostId);
+  if (!userOfPost) {
+    res.status(404);
+    throw new Error('User of post not found');
+  }
 
   /* checks the index to see if the userId already appears in the post's likes */
   const index = post.likes.findIndex((id) => id === String(userId));
@@ -137,6 +143,23 @@ const likePost = asyncHandler(async (req, res) => {
   }
 
   await user.save();
+
+  const newNotification = await Notification.create({
+    notificationType: 'Like Post',
+    notificationBody: `@${user.username} liked your post`,
+    postId: String(postId),
+    postImage: post.images[0].imgUrl,
+    requestTo: String(userOfPostId),
+    requestFrom: {
+      id: String(user._id),
+      username: user.username,
+      profileImage: user.profileImage,
+    },
+  });
+  await newNotification.save();
+  userOfPost.notifications.push(newNotification);
+  await userOfPost.save();
+
   res.status(200).json(updatedPost);
 });
 
@@ -267,17 +290,21 @@ const createNewComment = asyncHandler(async (req, res) => {
   await post.save();
 
   const newNotification = await Notification.create({
-    notificationType: 'Liked Post',
-    notificationBody: `@${commentingUser.username} liked your post`,
+    notificationType: 'Comment',
+    notificationBody: `@${commentingUser.username} commented on your post`,
     postId: String(postId),
+    postImage: post.images[0].imgUrl,
+    commentBody,
     requestTo: String(userOfPostId),
-    requestFrom: String(userId),
+    requestFrom: {
+      id: String(commentingUser._id),
+      username: commentingUser.username,
+      profileImage: commentingUser.profileImage,
+    },
   });
   await newNotification.save();
   userOfPost.notifications.push(newNotification);
   await userOfPost.save();
-
-  // res.json(newNotification);
 
   res.status(200).json(newComment);
 });
