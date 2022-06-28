@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   Image,
   TextInput,
   ActivityIndicator,
   FlatList,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,12 +21,13 @@ import Comment from '../components/Comment';
 import AlertMessage from '../components/AlertMessage';
 
 // Actions
-import { getPostDetails } from '../actions/postActions';
+import { getPostDetails, comment } from '../actions/postActions';
 
 const CommentsScreen = ({ route }) => {
   // Hooks
   const dispatch = useDispatch();
   const { postId } = route.params;
+  const [commentBody, setCommentBody] = useState('');
 
   // Redux state
   const {
@@ -32,6 +36,12 @@ const CommentsScreen = ({ route }) => {
     error: errorPostDetails,
   } = useSelector((state) => state.postDetails);
 
+  const { loading: loadingComment, success: successComment } = useSelector(
+    (state) => state.comment
+  );
+
+  const { userDetails } = useSelector((state) => state.userDetails);
+
   const renderItem = ({ item }) => {
     const [first, last] = item.sender.name.split(' ');
     return (
@@ -39,7 +49,7 @@ const CommentsScreen = ({ route }) => {
         displayName={first}
         username={`${item.sender.username}`}
         timePosted={moment(item.createdAt)
-          .startOf('hour')
+          .startOf('minute')
           .fromNow()
           .toUpperCase()}
         commentMessage={item.content}
@@ -48,60 +58,73 @@ const CommentsScreen = ({ route }) => {
     );
   };
 
+  const handleSubmitComment = () => {
+    dispatch(comment(postId, commentBody));
+    setCommentBody('');
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       dispatch(getPostDetails(postId));
-    }, [dispatch])
+    }, [dispatch, successComment])
   );
 
   return (
-    <View style={styles.container}>
-      {/* Create comment section */}
-      <View style={styles.createCommentSection}>
-        <Image
-          style={styles.userImage}
-          source={{
-            uri: 'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
-          }}
-        />
-
-        <TextInput
-          style={styles.textInput}
-          // ref={register.username}
-          // value={userDetails.username}
-          placeholder={'Say something...'}
-          placeholderTextColor={'#a1a1aa'}
-          maxLength={400}
-          multiline
-        />
-        <Text style={styles.sendBtn}>SEND</Text>
-      </View>
-
-      {loadingPostDetails && <ActivityIndicator />}
-
-      {errorPostDetails && (
-        <View style={styles.alertContainer}>
-          <AlertMessage>{errorPostDetails}</AlertMessage>
-        </View>
-      )}
-
-      {postDetails && postDetails.comments.length > 0 && (
-        <View style={styles.commentsSection}>
-          <FlatList
-            // ref={scrollRef}
-            data={postDetails.comments}
-            renderItem={renderItem}
-            keyExtractor={(item) => item._id}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        {/* Create comment section */}
+        <View style={styles.createCommentSection}>
+          <Image
+            style={styles.userImage}
+            source={
+              userDetails
+                ? { uri: userDetails.profileImage }
+                : {
+                    uri: 'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
+                  }
+            }
           />
-        </View>
-      )}
 
-      {postDetails && postDetails.comments.length === 0 && (
-        <View style={styles.alertContainer}>
-          <Text style={styles.alert}>No comments</Text>
+          <TextInput
+            style={styles.textInput}
+            value={commentBody}
+            onChangeText={(text) => setCommentBody(text)}
+            placeholder={'Say something...'}
+            placeholderTextColor={'#a1a1aa'}
+            maxLength={400}
+            multiline
+          />
+          <TouchableOpacity onPress={handleSubmitComment}>
+            <Text style={styles.sendBtn}>SEND</Text>
+          </TouchableOpacity>
         </View>
-      )}
-    </View>
+
+        {loadingPostDetails && <ActivityIndicator />}
+
+        {errorPostDetails && (
+          <View style={styles.centeredContainer}>
+            <AlertMessage>{errorPostDetails}</AlertMessage>
+          </View>
+        )}
+
+        {postDetails && postDetails.comments.length > 0 && (
+          <View style={styles.commentsSection}>
+            <FlatList
+              // ref={scrollRef}
+              data={postDetails.comments.reverse()}
+              renderItem={renderItem}
+              keyExtractor={(item) => item._id}
+            />
+          </View>
+        )}
+
+        {postDetails && postDetails.comments.length === 0 && (
+          <View style={styles.centeredContainer}>
+            <Text style={styles.alert}>No comments</Text>
+          </View>
+        )}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -149,13 +172,13 @@ const styles = StyleSheet.create({
     // backgroundColor: 'transparent',
   },
   sendBtn: {
-    color: '#a1a1aa',
+    color: '#71717a',
     fontWeight: '500',
   },
   commentsSection: {
     marginTop: 10,
   },
-  alertContainer: {
+  centeredContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
