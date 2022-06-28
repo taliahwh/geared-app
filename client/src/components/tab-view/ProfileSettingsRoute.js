@@ -130,7 +130,6 @@ const ProfileSettingsRoute = () => {
 
   const handleNewPassword = (newPassword, confirmPassword) => {
     dispatch(updatePassword(newPassword, confirmPassword));
-    // handleAlertMessage();
   };
 
   const handleSubmit = (data) => {
@@ -146,7 +145,6 @@ const ProfileSettingsRoute = () => {
         website
       )
     );
-    // handleAlertMessage();
   };
 
   const pickImage = async () => {
@@ -164,7 +162,6 @@ const ProfileSettingsRoute = () => {
   };
 
   useEffect(() => {
-    console.log('useEffect');
     handleAlertMessage();
   }, [
     successUpdateProfile,
@@ -181,10 +178,8 @@ const ProfileSettingsRoute = () => {
       return () => {
         // Do something when the screen is unfocused
         // Useful for cleanup functions
-        console.log('UNFOCUSED');
         dispatch({ type: CLEAR_PASSWORD_DATA });
         dispatch({ type: CLEAR_PROFILE_DATA });
-        // dispatch({ type: CLEAR_POSTS_DATA });
       };
     }, [dispatch])
   );
