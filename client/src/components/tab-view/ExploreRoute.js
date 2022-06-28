@@ -5,11 +5,9 @@ import {
   FlatList,
   View,
   ActivityIndicator,
-  Text,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
 
 // Components
 import TradingCardPost from '../TradingCardPost';
@@ -22,6 +20,7 @@ import { getUserDetails } from '../../actions/userActions';
 const windowWidth = Dimensions.get('window').width;
 
 const ExploreRoute = () => {
+  // Hooks
   const scrollRef = useRef(null);
   useScrollToTop(scrollRef);
   const dispatch = useDispatch();
@@ -64,6 +63,7 @@ const ExploreRoute = () => {
         likesIds={item.likes}
         savedPosts={savedPosts}
         postId={item._id}
+        commentsCount={item.comments.length}
       />
     );
   };
@@ -72,7 +72,7 @@ const ExploreRoute = () => {
     React.useCallback(() => {
       dispatch(getExplorePosts());
       dispatch(getUserDetails(userId));
-    }, [dispatch, successLikePost, successSavePost])
+    }, [dispatch, userId, successLikePost, successSavePost])
   );
 
   return (
