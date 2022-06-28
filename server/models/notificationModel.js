@@ -16,15 +16,30 @@ export const notificationSchema = new mongoose.Schema(
     },
     postId: {
       type: String,
-      required: true,
+    },
+    postImage: {
+      type: String,
+    },
+    commentBody: {
+      type: String,
     },
     requestTo: {
       type: String,
       required: true,
     },
     requestFrom: {
-      type: String,
-      required: true,
+      profileImage: {
+        type: String,
+        required: true,
+      },
+      username: {
+        type: String,
+        required: true,
+      },
+      id: {
+        type: String,
+        required: true,
+      },
     },
   },
 
