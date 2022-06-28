@@ -8,6 +8,7 @@ import {
   createPostReducer,
   explorePostsReducer,
   likePostReducer,
+  commentPostReducer,
   postDetailsReducer,
   savePostsReducer,
   viewLikedPostsReducer,
@@ -21,6 +22,7 @@ import {
   userSignUpReducer,
   userUpdatePasswordReducer,
   userUpdateProfileReducer,
+  viewNotificationReducer,
 } from './reducers/userReducers';
 
 const reducer = combineReducers({
@@ -31,12 +33,14 @@ const reducer = combineReducers({
   likedPosts: viewLikedPostsReducer,
   savePost: savePostsReducer,
   savedPosts: viewSavedPostsReducer,
+  comment: commentPostReducer,
   userSignIn: userSignInReducer,
   userSignUp: userSignUpReducer,
   userDetails: userDetailsReducer,
   userPosts: userPostsReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userUpdatePassword: userUpdatePasswordReducer,
+  userViewNotification: viewNotificationReducer,
 });
 
 const persistConfig = {
