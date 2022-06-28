@@ -7,6 +7,7 @@ import {
   getPostsByUserId,
   updateUserProfile,
   updateUserPassword,
+  markNotificationAsViewed,
 } from '../controllers/userController.js';
 
 import { authMiddleware } from '../middleware/authMiddleware.js';
@@ -16,6 +17,8 @@ const router = express.Router();
 router.post('/signin', signIn);
 
 router.post('/signup', signUp);
+
+router.put('/notification/:id', authMiddleware, markNotificationAsViewed);
 
 router.put('/password', authMiddleware, updateUserPassword);
 
