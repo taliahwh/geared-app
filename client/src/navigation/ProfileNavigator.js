@@ -1,18 +1,19 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 
 import ProfileScreen from '../screens/ProfileScreen';
 import PostDetailsScreen from '../screens/PostDetailsScreen';
+import CommentsScreen from '../screens/CommentsScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 
 import { Ionicons } from '@expo/vector-icons';
 
+import { HeaderBack, HeaderNotification } from '../components/HeaderBackImages';
+
 const Stack = createStackNavigator();
 
 const ProfileNavigator = () => {
-  const navigation = useNavigation();
   return (
     <Stack.Navigator options={{ headerBackTitleVisible: false }}>
       <Stack.Screen
@@ -26,22 +27,17 @@ const ProfileNavigator = () => {
             borderBottomWidth: 0,
             // height: 60,
           },
-          headerLeft: () => (
-            <View style={{ marginLeft: 15 }}>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => navigation.navigate('Notifications')}
-              >
-                <Ionicons name="ios-notifications" size={25} color="black" />
-              </TouchableOpacity>
-            </View>
-          ),
+          headerLeft: HeaderNotification,
         }}
       />
       <Stack.Screen
-        name="User Post Details"
+        name="PostDetails"
         component={PostDetailsScreen}
-        options={{ headerTitle: '', headerBackTitleVisible: false }}
+        options={{
+          headerTitle: '',
+          headerBackTitleVisible: false,
+          headerBackImage: HeaderBack,
+        }}
       />
       <Stack.Screen
         name="Notifications"
@@ -49,6 +45,16 @@ const ProfileNavigator = () => {
         options={{
           headerTitle: 'Notifications',
           headerBackTitleVisible: false,
+          headerBackImage: HeaderBack,
+        }}
+      />
+      <Stack.Screen
+        name="Comments"
+        component={CommentsScreen}
+        options={{
+          headerTitle: 'Comments',
+          headerBackTitleVisible: false,
+          headerBackImage: HeaderBack,
         }}
       />
     </Stack.Navigator>

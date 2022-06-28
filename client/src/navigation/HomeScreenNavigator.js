@@ -1,17 +1,18 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import { TransitionPresets } from '@react-navigation/stack';
+import { createStackNavigator, Header } from '@react-navigation/stack';
 import { View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/HomeScreen';
 import ViewUserProfileScreen from '../screens/ViewUserProfileScreen';
 import PostDetailsScreen from '../screens/PostDetailsScreen';
 import CommentsScreen from '../screens/CommentsScreen';
 
-import { Ionicons } from '@expo/vector-icons';
+import { HeaderBack, HeaderClose } from '../components/HeaderBackImages';
+
 const Stack = createStackNavigator();
 
-const HomeScreenNavigator = ({ routeName }) => {
+const HomeScreenNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Group>
@@ -33,6 +34,7 @@ const HomeScreenNavigator = ({ routeName }) => {
           options={{
             headerTitle: '',
             headerBackTitleVisible: false,
+            headerBackImage: HeaderBack,
             headerStyle: {
               elevation: 0,
               shadowOpacity: 0,
@@ -43,25 +45,23 @@ const HomeScreenNavigator = ({ routeName }) => {
         <Stack.Screen
           name="Post Details"
           component={PostDetailsScreen}
-          options={{ headerTitle: '', headerBackTitleVisible: false }}
+          options={{
+            headerTitle: '',
+            headerBackTitleVisible: false,
+            headerBackImage: HeaderBack,
+          }}
         />
       </Stack.Group>
 
       {/* Modals */}
-      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+      <Stack.Group screenOptions={{ presentation: 'transparentModal' }}>
         <Stack.Screen
-          name="CommentScreenFromHome"
+          name="Comments"
           component={CommentsScreen}
           options={{
             headerTitle: 'Comments',
             headerBackTitleVisible: false,
-            // ...TransitionPresets.ModalSlideFromBottomIOS,
-
-            headerBackImage: () => (
-              <View style={{ marginLeft: 15 }}>
-                <Ionicons name="close-outline" size={28} color="black" />
-              </View>
-            ),
+            headerBackImage: HeaderClose,
           }}
         />
       </Stack.Group>

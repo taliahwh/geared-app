@@ -1,9 +1,11 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, Header } from '@react-navigation/stack';
 import { TransitionPresets } from '@react-navigation/stack';
 
 import DashboardScreen from '../screens/DashboardScreen';
 import CreateListingScreen from '../screens/CreateListingScreen';
+
+import { HeaderBack } from '../components/HeaderBackImages';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +30,7 @@ const DashboardNavigator = () => {
         options={{
           headerTitle: 'Listing',
           headerBackTitleVisible: false,
+          headerBackImage: HeaderBack,
           ...TransitionPresets.ModalSlideFromBottomIOS,
         }}
       />
