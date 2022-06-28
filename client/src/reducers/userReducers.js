@@ -17,6 +17,9 @@ import {
   UPDATE_PASSWORD_REQUEST,
   UPDATE_PASSWORD_SUCCESS,
   UPDATE_PASSWORD_FAILURE,
+  VIEW_NOTIFICATION_REQUEST,
+  VIEW_NOTIFICATION_SUCCESS,
+  VIEW_NOTIFICATION_FAILURE,
   CLEAR_PROFILE_DATA,
   CLEAR_PASSWORD_DATA,
   CLEAR_POSTS_DATA,
@@ -78,7 +81,14 @@ export const userDetailsReducer = (state = {}, action) => {
     case USER_DETAILS_REQUEST:
       return { loading: true };
     case USER_DETAILS_SUCCESS:
-      return { loading: false, success: true, userDetails: action.payload };
+      return {
+        loading: false,
+        success: true,
+        userDetails: action.payload,
+        unreadNotifications: action.payload.notifications.filter(
+          (notification) => notification.viewed !== true
+        ),
+      };
     case USER_DETAILS_FAILURE:
       return { loading: false, error: action.payload };
     case USER_LOGOUT:
@@ -140,6 +150,21 @@ export const userUpdatePasswordReducer = (state = {}, action) => {
     case CLEAR_PASSWORD_DATA:
       return {};
 
+    default:
+      return state;
+  }
+};
+
+export const viewNotificationReducer = (state = {}, action) => {
+  switch (action.type) {
+    case VIEW_NOTIFICATION_REQUEST:
+      return { loading: true };
+    case VIEW_NOTIFICATION_SUCCESS:
+      return {
+        success: true,
+      };
+    case VIEW_NOTIFICATION_FAILURE:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }

@@ -17,6 +17,9 @@ import {
   UPDATE_PASSWORD_REQUEST,
   UPDATE_PASSWORD_SUCCESS,
   UPDATE_PASSWORD_FAILURE,
+  VIEW_NOTIFICATION_REQUEST,
+  VIEW_NOTIFICATION_SUCCESS,
+  VIEW_NOTIFICATION_FAILURE,
   USER_LOGOUT,
 } from '../constants/userConstants';
 
@@ -82,14 +85,6 @@ export const signUp =
       );
 
       dispatch({ type: USER_SIGN_UP_SUCCESS, payload: data });
-      // RootNavigation.navigate('Sign Up Details', {
-      //   firstName,
-      //   lastName,
-      //   email,
-      //   username,
-      //   password,
-      //   confirmPassword,
-      // });
     } catch (error) {
       dispatch({
         type: USER_SIGN_UP_FAILURE,
@@ -282,6 +277,39 @@ export const completeSignUp =
     } catch (error) {
       dispatch({
         type: UPDATE_USER_PROFILE_FAILURE,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
+export const viewNotification =
+  (notificationId) => async (dispatch, getState) => {
+    const { authToken } = getState().userSignIn;
+    try {
+      dispatch({ type: VIEW_NOTIFICATION_REQUEST });
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      };
+
+      const { data } = await gearedApi.put(
+        `api/users/notification/${notificationId}`,
+        {
+          notificationId,
+        },
+        config
+      );
+
+      dispatch({ type: VIEW_NOTIFICATION_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: VIEW_NOTIFICATION_FAILURE,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message
