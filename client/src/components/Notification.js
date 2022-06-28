@@ -1,52 +1,190 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import moment from 'moment';
+
+// Actions
+import { viewNotification } from '../actions/userActions';
 
 const Notification = ({
   profileImage,
   username,
   notificationType,
   timePosted,
+  postId,
+  postImage,
+  commentBody,
+  isViewed,
+  notificationId,
+  user,
 }) => {
+  // Hooks
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const handleViewNotification = () => {
+    dispatch(viewNotification(notificationId));
+  };
+
+  const handleNavigation = () => {
+    // console.log(notificationType);
+    if (notificationType === 'Comment') {
+      navigation.navigate('Comments', { postId });
+    }
+
+    if (notificationType === 'Like Post') {
+      navigation.navigate('PostDetails', { postId });
+    }
+  };
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.userImage}
-        source={{
-          uri: profileImage,
-        }}
-      />
+    <>
+      {isViewed && (
+        <TouchableOpacity
+          onPress={() => {
+            handleNavigation();
+          }}
+        >
+          <View style={styles.isViewedContainer}>
+            <Image
+              style={styles.userImage}
+              source={{
+                uri: profileImage,
+              }}
+            />
 
-      <View>
-        <View style={styles.sentence}>
-          <Text style={styles.username}>{username}</Text>
+            <View style={styles.content}>
+              <View style={styles.sentence}>
+                {/* <Text style={styles.username}>{username}</Text> */}
 
-          {notificationType === 'Like Post' && (
-            <Text style={{ fontSize: 15 }}>liked your post.</Text>
-          )}
+                {notificationType === 'Like Post' && (
+                  <Text>
+                    <Text style={styles.username}>{username}</Text> liked your
+                    post.
+                  </Text>
+                )}
 
-          {notificationType === 'Follow' && (
-            <Text style={{ fontSize: 15 }}>started following you.</Text>
-          )}
+                {notificationType === 'Follow' && (
+                  <Text>
+                    <Text style={styles.username}>{username}</Text> started
+                    following you.
+                  </Text>
+                )}
 
-          {notificationType === 'Comment' && (
-            <Text style={{ fontSize: 15 }}>commented on your post.</Text>
-          )}
-        </View>
-        <Text style={styles.timePosted}>{timePosted}</Text>
-      </View>
-    </View>
+                {notificationType === 'Comment' && (
+                  <Text>
+                    <Text style={styles.username}>{username}</Text> commented on
+                    your post:{' '}
+                    {commentBody.length > 80
+                      ? `${commentBody.slice(0, 80)}...`
+                      : commentBody}
+                  </Text>
+                )}
+              </View>
+              <Text style={styles.timePosted}>
+                {moment(timePosted).startOf('minute').fromNow().toUpperCase()}
+              </Text>
+            </View>
+
+            {notificationType !== 'Follow' && (
+              <Image
+                style={styles.postImage}
+                source={{
+                  uri: postImage,
+                }}
+              />
+            )}
+          </View>
+        </TouchableOpacity>
+      )}
+
+      {!isViewed && (
+        <TouchableOpacity
+          onPress={() => {
+            handleViewNotification(user);
+            handleNavigation();
+          }}
+        >
+          <View style={styles.notViewedContainer}>
+            <Image
+              style={styles.userImage}
+              source={{
+                uri: profileImage,
+              }}
+            />
+
+            <View style={styles.content}>
+              <View style={styles.sentence}>
+                {/* <Text style={styles.username}>{username}</Text> */}
+
+                {notificationType === 'Like Post' && (
+                  <Text>
+                    <Text style={styles.username}>{username}</Text> liked your
+                    post.
+                  </Text>
+                )}
+
+                {notificationType === 'Follow' && (
+                  <Text>
+                    <Text style={styles.username}>{username}</Text> started
+                    following you.
+                  </Text>
+                )}
+
+                {notificationType === 'Comment' && (
+                  <Text>
+                    <Text style={styles.username}>{username}</Text> commented on
+                    your post:{' '}
+                    {commentBody.length > 80
+                      ? `${commentBody.slice(0, 80)}...`
+                      : commentBody}
+                  </Text>
+                )}
+              </View>
+              <Text style={styles.timePosted}>
+                {moment(timePosted).startOf('minute').fromNow().toUpperCase()}
+              </Text>
+            </View>
+
+            {notificationType !== 'Follow' && (
+              <Image
+                style={styles.postImage}
+                source={{
+                  uri: postImage,
+                }}
+              />
+            )}
+          </View>
+        </TouchableOpacity>
+      )}
+    </>
   );
 };
 
 export default Notification;
 
 const styles = StyleSheet.create({
-  container: {
+  notViewedContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 15,
     paddingVertical: 8,
+    justifyContent: 'space-between',
+    backgroundColor: '#f5f5f5',
+    borderBottomWidth: 1,
+    borderColor: '#d4d4d4',
+  },
+  isViewedContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderColor: '#d4d4d4',
   },
   userImage: {
     height: 40,
@@ -55,9 +193,12 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#d4d4d4',
-    marginRight: 10,
   },
-  content: {},
+  content: {
+    flex: 1,
+    marginLeft: 10,
+    marginRight: 8,
+  },
   sentence: {
     display: 'flex',
     flexDirection: 'row',
@@ -69,7 +210,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   timePosted: {
-    fontSize: 12,
+    fontSize: 10,
     marginTop: 2,
+  },
+  postImage: {
+    height: 50,
+    width: 50,
   },
 });
