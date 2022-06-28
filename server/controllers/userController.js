@@ -288,6 +288,33 @@ const getPostsByUserId = asyncHandler(async (req, res) => {
   res.status(200).json(userCollection);
 });
 
+/**
+ * @desc Mark notification as viewed by notification id
+ * @route PUT /users/notification/:id
+ * @access Public
+ */
+const markNotificationAsViewed = asyncHandler(async (req, res) => {
+  const { id: notificationId } = req.params;
+  const { id: userId } = req.user;
+
+  const user = await User.findOneAndUpdate(
+    {
+      _id: userId,
+      notifications: { $elemMatch: { _id: notificationId } },
+    },
+    { $set: { 'notifications.$.viewed': true } },
+    { new: true }
+  );
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  // const notifications = user.notifications;
+  res.status(200).json({ message: 'Notification marked as viewed' });
+});
+
 export {
   signIn,
   signUp,
@@ -295,4 +322,5 @@ export {
   getPostsByUserId,
   updateUserProfile,
   updateUserPassword,
+  markNotificationAsViewed,
 };
