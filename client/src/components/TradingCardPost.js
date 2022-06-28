@@ -51,6 +51,7 @@ const TradingCardPost = ({
   likesIds,
   post,
   savedPosts,
+  commentsCount,
 }) => {
   // console.log(savedPosts);
 
@@ -111,7 +112,7 @@ const TradingCardPost = ({
   };
 
   const navigateToComments = () => {
-    navigation.navigate('CommentScreenFromHome', {
+    navigation.navigate('Comments', {
       postId,
     });
   };
@@ -194,9 +195,25 @@ const TradingCardPost = ({
         />
       </View>
 
-      <TouchableOpacity onPress={navigateToComments} activeOpacity={0.9}>
-        <Text style={styles.viewComments}>View all 13 comments</Text>
-      </TouchableOpacity>
+      {commentsCount === 0 && (
+        <TouchableOpacity onPress={navigateToComments} activeOpacity={0.9}>
+          <Text style={styles.viewComments}>Add a comment</Text>
+        </TouchableOpacity>
+      )}
+
+      {commentsCount > 5 && (
+        <TouchableOpacity onPress={navigateToComments} activeOpacity={0.9}>
+          <Text style={styles.viewComments}>
+            View all {commentsCount} comments
+          </Text>
+        </TouchableOpacity>
+      )}
+
+      {commentsCount <= 5 && commentsCount > 0 && (
+        <TouchableOpacity onPress={navigateToComments} activeOpacity={0.9}>
+          <Text style={styles.viewComments}>View all comments</Text>
+        </TouchableOpacity>
+      )}
 
       <Text style={styles.timePosted}>
         {moment(datePosted).startOf('hour').fromNow().toUpperCase()}
@@ -394,7 +411,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F1F1F1',
     paddingHorizontal: 7,
     paddingVertical: 3,
-    borderRadius: 10,
+    borderRadius: 5,
     overflow: 'hidden',
   },
 });
