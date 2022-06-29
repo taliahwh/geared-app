@@ -1,14 +1,43 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+
+// Actions
+import { deleteComment } from '../actions/postActions';
+
 const Comment = ({
+  commentId,
   displayName,
   username,
   timePosted,
   userImage,
   commentMessage,
+  commentingUserId,
+  listedBy,
+  postOfComment,
 }) => {
+  // Hooks
+  const dispatch = useDispatch();
+
+  // Redux state
+  const { _id: loggedInUserId } = useSelector(
+    (state) => state.userSignIn.userInfo
+  );
+
+  const handleDeleteComment = () => {
+    dispatch(deleteComment(commentId, postOfComment));
+  };
+
+  const handleReportComment = () => {};
+
   return (
     <View style={styles.container}>
       <Image
@@ -26,7 +55,68 @@ const Comment = ({
             <Text style={styles.timePosted}>{timePosted}</Text>
           </View>
 
-          <Ionicons name="ellipsis-horizontal" size={19} color="#a3a3a3" />
+          {listedBy === loggedInUserId ||
+          commentingUserId === loggedInUserId ? (
+            <View>
+              <Pressable onPress={() => MenuProvider.open}>
+                <Menu>
+                  <MenuTrigger>
+                    <Ionicons
+                      name="ellipsis-horizontal"
+                      size={19}
+                      color="#a3a3a3"
+                    />
+                  </MenuTrigger>
+                  <MenuOptions style={styles.menu}>
+                    <MenuOption
+                      onSelect={handleDeleteComment}
+                      style={{ borderBottomWidth: 1, borderColor: '#d4d4d4' }}
+                    >
+                      <View style={styles.menuContainer}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingVertical: 2,
+                            // textAlign: 'center',
+                            fontWeight: '500',
+                            color: '#ef4444',
+                          }}
+                        >
+                          Delete Comment
+                        </Text>
+                        <Ionicons
+                          name="ios-trash-outline"
+                          size={20}
+                          color="#ef4444"
+                        />
+                      </View>
+                    </MenuOption>
+
+                    <MenuOption onSelect={handleReportComment}>
+                      <View style={styles.menuContainer}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            paddingVertical: 2,
+                            // textAlign: 'center',
+                            fontWeight: '500',
+                            color: '#000',
+                          }}
+                        >
+                          Report
+                        </Text>
+                        <Ionicons
+                          name="ios-flag-outline"
+                          size={20}
+                          color="#000"
+                        />
+                      </View>
+                    </MenuOption>
+                  </MenuOptions>
+                </Menu>
+              </Pressable>
+            </View>
+          ) : null}
         </View>
 
         <Text style={styles.commentMessage}>{commentMessage}</Text>
@@ -42,7 +132,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between  ',
+    justifyContent: 'space-between',
     marginBottom: 15,
   },
   userImage: {
@@ -91,5 +181,13 @@ const styles = StyleSheet.create({
   commentMessage: {
     marginTop: 5,
     // fontSize
+  },
+  menu: {},
+  menuContainer: {
+    dispaly: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 7,
+    paddingVertical: 5,
   },
 });
