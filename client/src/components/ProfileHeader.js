@@ -264,9 +264,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   menu: {
-    borderWidth: 1,
-    borderColor: '#d4d4d4',
-    padding: 3,
+    borderRadius: 10,
+    padding: 7,
   },
   website: {
     color: '#3E5E7E',
