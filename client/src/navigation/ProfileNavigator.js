@@ -17,7 +17,7 @@ const ProfileNavigator = () => {
   return (
     <Stack.Navigator options={{ headerBackTitleVisible: false }}>
       <Stack.Screen
-        name="User Profile"
+        name="UserProfile"
         component={ProfileScreen}
         options={{
           headerTitle: '',
