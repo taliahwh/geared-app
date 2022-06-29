@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   FlatList,
   Image,
@@ -45,12 +45,11 @@ const LikesRoute = () => {
     posts,
     errpr: errorLikedPosts,
   } = useSelector((state) => state.likedPosts);
+  const { success: successLikedPost } = useSelector((state) => state.likePost);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getLikedPosts());
-    }, [dispatch])
-  );
+  useEffect(() => {
+    dispatch(getLikedPosts());
+  }, [dispatch, successLikedPost]);
 
   return (
     <>
