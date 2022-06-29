@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -43,15 +43,23 @@ const AuthProfileHeader = () => {
     error: errorUserDetails,
   } = useSelector((state) => state.userDetails);
 
+  const { success: successUpdateProfile } = useSelector(
+    (state) => state.userUpdateProfile
+  );
+
   const handleLogout = () => {
     dispatch(logout());
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getUserDetails(userId));
-    }, [dispatch])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     dispatch(getUserDetails(userId));
+  //   }, [dispatch])
+  // );
+
+  useEffect(() => {
+    dispatch(getUserDetails(userId));
+  }, [dispatch, userId, successUpdateProfile]);
 
   return (
     <View style={styles.container}>

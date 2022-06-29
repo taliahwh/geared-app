@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   FlatList,
   Image,
@@ -49,11 +49,19 @@ const AuthCollectionGrid = () => {
     error: errorUserPosts,
   } = useSelector((state) => state.userPosts);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getUserPosts(userId));
-    }, [dispatch])
+  const { success: successCreatePost } = useSelector(
+    (state) => state.createPost
   );
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     dispatch(getUserPosts(userId));
+  //   }, [dispatch])
+  // );
+
+  useEffect(() => {
+    dispatch(getUserPosts(userId));
+  }, [dispatch, userId, successCreatePost]);
 
   // console.log(userId);
 
