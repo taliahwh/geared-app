@@ -114,6 +114,7 @@ const TradingCardPost = ({
   const navigateToComments = () => {
     navigation.navigate('Comments', {
       postId,
+      post,
     });
   };
 
@@ -216,7 +217,7 @@ const TradingCardPost = ({
       )}
 
       <Text style={styles.timePosted}>
-        {moment(datePosted).startOf('hour').fromNow().toUpperCase()}
+        {moment(datePosted).startOf('minute').fromNow().toUpperCase()}
       </Text>
     </View>
   );
