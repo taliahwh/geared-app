@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   ScrollView,
@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 
@@ -26,6 +26,7 @@ import { getPostDetails, likePost, savePost } from '../actions/postActions';
 const PostDetailsScreen = ({ route, forSale, offers }) => {
   // Hooks
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   // Params from navigation
   const { postId } = route.params;
@@ -65,11 +66,16 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
     dispatch(likePost(postDetails));
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getPostDetails(postId));
-    }, [dispatch, successLikePost])
-  );
+  const navigateToComments = () => {
+    navigation.navigate('Comments', {
+      postId,
+      post: postDetails,
+    });
+  };
+
+  useEffect(() => {
+    dispatch(getPostDetails(postId));
+  }, [dispatch, postId, successLikePost]);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -148,7 +154,26 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
             {postDetails.description}
           </Text>
 
-          <Text style={styles.viewComments}>View all 13 comments</Text>
+          {/* <Text style={styles.viewComments}>View all 13 comments</Text> */}
+          {postDetails.comments.length === 0 && (
+            <TouchableOpacity onPress={navigateToComments} activeOpacity={0.9}>
+              <Text style={styles.viewComments}>Add a comment</Text>
+            </TouchableOpacity>
+          )}
+
+          {postDetails.comments.length > 5 && (
+            <TouchableOpacity onPress={navigateToComments} activeOpacity={0.9}>
+              <Text style={styles.viewComments}>
+                View all {postDetails.comments.length} comments
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {postDetails.comments.length <= 5 && postDetails.comments.length > 0 && (
+            <TouchableOpacity onPress={navigateToComments} activeOpacity={0.9}>
+              <Text style={styles.viewComments}>View all comments</Text>
+            </TouchableOpacity>
+          )}
 
           <View style={styles.cardDetailsContainer}>
             <View style={styles.specsContainer}>
@@ -176,7 +201,7 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
 
           <Text style={styles.uploadDate}>
             {moment(postDetails.createdAt)
-              .startOf('hour')
+              .startOf('minute')
               .fromNow()
               .toUpperCase()}
           </Text>
