@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ScrollView,
   View,
@@ -40,11 +40,16 @@ const ManageRoute = () => {
     error: errorUserPosts,
   } = useSelector((state) => state.userPosts);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getUserPosts(userId));
-    }, [dispatch])
+  const { success: successCreatePost } = useSelector(
+    (state) => state.createPost
   );
+  const { success: successUpdateProfile } = useSelector(
+    (state) => state.userUpdateProfile
+  );
+
+  useEffect(() => {
+    dispatch(getUserPosts(userId));
+  }, [dispatch, userId, successCreatePost, successUpdateProfile]);
 
   const ITEMS = [
     posts && posts.length >= 1

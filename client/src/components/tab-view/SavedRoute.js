@@ -1,5 +1,4 @@
-import React, { useRef } from 'react';
-import { Asset } from 'expo-asset';
+import React, { useRef, useEffect } from 'react';
 import {
   FlatList,
   Image,
@@ -21,34 +20,6 @@ import AlertMessage from '../AlertMessage';
 import { getSavedPosts } from '../../actions/postActions';
 
 const cardWidth = Dimensions.get('window').width / 4;
-
-const marcus = Asset.fromModule(require('../../assets/test-images/marcus.jpg'));
-const ayton = Asset.fromModule(require('../../assets/test-images/ayton.jpg'));
-const maxey = Asset.fromModule(require('../../assets/test-images/maxey.jpg'));
-const jb = Asset.fromModule(require('../../assets/test-images/jb.jpg'));
-
-const IMAGES = [
-  {
-    id: 3,
-    name: 'Marcus Smart',
-    src: marcus,
-  },
-  {
-    id: 4,
-    name: 'Deandre Ayton',
-    src: ayton,
-  },
-  {
-    id: 5,
-    name: 'Tyrese Maxey',
-    src: maxey,
-  },
-  {
-    id: 6,
-    name: 'Jaylen Brown',
-    src: jb,
-  },
-];
 
 const ImageRender = ({ src }) => {
   return (
@@ -73,12 +44,11 @@ const SavedRoute = () => {
     posts,
     errpr: errorSavedPosts,
   } = useSelector((state) => state.savedPosts);
+  const { success: successSavePost } = useSelector((state) => state.savePost);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getSavedPosts());
-    }, [dispatch])
-  );
+  useEffect(() => {
+    dispatch(getSavedPosts());
+  }, [dispatch, successSavePost]);
 
   return (
     <>
