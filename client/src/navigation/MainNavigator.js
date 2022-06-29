@@ -4,11 +4,13 @@ import {
   getFocusedRouteNameFromRoute,
 } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 // Screens
 import SearchScreen from '../screens/SearchScreen';
+
+// Actions
 
 import HomeScreenNavigator from './HomeScreenNavigator';
 import ProfileNavigator from './ProfileNavigator';
@@ -16,7 +18,7 @@ import DashboardNavigator from './DashboardNavigator';
 import MessagesNavigator from './MessagesNavigator';
 
 // Actions
-import { getProfileDetails } from '../actions/userActions';
+import { getNotifications } from '../actions/userActions';
 
 export const navigationRef = createNavigationContainerRef();
 
@@ -29,8 +31,19 @@ export const navigate = (name, params) => {
 const Tab = createBottomTabNavigator();
 
 const MainNavigator = () => {
+  // Hooks
+  const dispatch = useDispatch();
+
   // User info from redux state
-  const { unreadNotifications } = useSelector((state) => state.userDetails);
+  const { unreadNotifications } = useSelector((state) => state.notifications);
+  const { success: successViewNotification } = useSelector(
+    (state) => state.userViewNotification
+  );
+  const { id: userId } = useSelector((state) => state.userSignIn);
+
+  useEffect(() => {
+    dispatch(getNotifications(userId));
+  }, [dispatch, userId, successViewNotification]);
 
   return (
     <Tab.Navigator
@@ -104,7 +117,7 @@ const MainNavigator = () => {
             shadowOpacity: 0,
             borderBottomWidth: 0,
           },
-          tabBarBadge: unreadNotifications ? unreadNotifications.length : null,
+          tabBarBadge: unreadNotifications ? unreadNotifications.length : 0,
           tabBarBadgeStyle: {
             backgroundColor: '#3E5E7E',
             fontSize: 12,
