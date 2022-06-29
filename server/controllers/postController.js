@@ -144,23 +144,25 @@ const likePost = asyncHandler(async (req, res) => {
 
   await user.save();
 
-  const newNotification = await Notification.create({
-    notificationType: 'Like Post',
-    notificationBody: `@${user.username} liked your post`,
-    postId: String(postId),
-    postImage: post.images[0].imgUrl,
-    requestTo: String(userOfPostId),
-    requestFrom: {
-      id: String(user._id),
-      username: user.username,
-      profileImage: user.profileImage,
-    },
-  });
-  await newNotification.save();
-  userOfPost.notifications.push(newNotification);
-  await userOfPost.save();
+  if (index === -1 && String(userId) !== String(userOfPostId)) {
+    const newNotification = await Notification.create({
+      notificationType: 'Like Post',
+      notificationBody: `@${user.username} liked your post`,
+      postId: String(postId),
+      postImage: post.images[0].imgUrl,
+      requestTo: String(userOfPostId),
+      requestFrom: {
+        id: String(user._id),
+        username: user.username,
+        profileImage: user.profileImage,
+      },
+    });
+    await newNotification.save();
+    userOfPost.notifications.push(newNotification);
+    await userOfPost.save();
+  }
 
-  res.status(200).json(updatedPost);
+  res.status(200).json({ message: 'Liked post' });
 });
 
 /**
@@ -289,24 +291,76 @@ const createNewComment = asyncHandler(async (req, res) => {
   post.comments.push(newComment);
   await post.save();
 
-  const newNotification = await Notification.create({
-    notificationType: 'Comment',
-    notificationBody: `@${commentingUser.username} commented on your post`,
-    postId: String(postId),
-    postImage: post.images[0].imgUrl,
-    commentBody,
-    requestTo: String(userOfPostId),
-    requestFrom: {
-      id: String(commentingUser._id),
-      username: commentingUser.username,
-      profileImage: commentingUser.profileImage,
-    },
-  });
-  await newNotification.save();
-  userOfPost.notifications.push(newNotification);
-  await userOfPost.save();
+  // Don't send notification if user is commenting on their own post
+  if (String(userId) !== String(userOfPostId)) {
+    const newNotification = await Notification.create({
+      notificationType: 'Comment',
+      notificationBody: `@${commentingUser.username} commented on your post`,
+      postId: String(postId),
+      postImage: post.images[0].imgUrl,
+      commentBody,
+      requestTo: String(userOfPostId),
+      requestFrom: {
+        id: String(commentingUser._id),
+        username: commentingUser.username,
+        profileImage: commentingUser.profileImage,
+      },
+    });
+    await newNotification.save();
+    userOfPost.notifications.push(newNotification);
+    await userOfPost.save();
+  }
 
   res.status(200).json(newComment);
+});
+
+/**
+ * @desc Delete comment from post by comment id
+ * @route PUT /posts/deletecomment/:id
+ * @access Public
+ */
+const deleteComment = asyncHandler(async (req, res) => {
+  const { id: commentId } = req.params;
+  const { id: userId } = req.user;
+
+  const commentExists = await Comment.findById(commentId);
+  if (!commentExists) {
+    res.json(404);
+    throw new Error('No comment found with that id.');
+  }
+  const postId = commentExists.post;
+  const post = await Post.findById(postId);
+
+  //  Check if User is authorized to delete comment:
+  // -- If their id is the same as the comment sender's id
+  // -- OR if their id is the same as the post's listedBy userId
+  // -- Meaning they can only delete their comment or comment's under their posts
+  if (
+    String(userId) !== String(post.listedBy.userId) &&
+    String(userId) !== String(commentExists.sender.userId)
+  ) {
+    res.status(400);
+    throw new Error('Not authorized to delete this comment');
+  }
+
+  // Delete comment from post's comments array
+  const updatedPost = await Post.updateOne(
+    { _id: postId },
+    {
+      $pull: {
+        comments: {
+          _id: commentId,
+        },
+      },
+    }
+  );
+
+  // Delete comment document
+  await Comment.findByIdAndDelete(commentId);
+
+  res.status(200).json({ message: 'Comment deleted' });
+
+  res.json(updatedPost);
 });
 
 export {
@@ -318,4 +372,5 @@ export {
   savePost,
   getSavedPosts,
   createNewComment,
+  deleteComment,
 };

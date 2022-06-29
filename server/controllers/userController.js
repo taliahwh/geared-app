@@ -11,13 +11,14 @@ import Post from '../models/postModel.js';
  * @access Public
  */
 const signIn = asyncHandler(async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, password } = req.body;
 
   const sendUserData = (user) => {
     res.json({
       _id: user._id,
       name: user.name,
       username: user.username,
+      notifications: user.notifications,
       token: generateToken(user._id),
     });
   };
@@ -315,6 +316,25 @@ const markNotificationAsViewed = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Notification marked as viewed' });
 });
 
+/**
+ * @desc Get user notifications by user if
+ * @route GET /users/notification/:id
+ * @access Public
+ */
+const getNotifications = asyncHandler(async (req, res) => {
+  const { id: userId } = req.user;
+
+  const user = await User.findById(userId);
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  const notifications = user.notifications;
+
+  res.status(200).json(notifications);
+});
+
 export {
   signIn,
   signUp,
@@ -323,4 +343,5 @@ export {
   updateUserProfile,
   updateUserPassword,
   markNotificationAsViewed,
+  getNotifications,
 };
