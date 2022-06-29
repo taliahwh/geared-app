@@ -20,12 +20,13 @@ import {
   VIEW_NOTIFICATION_REQUEST,
   VIEW_NOTIFICATION_SUCCESS,
   VIEW_NOTIFICATION_FAILURE,
+  GET_NOTIFICATIONS_REQUEST,
+  GET_NOTIFICATIONS_SUCCESS,
+  GET_NOTIFICATIONS_FAILURE,
   USER_LOGOUT,
 } from '../constants/userConstants';
 
 import gearedApi from '../api/geared';
-
-import * as RootNavigation from '../navigation/RootNavigation';
 
 export const signIn = (username, password) => async (dispatch) => {
   try {
@@ -299,7 +300,7 @@ export const viewNotification =
       };
 
       const { data } = await gearedApi.put(
-        `api/users/notification/${notificationId}`,
+        `api/users/notifications/${notificationId}`,
         {
           notificationId,
         },
@@ -317,3 +318,32 @@ export const viewNotification =
       });
     }
   };
+
+export const getNotifications = (userId) => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
+  try {
+    dispatch({ type: GET_NOTIFICATIONS_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await gearedApi.get(
+      `api/users/notifications/${userId}`,
+      config
+    );
+
+    dispatch({ type: GET_NOTIFICATIONS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: GET_NOTIFICATIONS_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};

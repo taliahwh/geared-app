@@ -20,6 +20,9 @@ import {
   VIEW_NOTIFICATION_REQUEST,
   VIEW_NOTIFICATION_SUCCESS,
   VIEW_NOTIFICATION_FAILURE,
+  GET_NOTIFICATIONS_REQUEST,
+  GET_NOTIFICATIONS_SUCCESS,
+  GET_NOTIFICATIONS_FAILURE,
   CLEAR_PROFILE_DATA,
   CLEAR_PASSWORD_DATA,
   CLEAR_POSTS_DATA,
@@ -164,6 +167,25 @@ export const viewNotificationReducer = (state = {}, action) => {
         success: true,
       };
     case VIEW_NOTIFICATION_FAILURE:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const notificationsReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_NOTIFICATIONS_REQUEST:
+      return { loading: true };
+    case GET_NOTIFICATIONS_SUCCESS:
+      return {
+        success: true,
+        notifications: action.payload,
+        unreadNotifications: action.payload.filter(
+          (notification) => notification.viewed !== true
+        ),
+      };
+    case GET_NOTIFICATIONS_FAILURE:
       return { loading: false, error: action.payload };
     default:
       return state;
