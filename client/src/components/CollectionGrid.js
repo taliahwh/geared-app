@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Asset } from 'expo-asset';
 import {
   FlatList,
@@ -47,11 +47,15 @@ const CollectionGrid = ({ userId }) => {
     error: errorUserPosts,
   } = useSelector((state) => state.userPosts);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getUserPosts(userId));
-    }, [dispatch])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     dispatch(getUserPosts(userId));
+  //   }, [dispatch])
+  // );
+
+  useEffect(() => {
+    dispatch(getUserPosts(userId));
+  }, [dispatch, userId]);
 
   return (
     <>
