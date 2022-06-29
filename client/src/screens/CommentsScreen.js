@@ -26,26 +26,31 @@ import { getPostDetails, comment } from '../actions/postActions';
 const CommentsScreen = ({ route }) => {
   // Hooks
   const dispatch = useDispatch();
-  const { postId } = route.params;
+  const { postId, post } = route.params;
+
   const [commentBody, setCommentBody] = useState('');
 
   // Redux state
   const {
     loading: loadingPostDetails,
     postDetails,
+    comments,
     error: errorPostDetails,
   } = useSelector((state) => state.postDetails);
 
-  const { loading: loadingComment, success: successComment } = useSelector(
-    (state) => state.comment
+  const { success: successComment } = useSelector((state) => state.comment);
+  const { success: successDeleteComment } = useSelector(
+    (state) => state.deleteComment
   );
 
   const { userDetails } = useSelector((state) => state.userDetails);
+  const listedBy = postDetails && postDetails.listedBy.userId;
 
   const renderItem = ({ item }) => {
     const [first, last] = item.sender.name.split(' ');
     return (
       <Comment
+        commentId={item._id}
         displayName={first}
         username={`${item.sender.username}`}
         timePosted={moment(item.createdAt)
@@ -54,6 +59,9 @@ const CommentsScreen = ({ route }) => {
           .toUpperCase()}
         commentMessage={item.content}
         userImage={item.sender.profileImage}
+        commentingUserId={item.sender.userId}
+        listedBy={listedBy}
+        postOfComment={post}
       />
     );
   };
@@ -66,7 +74,7 @@ const CommentsScreen = ({ route }) => {
   useFocusEffect(
     React.useCallback(() => {
       dispatch(getPostDetails(postId));
-    }, [dispatch, successComment])
+    }, [dispatch, successComment, successDeleteComment])
   );
 
   return (
@@ -107,18 +115,18 @@ const CommentsScreen = ({ route }) => {
           </View>
         )}
 
-        {postDetails && postDetails.comments.length > 0 && (
+        {comments && comments.length > 0 && (
           <View style={styles.commentsSection}>
             <FlatList
               // ref={scrollRef}
-              data={postDetails.comments.reverse()}
+              data={comments}
               renderItem={renderItem}
               keyExtractor={(item) => item._id}
             />
           </View>
         )}
 
-        {postDetails && postDetails.comments.length === 0 && (
+        {comments && comments.length === 0 && (
           <View style={styles.centeredContainer}>
             <Text style={styles.alert}>No comments</Text>
           </View>
