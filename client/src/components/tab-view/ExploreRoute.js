@@ -1,10 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   StyleSheet,
   Dimensions,
   FlatList,
   View,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
@@ -24,6 +25,7 @@ const ExploreRoute = () => {
   const scrollRef = useRef(null);
   useScrollToTop(scrollRef);
   const dispatch = useDispatch();
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
 
   // Redux state
   const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
@@ -41,8 +43,18 @@ const ExploreRoute = () => {
 
   const { success: successLikePost } = useSelector((state) => state.likePost);
   const { success: successSavePost } = useSelector((state) => state.savePost);
+  const { success: successCreatePost } = useSelector(
+    (state) => state.createPost
+  );
 
   const savedPosts = userDetails && userDetails.savedPosts;
+
+  const onRefresh = React.useCallback(() => {
+    setIsRefreshing(true);
+
+    setTimeout(() => setIsRefreshing(false), 2000);
+    dispatch(getExplorePosts());
+  }, []);
 
   const renderItem = ({ item }) => {
     return (
@@ -68,12 +80,17 @@ const ExploreRoute = () => {
     );
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getExplorePosts());
-      dispatch(getUserDetails(userId));
-    }, [dispatch, userId, successLikePost, successSavePost])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     dispatch(getExplorePosts());
+  //     dispatch(getUserDetails(userId));
+  //   }, [dispatch, userId, successLikePost, successSavePost])
+  // );
+
+  useEffect(() => {
+    dispatch(getExplorePosts());
+    dispatch(getUserDetails(userId));
+  }, [dispatch, userId, successLikePost, successSavePost, successCreatePost]);
 
   return (
     <>
@@ -87,6 +104,9 @@ const ExploreRoute = () => {
             data={posts}
             renderItem={renderItem}
             keyExtractor={(item) => item._id}
+            refreshControl={
+              <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+            }
           />
         </View>
       )}
