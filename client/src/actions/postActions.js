@@ -23,6 +23,9 @@ import {
   COMMENT_POST_REQUEST,
   COMMENT_POST_SUCCESS,
   COMMENT_POST_FAILURE,
+  DELETE_COMMENT_REQUEST,
+  DELETE_COMMENT_SUCCESS,
+  DELETE_COMMENT_FAILURE,
   GET_SAVED_POSTS_REQUEST,
   GET_SAVED_POSTS_SUCCESS,
   GET_SAVED_POSTS_FAILURE,
@@ -237,3 +240,29 @@ export const comment = (postId, commentBody) => async (dispatch, getState) => {
     console.log(error.message);
   }
 };
+
+export const deleteComment =
+  (commentId, post) => async (dispatch, getState) => {
+    dispatch({ type: DELETE_COMMENT_REQUEST });
+
+    const { authToken } = getState().userSignIn;
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`,
+        },
+      };
+
+      const { data } = await geared.put(
+        `/api/posts/deletecomment/${commentId}`,
+        { post },
+        config
+      );
+
+      dispatch({ type: DELETE_COMMENT_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({ type: DELETE_COMMENT_FAILURE });
+      console.log(error.message);
+    }
+  };
