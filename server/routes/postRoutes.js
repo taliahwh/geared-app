@@ -9,6 +9,7 @@ import {
   savePost,
   getSavedPosts,
   createNewComment,
+  deleteComment,
 } from '../controllers/postController.js';
 
 // Middleware
@@ -27,6 +28,8 @@ router.get('/likedposts', authMiddleware, getLikedPosts);
 router.get('/savedposts', authMiddleware, getSavedPosts);
 
 router.get('/:id', authMiddleware, getPostById);
+
+router.put('/deletecomment/:id', authMiddleware, deleteComment);
 
 router.put('/:id/likepost', authMiddleware, likePost);
 
