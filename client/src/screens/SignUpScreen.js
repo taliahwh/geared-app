@@ -68,12 +68,6 @@ const SignUpScreen = () => {
       });
   }, [successSignUp]);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     return () => dispatch({ type: CLEAR_SIGN_UP_DATA });
-  //   }, [dispatch])
-  // );
-
   return (
     <SafeAreaView style={styles.screenContainer}>
       <KeyboardAvoidingView

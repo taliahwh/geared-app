@@ -23,6 +23,15 @@ import {
   GET_NOTIFICATIONS_REQUEST,
   GET_NOTIFICATIONS_SUCCESS,
   GET_NOTIFICATIONS_FAILURE,
+  FOLLOW_USER_REQUEST,
+  FOLLOW_USER_SUCCESS,
+  FOLLOW_USER_FAILURE,
+  VIEW_FOLLOWERS_REQUEST,
+  VIEW_FOLLOWERS_SUCCESS,
+  VIEW_FOLLOWERS_FAILURE,
+  VIEW_FOLLOWING_REQUEST,
+  VIEW_FOLLOWING_SUCCESS,
+  VIEW_FOLLOWING_FAILURE,
   CLEAR_PROFILE_DATA,
   CLEAR_PASSWORD_DATA,
   CLEAR_POSTS_DATA,
@@ -186,6 +195,56 @@ export const notificationsReducer = (state = {}, action) => {
         ),
       };
     case GET_NOTIFICATIONS_FAILURE:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const followUserReducer = (state = {}, action) => {
+  switch (action.type) {
+    case FOLLOW_USER_REQUEST:
+      return { loading: true };
+    case FOLLOW_USER_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+      };
+    case FOLLOW_USER_FAILURE:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const viewFollowersReducer = (state = { followers: {} }, action) => {
+  switch (action.type) {
+    case VIEW_FOLLOWERS_REQUEST:
+      return { loading: true };
+    case VIEW_FOLLOWERS_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        followers: action.payload,
+      };
+    case VIEW_FOLLOWERS_FAILURE:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const viewFollowingReducer = (state = { following: {} }, action) => {
+  switch (action.type) {
+    case VIEW_FOLLOWING_REQUEST:
+      return { loading: true };
+    case VIEW_FOLLOWING_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        following: action.payload,
+      };
+    case VIEW_FOLLOWING_FAILURE:
       return { loading: false, error: action.payload };
     default:
       return state;
