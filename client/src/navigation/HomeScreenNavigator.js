@@ -4,11 +4,18 @@ import { View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from '../screens/HomeScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import ViewUserProfileScreen from '../screens/ViewUserProfileScreen';
 import PostDetailsScreen from '../screens/PostDetailsScreen';
 import CommentsScreen from '../screens/CommentsScreen';
+import FollowingScreen from '../screens/FollowingScreen';
+import FollowersScreen from '../screens/FollowersScreen';
 
-import { HeaderBack, HeaderClose } from '../components/HeaderBackImages';
+import {
+  HeaderBack,
+  HeaderClose,
+  HeaderNotification,
+} from '../components/HeaderBackImages';
 
 const Stack = createStackNavigator();
 
@@ -29,7 +36,7 @@ const HomeScreenNavigator = () => {
           }}
         />
         <Stack.Screen
-          name="Profile Details"
+          name="ProfileDetails"
           component={ViewUserProfileScreen}
           options={{
             headerTitle: '',
@@ -43,12 +50,44 @@ const HomeScreenNavigator = () => {
           }}
         />
         <Stack.Screen
-          name="Post Details"
+          name="PostDetails"
           component={PostDetailsScreen}
           options={{
             headerTitle: '',
             headerBackTitleVisible: false,
             headerBackImage: HeaderBack,
+          }}
+        />
+        <Stack.Screen
+          name="Followers"
+          component={FollowersScreen}
+          options={{
+            headerTitle: 'Followers',
+            headerBackTitleVisible: false,
+            headerBackImage: HeaderBack,
+          }}
+        />
+        <Stack.Screen
+          name="Following"
+          component={FollowingScreen}
+          options={{
+            headerTitle: 'Following',
+            headerBackTitleVisible: false,
+            headerBackImage: HeaderBack,
+          }}
+        />
+        <Stack.Screen
+          name="UserProfile"
+          component={ProfileScreen}
+          options={{
+            headerTitle: '',
+            headerStyle: {
+              elevation: 0,
+              shadowOpacity: 0,
+              borderBottomWidth: 0,
+              // height: 60,
+            },
+            headerLeft: HeaderNotification,
           }}
         />
       </Stack.Group>
