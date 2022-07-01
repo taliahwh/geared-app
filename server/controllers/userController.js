@@ -1,10 +1,12 @@
 import asyncHandler from 'express-async-handler';
+import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 import generateToken from '../utils/generateToken.js';
 
 import User from '../models/userModel.js';
 import Post from '../models/postModel.js';
+import Notification from '../models/notificationModel.js';
 /**
  * @desc Authenticate user and get token
  * @route POST /user/signup
@@ -317,7 +319,7 @@ const markNotificationAsViewed = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc Get user notifications by user if
+ * @desc Get user notifications by user id
  * @route GET /users/notification/:id
  * @access Public
  */
@@ -335,6 +337,132 @@ const getNotifications = asyncHandler(async (req, res) => {
   res.status(200).json(notifications);
 });
 
+/**
+ * @desc Follow user by user id
+ * @route PUT /users/follow/:id
+ * @access Public
+ */
+const followUser = asyncHandler(async (req, res) => {
+  const { id: authUserId } = req.user;
+  const { id: userToFollowId } = req.params;
+
+  if (String(authUserId) === String(userToFollowId)) {
+    res.status(400);
+    throw new Error('Cannot follow yourself.');
+  }
+
+  const userToFollow = await User.findById(userToFollowId);
+
+  if (!userToFollow) {
+    res.status(404);
+    throw new Error('User not found with that id.');
+  }
+
+  /* checks the index to see if the userId already appears in the post's likes */
+  const index = userToFollow.followers.findIndex(
+    (id) => id === String(authUserId)
+  );
+
+  if (index === -1) {
+    // follow the user
+    userToFollow.followers.push(authUserId);
+  } else {
+    // dislike the post
+    // returns an array of followers without the current user's id (removes)
+    userToFollow.followers = userToFollow.followers.filter(
+      (id) => id !== String(authUserId)
+    );
+  }
+
+  const updatedUser = await userToFollow.save();
+
+  const authUser = await User.findById(authUserId);
+  if (!authUser) {
+    res.status(404);
+    throw new Error('Requesting user model not found');
+  }
+
+  // Updating following arr in Auth User document
+  const idExistsInFollowingArr = authUser.following.includes(
+    String(updatedUser._id)
+  ); // returns Boolean
+
+  if (!idExistsInFollowingArr) {
+    authUser.following.push(updatedUser._id); // if user's if is not in arr, pushed user's id
+  }
+  if (idExistsInFollowingArr) {
+    authUser.following = authUser.following.filter(
+      (id) => id !== String(updatedUser._id)
+    );
+  }
+
+  await authUser.save();
+
+  if (index === -1 && String(authUserId) !== String(userToFollowId)) {
+    const newNotification = await Notification.create({
+      notificationType: 'Follow',
+      notificationBody: `@${authUser.username} started following you.`,
+      requestTo: String(userToFollowId),
+      requestFrom: {
+        id: String(authUserId),
+        username: authUser.username,
+        profileImage: authUser.profileImage,
+      },
+    });
+    await newNotification.save();
+    userToFollow.notifications.push(newNotification);
+    await userToFollow.save();
+  }
+
+  res.status(200).json({ message: 'Followed user' });
+});
+
+/**
+ * @desc Get user's followers by user id
+ * @route GET /users/followers/:id
+ * @access Public
+ */
+const getFollowers = asyncHandler(async (req, res) => {
+  const { id: userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    res.status(400);
+    throw new Error('No user found with that id.');
+  }
+
+  const userFollowersIds = user.followers.map(mongoose.Types.ObjectId); // convert strs to objectId
+  const followers = await User.find({ _id: { $in: userFollowersIds } }).select(
+    'name username profileImage'
+  );
+
+  res.status(200).json(followers);
+});
+
+/**
+ * @desc Get user's following by user id
+ * @route GET /users/following/:id
+ * @access Public
+ */
+const getFollowing = asyncHandler(async (req, res) => {
+  const { id: userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    res.status(400);
+    throw new Error('No user found with that id.');
+  }
+
+  const userFollowingIds = user.following.map(mongoose.Types.ObjectId); // convert strs to objectId
+  const following = await User.find({ _id: { $in: userFollowingIds } }).select(
+    'name username profileImage'
+  );
+
+  res.status(200).json(following);
+});
+
 export {
   signIn,
   signUp,
@@ -344,4 +472,7 @@ export {
   updateUserPassword,
   markNotificationAsViewed,
   getNotifications,
+  followUser,
+  getFollowers,
+  getFollowing,
 };
