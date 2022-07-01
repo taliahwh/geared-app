@@ -23,6 +23,15 @@ import {
   GET_NOTIFICATIONS_REQUEST,
   GET_NOTIFICATIONS_SUCCESS,
   GET_NOTIFICATIONS_FAILURE,
+  FOLLOW_USER_REQUEST,
+  FOLLOW_USER_SUCCESS,
+  FOLLOW_USER_FAILURE,
+  VIEW_FOLLOWERS_REQUEST,
+  VIEW_FOLLOWERS_SUCCESS,
+  VIEW_FOLLOWERS_FAILURE,
+  VIEW_FOLLOWING_REQUEST,
+  VIEW_FOLLOWING_SUCCESS,
+  VIEW_FOLLOWING_FAILURE,
   USER_LOGOUT,
 } from '../constants/userConstants';
 
@@ -340,6 +349,94 @@ export const getNotifications = (userId) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: GET_NOTIFICATIONS_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const followUser = (userId) => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
+  try {
+    dispatch({ type: FOLLOW_USER_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await gearedApi.put(
+      `api/users/follow/${userId}`,
+      { userId },
+      config
+    );
+
+    dispatch({ type: FOLLOW_USER_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: FOLLOW_USER_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const viewFollowers = (userId) => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
+  try {
+    dispatch({ type: VIEW_FOLLOWERS_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await gearedApi.get(
+      `api/users/followers/${userId}`,
+      config
+    );
+
+    dispatch({ type: VIEW_FOLLOWERS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: VIEW_FOLLOWERS_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const viewFollowing = (userId) => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
+  try {
+    dispatch({ type: VIEW_FOLLOWING_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await gearedApi.get(
+      `api/users/following/${userId}`,
+      config
+    );
+
+    dispatch({ type: VIEW_FOLLOWING_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: VIEW_FOLLOWING_FAILURE,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

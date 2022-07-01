@@ -70,6 +70,14 @@ const userSchema = new mongoose.Schema(
       type: [notificationSchema],
       default: [],
     },
+    followers: {
+      type: [String],
+      default: [],
+    },
+    following: {
+      type: [String],
+      default: [],
+    },
   },
   {
     // Automatically generates createdAt and updatedAt fields

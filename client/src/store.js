@@ -17,6 +17,7 @@ import {
 } from './reducers/postReducers';
 
 import {
+  followUserReducer,
   notificationsReducer,
   userDetailsReducer,
   userPostsReducer,
@@ -24,6 +25,8 @@ import {
   userSignUpReducer,
   userUpdatePasswordReducer,
   userUpdateProfileReducer,
+  viewFollowersReducer,
+  viewFollowingReducer,
   viewNotificationReducer,
 } from './reducers/userReducers';
 
@@ -36,6 +39,9 @@ const reducer = combineReducers({
   savePost: savePostsReducer,
   savedPosts: viewSavedPostsReducer,
   comment: commentPostReducer,
+  followUser: followUserReducer,
+  viewFollowers: viewFollowersReducer,
+  viewFollowing: viewFollowingReducer,
   notifications: notificationsReducer,
   deleteComment: deleteCommentReducer,
   userSignIn: userSignInReducer,
