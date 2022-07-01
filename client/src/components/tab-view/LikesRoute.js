@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
+import { useScrollToTop } from '@react-navigation/native';
 
 // Components
 import AlertMessage from '../AlertMessage';
@@ -63,7 +63,7 @@ const LikesRoute = () => {
             <TouchableOpacity
               onPress={() => {
                 /* 1. Navigate to the Details route with params */
-                navigation.navigate('Post Details', {
+                navigation.navigate('PostDetails', {
                   postId: item._id,
                 });
               }}
