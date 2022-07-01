@@ -8,7 +8,7 @@ const ChatScreen = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => {
           /* 1. Navigate to the Details route with params */
-          navigation.navigate('Post Details', {
+          navigation.navigate('PostDetails', {
             itemId: 1,
           });
         }}
