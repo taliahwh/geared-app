@@ -8,7 +8,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
+import { useScrollToTop } from '@react-navigation/native';
 
 // Components
 import TradingCardPost from '../TradingCardPost';
@@ -79,13 +79,6 @@ const ExploreRoute = () => {
       />
     );
   };
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     dispatch(getExplorePosts());
-  //     dispatch(getUserDetails(userId));
-  //   }, [dispatch, userId, successLikePost, successSavePost])
-  // );
 
   useEffect(() => {
     dispatch(getExplorePosts());

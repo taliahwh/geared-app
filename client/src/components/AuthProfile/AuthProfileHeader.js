@@ -10,7 +10,7 @@ import {
   Linking,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Menu,
@@ -20,12 +20,11 @@ import {
 } from 'react-native-popup-menu';
 
 // Components
-import Loader from '../Loader';
 import ProfileHeaderLoader from '../Loaders/ProfileHeaderLoader';
 import AlertMessage from '../AlertMessage';
 
 // Actions
-import { logout, getUserDetails } from '../../actions/userActions';
+import { logout, getUserDetails, followUser } from '../../actions/userActions';
 
 const TagRender = ({ name }) => <Text style={styles.tags}>{name}</Text>;
 const Separator = () => {
@@ -33,7 +32,9 @@ const Separator = () => {
 };
 
 const AuthProfileHeader = () => {
+  // Hooks
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   // State from redux
   const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
@@ -47,15 +48,18 @@ const AuthProfileHeader = () => {
     (state) => state.userUpdateProfile
   );
 
+  const handleNavigate = (query) => {
+    if (query === 'followers') {
+      navigation.navigate('Followers', { userId });
+    }
+    if (query === 'following') {
+      navigation.navigate('Following', { userId });
+    }
+  };
+
   const handleLogout = () => {
     dispatch(logout());
   };
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     dispatch(getUserDetails(userId));
-  //   }, [dispatch])
-  // );
 
   useEffect(() => {
     dispatch(getUserDetails(userId));
@@ -154,14 +158,28 @@ const AuthProfileHeader = () => {
 
           <View style={styles.followersAndShareContainer}>
             <View style={styles.followersContainer}>
-              <View>
-                <Text style={styles.count}>113</Text>
-                <Text>followers</Text>
-              </View>
-              <View>
-                <Text style={styles.count}>196</Text>
-                <Text>following</Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => handleNavigate('following')}
+                activeOpacity={1}
+              >
+                <View>
+                  <Text style={styles.count}>
+                    {userDetails.following.length}
+                  </Text>
+                  <Text>following</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleNavigate('followers')}
+                activeOpacity={1}
+              >
+                <View>
+                  <Text style={styles.count}>
+                    {userDetails.followers.length}
+                  </Text>
+                  <Text>followers</Text>
+                </View>
+              </TouchableOpacity>
             </View>
             <View style={styles.shareBtnContainer}>
               <Text style={styles.shareBtn}>Share collection</Text>
