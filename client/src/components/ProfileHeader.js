@@ -10,7 +10,7 @@ import {
   Linking,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Menu,
@@ -20,12 +20,11 @@ import {
 } from 'react-native-popup-menu';
 
 // Components
-import Loader from './Loader';
 import ProfileHeaderLoader from './Loaders/ProfileHeaderLoader';
 import AlertMessage from '../components/AlertMessage';
 
 // Actions
-import { logout, getUserDetails } from '../actions/userActions';
+import { logout, getUserDetails, followUser } from '../actions/userActions';
 
 const TagRender = ({ name }) => <Text style={styles.tags}>{name}</Text>;
 
@@ -34,25 +33,46 @@ const Separator = () => {
 };
 
 const ProfileHeader = ({ userId }) => {
+  // Hooks
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   // State from redux
-  // const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
+  // const { _id: authUserId } = useSelector((state) => state.userSignIn.userInfo);
   const {
     loading: loadingUserDetails,
     userDetails,
     error: errorUserDetails,
   } = useSelector((state) => state.userDetails);
 
+  const { success: successFollowUser } = useSelector(
+    (state) => state.followUser
+  );
+
+  const { success: successUpdateProfile } = useSelector(
+    (state) => state.userUpdateProfile
+  );
+
+  const handleNavigate = (query) => {
+    if (query === 'followers') {
+      navigation.navigate('Followers', { userId });
+    }
+    if (query === 'following') {
+      navigation.navigate('Following', { userId });
+    }
+  };
+
   const handleLogout = () => {
     dispatch(logout());
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getUserDetails(userId));
-    }, [dispatch])
-  );
+  const handleFollowUser = () => {
+    dispatch(followUser(userId));
+  };
+
+  useEffect(() => {
+    dispatch(getUserDetails(userId));
+  }, [dispatch, userId, successFollowUser, successUpdateProfile]);
 
   return (
     <View style={styles.container}>
@@ -146,17 +166,34 @@ const ProfileHeader = ({ userId }) => {
 
           <View style={styles.followersAndShareContainer}>
             <View style={styles.followersContainer}>
-              <View>
-                <Text style={styles.count}>113</Text>
-                <Text>followers</Text>
-              </View>
-              <View>
-                <Text style={styles.count}>196</Text>
-                <Text>following</Text>
-              </View>
+              <TouchableOpacity
+                onPress={() => handleNavigate('following')}
+                activeOpacity={1}
+              >
+                <View>
+                  <Text style={styles.count}>
+                    {userDetails.following.length}
+                  </Text>
+                  <Text>following</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleNavigate('followers')}
+                activeOpacity={1}
+              >
+                <View>
+                  <Text style={styles.count}>
+                    {userDetails.followers.length}
+                  </Text>
+                  <Text>followers</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-            <View style={styles.shareBtnContainer}>
-              <Text style={styles.shareBtn}>Share collection</Text>
+
+            <View style={styles.followBtnContainer}>
+              <TouchableOpacity onPress={handleFollowUser} activeOpacity={0.7}>
+                <Text style={styles.followBtn}>Follow</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </>
@@ -242,14 +279,13 @@ const styles = StyleSheet.create({
     flex: 4,
     justifyContent: 'space-between',
   },
-  shareBtnContainer: {
+  followBtnContainer: {
     flex: 6,
     marginLeft: 25,
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
   },
-  shareBtn: {
+  followBtn: {
     backgroundColor: '#3E5E7E',
     width: '100%',
     textAlign: 'center',
