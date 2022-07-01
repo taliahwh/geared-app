@@ -62,7 +62,7 @@ const NotificationScreen = () => {
     <>
       {errorUserDetails && (
         <View style={styles.centered}>
-          <AlertMessage style={styles.text}>{errorUserDetails}</AlertMessage>
+          <AlertMessage>{errorUserDetails}</AlertMessage>
         </View>
       )}
 
