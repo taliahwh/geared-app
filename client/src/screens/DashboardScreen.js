@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import { useFocusEffect } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Tab Screens
@@ -56,12 +55,13 @@ const DashboardScreen = ({ navigation }) => {
     userDetails,
     error: errorUserDetails,
   } = useSelector((state) => state.userDetails);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getUserDetails(userId));
-    }, [dispatch])
+  const { success: successUpdateProfile } = useSelector(
+    (state) => state.userUpdateProfile
   );
+
+  useEffect(() => {
+    dispatch(getUserDetails(userId));
+  }, [dispatch, userId, successUpdateProfile]);
 
   return (
     <>
