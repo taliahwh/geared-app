@@ -3,12 +3,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Pressable,
   Image,
   StyleSheet,
   Dimensions,
   FlatList,
-  Alert,
   ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -60,13 +58,13 @@ const TradingCardPost = ({
   const dispatch = useDispatch();
 
   // Redux state
-  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
+  const { _id: authUserId } = useSelector((state) => state.userSignIn.userInfo);
 
   // Component state -> from parent component's redux state
   const userSavedPost = savedPosts && savedPosts.includes(post._id);
 
   const Likes = () => {
-    const userLikedPost = likesIds.includes(userId);
+    const userLikedPost = likesIds.includes(authUserId);
     return (
       <>
         {userLikedPost ? (
@@ -105,10 +103,16 @@ const TradingCardPost = ({
     dispatch(savePost(post));
   };
 
-  const navigateToProfileDetails = (id) => {
-    navigation.navigate('Profile Details', {
-      userId: id,
-    });
+  const navigateToProfileDetails = () => {
+    if (userProfileId === authUserId) {
+      navigation.navigate('UserProfile', {
+        userId: userProfileId,
+      });
+    } else {
+      navigation.navigate('ProfileDetails', {
+        userId: userProfileId,
+      });
+    }
   };
 
   const navigateToComments = () => {
@@ -130,9 +134,7 @@ const TradingCardPost = ({
           />
 
           <View style={styles.usernameContainer}>
-            <TouchableOpacity
-              onPress={() => navigateToProfileDetails(userProfileId)}
-            >
+            <TouchableOpacity onPress={navigateToProfileDetails}>
               <Text style={styles.username}>{username}</Text>
             </TouchableOpacity>
             {forSale && <Text style={styles.listingType}>FOR SALE 💸</Text>}
