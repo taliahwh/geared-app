@@ -8,13 +8,13 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
+import { useScrollToTop } from '@react-navigation/native';
 
 // Components
-import Loader from './Loader';
 import AlertMessage from './AlertMessage';
 
 // Actions
@@ -47,19 +47,13 @@ const CollectionGrid = ({ userId }) => {
     error: errorUserPosts,
   } = useSelector((state) => state.userPosts);
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     dispatch(getUserPosts(userId));
-  //   }, [dispatch])
-  // );
-
   useEffect(() => {
     dispatch(getUserPosts(userId));
   }, [dispatch, userId]);
 
   return (
     <>
-      {loadingUserPosts && <Loader />}
+      {loadingUserPosts && <ActivityIndicator />}
       {errorUserPosts && <AlertMessage>{errorUserPosts}</AlertMessage>}
       {posts && posts.length > 0 && (
         <FlatList
@@ -69,7 +63,7 @@ const CollectionGrid = ({ userId }) => {
             <TouchableOpacity
               onPress={() => {
                 /* 1. Navigate to the Details route with params */
-                navigation.navigate('Post Details', {
+                navigation.navigate('PostDetails', {
                   postId: item._id,
                 });
               }}
