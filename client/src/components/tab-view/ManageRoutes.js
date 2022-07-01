@@ -8,15 +8,14 @@ import {
   Dimensions,
   FlatList,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
 
 // Components
 import AlertMessage from '../AlertMessage';
-import Loader from '../Loader';
 
 // Actions
 import { getUserPosts } from '../../actions/userActions';
@@ -101,7 +100,7 @@ const ManageRoute = () => {
 
   return (
     <>
-      {loadingUserPosts && <Loader />}
+      {loadingUserPosts && <ActivityIndicator />}
       {errorUserPosts && <AlertMessage>{errorUserPosts}</AlertMessage>}
       {posts && (
         <ScrollView style={styles.container}>
