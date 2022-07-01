@@ -7,13 +7,13 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
+import { useScrollToTop } from '@react-navigation/native';
 
 // Components
-import Loader from '../Loader';
 import AlertMessage from '../AlertMessage';
 
 // Actions
@@ -53,12 +53,6 @@ const AuthCollectionGrid = () => {
     (state) => state.createPost
   );
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     dispatch(getUserPosts(userId));
-  //   }, [dispatch])
-  // );
-
   useEffect(() => {
     dispatch(getUserPosts(userId));
   }, [dispatch, userId, successCreatePost]);
@@ -67,7 +61,7 @@ const AuthCollectionGrid = () => {
 
   return (
     <>
-      {loadingUserPosts && <Loader />}
+      {loadingUserPosts && <ActivityIndicator />}
       {errorUserPosts && <AlertMessage>{errorUserPosts}</AlertMessage>}
       {posts && posts.length > 0 && (
         <FlatList
