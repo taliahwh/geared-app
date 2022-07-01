@@ -7,16 +7,15 @@ import {
   Image,
   Modal,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
 // Components
 import ModalComponent from '../Modal';
-import Loader from '../Loader';
 import AlertMessage from '../AlertMessage';
 
 // Styles
@@ -171,22 +170,13 @@ const ProfileSettingsRoute = () => {
   ]);
 
   // Will be called every time the dashboard tab is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getUserDetails(userId));
-
-      return () => {
-        // Do something when the screen is unfocused
-        // Useful for cleanup functions
-        dispatch({ type: CLEAR_PASSWORD_DATA });
-        dispatch({ type: CLEAR_PROFILE_DATA });
-      };
-    }, [dispatch])
-  );
+  useEffect(() => {
+    dispatch(getUserDetails(userId));
+  }, [dispatch, userId, successUpdatePassword, successUpdateProfile]);
 
   return (
     <>
-      {loadingUserDetails && <Loader />}
+      {loadingUserDetails && <ActivityIndicator />}
       {userDetails && (
         <KeyboardAwareScrollView style={styles.container} enableOnAndroid>
           {/* {errorUpdateProfile && (
