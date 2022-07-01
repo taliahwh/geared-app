@@ -6,8 +6,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 import PostDetailsScreen from '../screens/PostDetailsScreen';
 import CommentsScreen from '../screens/CommentsScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
-
-import { Ionicons } from '@expo/vector-icons';
+import FollowersScreen from '../screens/FollowersScreen';
+import FollowingScreen from '../screens/FollowingScreen';
 
 import { HeaderBack, HeaderNotification } from '../components/HeaderBackImages';
 
@@ -53,6 +53,24 @@ const ProfileNavigator = () => {
         component={CommentsScreen}
         options={{
           headerTitle: 'Comments',
+          headerBackTitleVisible: false,
+          headerBackImage: HeaderBack,
+        }}
+      />
+      <Stack.Screen
+        name="Followers"
+        component={FollowersScreen}
+        options={{
+          headerTitle: 'Followers',
+          headerBackTitleVisible: false,
+          headerBackImage: HeaderBack,
+        }}
+      />
+      <Stack.Screen
+        name="Following"
+        component={FollowingScreen}
+        options={{
+          headerTitle: 'Following',
           headerBackTitleVisible: false,
           headerBackImage: HeaderBack,
         }}
