@@ -5,12 +5,18 @@ import {
   USER_SIGN_UP_REQUEST,
   USER_SIGN_UP_SUCCESS,
   USER_SIGN_UP_FAILURE,
+  AUTH_USER_DETAILS_REQUEST,
+  AUTH_USER_DETAILS_SUCCESS,
+  AUTH_USER_DETAILS_FAILURE,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_DETAILS_FAILURE,
   USER_POSTS_REQUEST,
   USER_POSTS_SUCCESS,
   USER_POSTS_FAILURE,
+  AUTH_USER_POSTS_REQUEST,
+  AUTH_USER_POSTS_SUCCESS,
+  AUTH_USER_POSTS_FAILURE,
   UPDATE_USER_PROFILE_REQUEST,
   UPDATE_USER_PROFILE_SUCCESS,
   UPDATE_USER_PROFILE_FAILURE,
@@ -106,6 +112,32 @@ export const signUp =
     }
   };
 
+export const getAuthUserDetails = () => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
+  try {
+    dispatch({ type: AUTH_USER_DETAILS_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await gearedApi.get(`/api/users/auth-details`, config);
+
+    dispatch({ type: AUTH_USER_DETAILS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: AUTH_USER_DETAILS_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
 export const getUserDetails = (id) => async (dispatch, getState) => {
   const { authToken } = getState().userSignIn;
   try {
@@ -124,6 +156,32 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_DETAILS_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getAuthUserPosts = () => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
+  try {
+    dispatch({ type: AUTH_USER_POSTS_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await gearedApi.get(`/api/users/auth-collection`, config);
+
+    dispatch({ type: AUTH_USER_POSTS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: AUTH_USER_POSTS_FAILURE,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
