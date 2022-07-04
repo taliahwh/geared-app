@@ -18,7 +18,6 @@ import { viewFollowing } from '../actions/userActions';
 
 const FollowingScreen = ({ route }) => {
   const { userId } = route.params;
-  console.log(userId);
   // Hooks
   const scrollRef = useRef(null);
   useScrollToTop(scrollRef);
