@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Text, View, StyleSheet, Dimensions, StatusBar } from 'react-native';
+import { Text, StyleSheet, Dimensions, StatusBar } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 import AuthCollectionRoute from '../components/AuthProfile/AuthCollectionRoute';
