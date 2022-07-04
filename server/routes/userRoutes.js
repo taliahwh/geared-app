@@ -3,7 +3,9 @@ import express from 'express';
 import {
   signIn,
   signUp,
+  getAuthUserDetails,
   getUserDetails,
+  getAuthPosts,
   getPostsByUserId,
   updateUserProfile,
   updateUserPassword,
@@ -29,6 +31,10 @@ router.put('/notifications/:id', authMiddleware, markNotificationAsViewed);
 router.put('/password', authMiddleware, updateUserPassword);
 
 router.put('/profile', authMiddleware, updateUserProfile);
+
+router.get('/auth-collection', authMiddleware, getAuthPosts);
+
+router.get('/auth-details', authMiddleware, getAuthUserDetails);
 
 router.get('/followers/:id', authMiddleware, getFollowers);
 
