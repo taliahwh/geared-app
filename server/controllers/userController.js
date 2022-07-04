@@ -263,6 +263,48 @@ const getUserDetails = asyncHandler(async (req, res) => {
   res.status(200).json(user);
 });
 
+// @desc Get auth user's details
+// @route GET /api/users/auth-details
+// @access Private
+const getAuthUserDetails = asyncHandler(async (req, res) => {
+  const { id } = req.user;
+  const user = await User.findById(id).select('-password');
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+  res.status(200).json(user);
+});
+
+/**
+ * @desc Fetch all loggen in user's posts (collection) by their id
+ * @route GET /posts/collection/:id
+ * @access Public
+ */
+const getAuthPosts = asyncHandler(async (req, res) => {
+  const { id } = req.user;
+  const user = await User.findById(id);
+
+  if (!user) {
+    res.status(403);
+    throw new Error('Unauthorized. Must be signed in.');
+  }
+
+  // dot notation for nested documents (mongoose)
+  const posts = await Post.find({
+    'listedBy.userId': String(user._id),
+  });
+
+  if (!posts) {
+    res.status(404);
+    throw new Error('User does not have any listings.');
+  }
+
+  const userCollection = posts.reverse();
+  res.status(200).json(userCollection);
+});
+
 /**
  * @desc Fetch all user's posts (collection) by their id
  * @route GET /posts/collection/:id
@@ -466,7 +508,9 @@ const getFollowing = asyncHandler(async (req, res) => {
 export {
   signIn,
   signUp,
+  getAuthUserDetails,
   getUserDetails,
+  getAuthPosts,
   getPostsByUserId,
   updateUserProfile,
   updateUserPassword,
