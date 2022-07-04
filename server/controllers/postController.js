@@ -44,7 +44,6 @@ const createNewPost = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error('Not authorized');
   }
-  // console.log(user);
 
   const newPost = await Post.create({
     images,
