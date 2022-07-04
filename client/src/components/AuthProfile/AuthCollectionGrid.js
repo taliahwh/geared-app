@@ -9,7 +9,7 @@ import {
   Text,
   ActivityIndicator,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useScrollToTop } from '@react-navigation/native';
 
@@ -17,7 +17,7 @@ import { useScrollToTop } from '@react-navigation/native';
 import AlertMessage from '../AlertMessage';
 
 // Actions
-import { getUserPosts } from '../../actions/userActions';
+import { getAuthUserPosts } from '../../actions/userActions';
 
 const thirdWindowWidth = Dimensions.get('window').width / 3;
 
@@ -47,17 +47,21 @@ const AuthCollectionGrid = () => {
     loading: loadingUserPosts,
     posts,
     error: errorUserPosts,
-  } = useSelector((state) => state.userPosts);
+  } = useSelector((state) => state.authUserPosts);
 
   const { success: successCreatePost } = useSelector(
     (state) => state.createPost
   );
 
   useEffect(() => {
-    dispatch(getUserPosts(userId));
-  }, [dispatch, userId, successCreatePost]);
+    dispatch(getAuthUserPosts());
+  }, [dispatch, successCreatePost]);
 
-  // console.log(userId);
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     dispatch(getAuthUserPosts());
+  //   }, [dispatch])
+  // );
 
   return (
     <>
