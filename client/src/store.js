@@ -17,6 +17,8 @@ import {
 } from './reducers/postReducers';
 
 import {
+  authUserDetailsReducer,
+  authUserPostsReducer,
   followUserReducer,
   notificationsReducer,
   userDetailsReducer,
@@ -46,7 +48,9 @@ const reducer = combineReducers({
   deleteComment: deleteCommentReducer,
   userSignIn: userSignInReducer,
   userSignUp: userSignUpReducer,
+  authUserDetails: authUserDetailsReducer,
   userDetails: userDetailsReducer,
+  authUserPosts: authUserPostsReducer,
   userPosts: userPostsReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userUpdatePassword: userUpdatePasswordReducer,
