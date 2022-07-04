@@ -10,7 +10,7 @@ import {
   Linking,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Menu,
@@ -24,7 +24,11 @@ import ProfileHeaderLoader from '../Loaders/ProfileHeaderLoader';
 import AlertMessage from '../AlertMessage';
 
 // Actions
-import { logout, getUserDetails, followUser } from '../../actions/userActions';
+import {
+  logout,
+  getAuthUserDetails,
+  followUser,
+} from '../../actions/userActions';
 
 const TagRender = ({ name }) => <Text style={styles.tags}>{name}</Text>;
 const Separator = () => {
@@ -42,7 +46,7 @@ const AuthProfileHeader = () => {
     loading: loadingUserDetails,
     userDetails,
     error: errorUserDetails,
-  } = useSelector((state) => state.userDetails);
+  } = useSelector((state) => state.authUserDetails);
 
   const { success: successUpdateProfile } = useSelector(
     (state) => state.userUpdateProfile
@@ -61,9 +65,11 @@ const AuthProfileHeader = () => {
     dispatch(logout());
   };
 
-  useEffect(() => {
-    dispatch(getUserDetails(userId));
-  }, [dispatch, userId, successUpdateProfile]);
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getAuthUserDetails());
+    }, [dispatch, successUpdateProfile])
+  );
 
   return (
     <View style={styles.container}>
