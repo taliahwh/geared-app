@@ -75,7 +75,7 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
 
   useEffect(() => {
     dispatch(getPostDetails(postId));
-  }, [dispatch, postId, successLikePost]);
+  }, [dispatch, successLikePost]);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
