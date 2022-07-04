@@ -10,7 +10,7 @@ import {
   Linking,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Menu,
@@ -38,7 +38,6 @@ const ProfileHeader = ({ userId }) => {
   const navigation = useNavigation();
 
   // State from redux
-  // const { _id: authUserId } = useSelector((state) => state.userSignIn.userInfo);
   const {
     loading: loadingUserDetails,
     userDetails,
@@ -70,9 +69,15 @@ const ProfileHeader = ({ userId }) => {
     dispatch(followUser(userId));
   };
 
-  useEffect(() => {
-    dispatch(getUserDetails(userId));
-  }, [dispatch, userId, successFollowUser, successUpdateProfile]);
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getUserDetails(userId));
+    }, [dispatch, successFollowUser])
+  );
+
+  // useEffect(() => {
+  //   dispatch(getUserDetails(userId));
+  // }, [dispatch, userId, successFollowUser, successUpdateProfile]);
 
   return (
     <View style={styles.container}>
