@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 import { View, StyleSheet, Dimensions, StatusBar } from 'react-native';
 
 // Components
@@ -8,6 +7,7 @@ import CollectionGrid from '../components/CollectionGrid';
 
 const ViewUserProfileScreen = ({ route }) => {
   const { userId } = route.params;
+
   return (
     <View style={styles.collectionContainter}>
       <ProfileHeader userId={userId} />
