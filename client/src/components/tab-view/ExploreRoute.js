@@ -83,7 +83,7 @@ const ExploreRoute = () => {
   useEffect(() => {
     dispatch(getExplorePosts());
     dispatch(getUserDetails(userId));
-  }, [dispatch, userId, successLikePost, successSavePost, successCreatePost]);
+  }, [dispatch, userId, successSavePost, successCreatePost, successLikePost]);
 
   return (
     <>
