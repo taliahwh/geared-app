@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 
@@ -43,11 +43,10 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
   } = useSelector((state) => state.postDetails);
 
   const Likes = () => {
-    const userLikedPost =
-      postDetails && postDetails.likes.includes(signedInUserId);
+    const userLikedPost = postDetails.likes.includes(signedInUserId);
     return (
       <>
-        {userLikedPost ? (
+        {postDetails && userLikedPost ? (
           <View style={styles.likeBtnContainer}>
             <Ionicons name="thumbs-up" size={26} color="black" />
             <Text style={styles.likeCount}>{postDetails.likes.length}</Text>
@@ -73,9 +72,11 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
     });
   };
 
-  useEffect(() => {
-    dispatch(getPostDetails(postId));
-  }, [dispatch, successLikePost]);
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getPostDetails(postId));
+    }, [dispatch, postId])
+  );
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
