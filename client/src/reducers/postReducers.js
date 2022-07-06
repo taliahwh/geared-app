@@ -90,8 +90,6 @@ export const likePostReducer = (state = {}, action) => {
       };
     case LIKE_POST_FAILURE:
       return { loading: false, error: action.payload };
-    case CLEAR_LIKE_POST_DATA:
-      return {};
     default:
       return state;
   }
