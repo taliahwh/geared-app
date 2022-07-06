@@ -67,6 +67,7 @@ const ExploreRoute = () => {
         datePosted={item.createdAt}
         likesCount={item.likes.length}
         likesIds={item.likes}
+        savedBy={item.savedBy}
         postId={item._id}
         commentsCount={item.comments.length}
       />
@@ -75,7 +76,7 @@ const ExploreRoute = () => {
 
   useEffect(() => {
     dispatch(getExplorePosts());
-  }, [dispatch, successLikePost]);
+  }, [dispatch, successLikePost, successSavePost]);
 
   // useEffect(() => {}, [dispatch, successLikePost]);
 
