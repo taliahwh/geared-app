@@ -13,6 +13,7 @@ import Loader from './src/components/Loader';
 import { navigationRef } from './src/navigation/RootNavigation';
 import MainNavigator from './src/navigation/MainNavigator';
 import AuthNavigator from './src/navigation/AuthNavigator';
+import { getUserDetails } from './src/actions/userActions';
 
 const AppWrapper = () => {
   return (
@@ -27,16 +28,14 @@ const AppWrapper = () => {
 };
 
 const App = () => {
+  const dispatch = useDispatch();
+
   const { authToken } = useSelector((state) => state.userSignIn);
-
-  useEffect(
-    () =>
-      LogBox.ignoreLogs([
-        `ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.`,
-      ]),
-
-    []
-  );
+  useEffect(() => {
+    LogBox.ignoreLogs([
+      `ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.`,
+    ]);
+  }, []);
 
   return (
     <NavigationContainer ref={navigationRef}>
