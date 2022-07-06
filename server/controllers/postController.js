@@ -215,14 +215,19 @@ const savePost = asyncHandler(async (req, res) => {
 
   if (!postExistsInSavedPosts) {
     user.savedPosts.push(postToSave._id); // if post is not in arr, pushed post's id
+    postToSave.savedBy.push(String(userId));
   }
   if (postExistsInSavedPosts) {
     user.savedPosts = user.savedPosts.filter(
       (id) => id !== String(postToSave._id)
     );
+    postToSave.savedBy = postToSave.savedBy.filter(
+      (id) => id !== String(userId)
+    );
   }
 
   await user.save();
+  await postToSave.save();
   // const updatedSavedPosts = user.savedPosts;
   res.status(200).json(user);
 });
