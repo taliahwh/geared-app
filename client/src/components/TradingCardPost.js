@@ -48,7 +48,7 @@ const TradingCardPost = ({
   likesCount,
   likesIds,
   post,
-  savedPosts,
+  savedBy,
   commentsCount,
 }) => {
   // console.log(savedPosts);
@@ -59,9 +59,6 @@ const TradingCardPost = ({
 
   // Redux state
   const { _id: authUserId } = useSelector((state) => state.userSignIn.userInfo);
-
-  // Component state -> from parent component's redux state
-  const userSavedPost = null;
 
   const Likes = () => {
     const userLikedPost = likesIds.includes(authUserId);
@@ -83,6 +80,8 @@ const TradingCardPost = ({
   };
 
   const Saved = () => {
+    const userSavedPost = savedBy.includes(authUserId);
+
     return (
       <>
         {/* {loadingSavePost && <ActivityIndicator />} */}
