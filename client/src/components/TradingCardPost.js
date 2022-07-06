@@ -61,7 +61,7 @@ const TradingCardPost = ({
   const { _id: authUserId } = useSelector((state) => state.userSignIn.userInfo);
 
   // Component state -> from parent component's redux state
-  const userSavedPost = savedPosts && savedPosts.includes(post._id);
+  const userSavedPost = null;
 
   const Likes = () => {
     const userLikedPost = likesIds.includes(authUserId);
@@ -121,6 +121,8 @@ const TradingCardPost = ({
       post,
     });
   };
+
+  const { success: successLikePost } = useSelector((state) => state.likePost);
 
   return (
     <View style={styles.container}>
