@@ -66,6 +66,9 @@ export const userSignInReducer = (state = initialState, action) => {
           email: action.payload.email,
           username: action.payload.username,
         },
+        // notifications: action.payload.notifications,
+        // savedPosts: action.payload.savedPosts,
+        // likedPosts: action.payload.likedPosts,
       };
     case USER_SIGN_IN_FAILURE:
       return { ...state, error: action.payload };
