@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { Provider, useSelector } from 'react-redux';
+import { Provider, useSelector, useDispatch } from 'react-redux';
 import { MenuProvider } from 'react-native-popup-menu';
 import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from './src/store';
@@ -34,6 +34,7 @@ const App = () => {
       LogBox.ignoreLogs([
         `ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.`,
       ]),
+
     []
   );
 
