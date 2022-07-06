@@ -20,7 +20,9 @@ const signIn = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       username: user.username,
-      notifications: user.notifications,
+      // notifications: user.notifications,
+      // savedPosts: user.savedPosts,
+      // likedPosts: user.savedPosts,
       token: generateToken(user._id),
     });
   };
