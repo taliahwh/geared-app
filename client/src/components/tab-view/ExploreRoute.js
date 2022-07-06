@@ -15,7 +15,7 @@ import TradingCardPost from '../TradingCardPost';
 import AlertMessage from '../AlertMessage';
 
 // Actions
-import { getExplorePosts } from '../../actions/postActions';
+import { getExplorePosts, getSavedPosts } from '../../actions/postActions';
 import { getUserDetails } from '../../actions/userActions';
 
 const windowWidth = Dimensions.get('window').width;
@@ -28,18 +28,12 @@ const ExploreRoute = () => {
   const [isRefreshing, setIsRefreshing] = React.useState(false);
 
   // Redux state
-  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
+
   const {
     loading: loadingExplorePosts,
     posts,
     error: errorExplorePosts,
   } = useSelector((state) => state.explorePosts);
-
-  const {
-    loading: loadingUserDetails,
-    userDetails,
-    error: errorUserDetails,
-  } = useSelector((state) => state.userDetails);
 
   const { success: successLikePost } = useSelector((state) => state.likePost);
   const { success: successSavePost } = useSelector((state) => state.savePost);
@@ -47,7 +41,7 @@ const ExploreRoute = () => {
     (state) => state.createPost
   );
 
-  const savedPosts = userDetails && userDetails.savedPosts;
+  // const savedPosts = userDetails && userDetails.savedPosts;
 
   const onRefresh = React.useCallback(() => {
     setIsRefreshing(true);
@@ -73,7 +67,6 @@ const ExploreRoute = () => {
         datePosted={item.createdAt}
         likesCount={item.likes.length}
         likesIds={item.likes}
-        savedPosts={savedPosts}
         postId={item._id}
         commentsCount={item.comments.length}
       />
@@ -82,8 +75,9 @@ const ExploreRoute = () => {
 
   useEffect(() => {
     dispatch(getExplorePosts());
-    dispatch(getUserDetails(userId));
-  }, [dispatch, userId, successSavePost, successCreatePost, successLikePost]);
+  }, [dispatch, successLikePost]);
+
+  // useEffect(() => {}, [dispatch, successLikePost]);
 
   return (
     <>
