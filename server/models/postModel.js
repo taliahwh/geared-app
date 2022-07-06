@@ -62,6 +62,10 @@ export const postSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    savedBy: {
+      type: [String],
+      default: [],
+    },
     comments: {
       type: [commentSchema],
       default: [],
