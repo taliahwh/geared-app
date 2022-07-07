@@ -121,8 +121,6 @@ const TradingCardPost = ({
     });
   };
 
-  const { success: successLikePost } = useSelector((state) => state.likePost);
-
   return (
     <View style={styles.container}>
       <View style={styles.headingContainer}>
