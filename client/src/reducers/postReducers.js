@@ -8,9 +8,12 @@ import {
   POST_DETAILS_REQUEST,
   POST_DETAILS_SUCCESS,
   POST_DETAILS_FAILURE,
-  LIKE_POST_REQUEST,
-  LIKE_POST_SUCCESS,
-  LIKE_POST_FAILURE,
+  LIKE_POST_FROM_FEED_REQUEST,
+  LIKE_POST_FROM_FEED_SUCCESS,
+  LIKE_POST_FROM_FEED_FAILURE,
+  LIKE_POST_FROM_DETAILS_REQUEST,
+  LIKE_POST_FROM_DETAILS_SUCCESS,
+  LIKE_POST_FROM_DETAILS_FAILURE,
   GET_LIKED_POSTS_REQUEST,
   GET_LIKED_POSTS_SUCCESS,
   GET_LIKED_POSTS_FAILURE,
@@ -26,7 +29,7 @@ import {
   GET_SAVED_POSTS_REQUEST,
   GET_SAVED_POSTS_SUCCESS,
   GET_SAVED_POSTS_FAILURE,
-  CLEAR_LIKE_POST_DATA,
+  CLEAR_LIKE_POST_FROM_FEED_DATA,
 } from '../constants/postConstants';
 
 export const explorePostsReducer = (state = { posts: [] }, action) => {
@@ -81,14 +84,30 @@ export const postDetailsReducer = (state = {}, action) => {
 
 export const likePostReducer = (state = {}, action) => {
   switch (action.type) {
-    case LIKE_POST_REQUEST:
+    case LIKE_POST_FROM_FEED_REQUEST:
       return { loading: true };
-    case LIKE_POST_SUCCESS:
+    case LIKE_POST_FROM_FEED_SUCCESS:
       return {
         loading: false,
         success: true,
       };
-    case LIKE_POST_FAILURE:
+    case LIKE_POST_FROM_FEED_FAILURE:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const likePostFromDetailsScreenReducer = (state = {}, action) => {
+  switch (action.type) {
+    case LIKE_POST_FROM_DETAILS_REQUEST:
+      return { loading: true };
+    case LIKE_POST_FROM_DETAILS_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+      };
+    case LIKE_POST_FROM_DETAILS_FAILURE:
       return { loading: false, error: action.payload };
     default:
       return state;
