@@ -11,9 +11,12 @@ import {
   POST_DETAILS_REQUEST,
   POST_DETAILS_SUCCESS,
   POST_DETAILS_FAILURE,
-  LIKE_POST_REQUEST,
-  LIKE_POST_SUCCESS,
-  LIKE_POST_FAILURE,
+  LIKE_POST_FROM_FEED_REQUEST,
+  LIKE_POST_FROM_FEED_SUCCESS,
+  LIKE_POST_FROM_FEED_FAILURE,
+  LIKE_POST_FROM_DETAILS_REQUEST,
+  LIKE_POST_FROM_DETAILS_SUCCESS,
+  LIKE_POST_FROM_DETAILS_FAILURE,
   GET_LIKED_POSTS_REQUEST,
   GET_LIKED_POSTS_SUCCESS,
   GET_LIKED_POSTS_FAILURE,
@@ -125,7 +128,7 @@ export const getPostDetails = (id) => async (dispatch, getState) => {
 };
 
 export const likePost = (post) => async (dispatch, getState) => {
-  dispatch({ type: LIKE_POST_REQUEST });
+  dispatch({ type: LIKE_POST_FROM_FEED_REQUEST });
 
   const { authToken } = getState().userSignIn;
   try {
@@ -142,9 +145,34 @@ export const likePost = (post) => async (dispatch, getState) => {
       config
     );
 
-    dispatch({ type: LIKE_POST_SUCCESS, payload: data });
+    dispatch({ type: LIKE_POST_FROM_FEED_SUCCESS, payload: data });
   } catch (error) {
-    dispatch({ type: LIKE_POST_FAILURE });
+    dispatch({ type: LIKE_POST_FROM_FEED_FAILURE });
+    console.log(error.message);
+  }
+};
+
+export const likePostFromDetails = (post) => async (dispatch, getState) => {
+  dispatch({ type: LIKE_POST_FROM_DETAILS_REQUEST });
+
+  const { authToken } = getState().userSignIn;
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await geared.put(
+      `/api/posts/${post._id}/likepost`,
+      post,
+      config
+    );
+
+    dispatch({ type: LIKE_POST_FROM_DETAILS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: LIKE_POST_FROM_DETAILS_FAILURE });
     console.log(error.message);
   }
 };
