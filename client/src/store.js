@@ -14,6 +14,7 @@ import {
   viewLikedPostsReducer,
   viewSavedPostsReducer,
   deleteCommentReducer,
+  likePostFromDetailsScreenReducer,
 } from './reducers/postReducers';
 
 import {
@@ -37,6 +38,7 @@ const reducer = combineReducers({
   createPost: createPostReducer,
   postDetails: postDetailsReducer,
   likePost: likePostReducer,
+  likePostDetailsScreen: likePostFromDetailsScreenReducer,
   likedPosts: viewLikedPostsReducer,
   savePost: savePostsReducer,
   savedPosts: viewSavedPostsReducer,
