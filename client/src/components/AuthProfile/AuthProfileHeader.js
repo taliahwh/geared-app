@@ -65,11 +65,15 @@ const AuthProfileHeader = () => {
     dispatch(logout());
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getAuthUserDetails());
-    }, [dispatch, successUpdateProfile])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     dispatch(getAuthUserDetails());
+  //   }, [dispatch, successUpdateProfile])
+  // );
+
+  useEffect(() => {
+    dispatch(getAuthUserDetails());
+  }, [dispatch, successUpdateProfile]);
 
   return (
     <View style={styles.container}>
