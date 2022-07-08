@@ -31,6 +31,7 @@ const PostDetailsCard = ({
   productImages,
   likeCount,
   userLikedPost,
+  userSavedPost,
   description,
   numComments,
   condition,
@@ -45,6 +46,10 @@ const PostDetailsCard = ({
 
   const handleLikePost = () => {
     dispatch(likePostFromDetails(postDetails));
+  };
+
+  const handleSavePost = () => {
+    dispatch(savePost(postDetails));
   };
 
   const navigateToComments = () => {
@@ -67,6 +72,18 @@ const PostDetailsCard = ({
             <Ionicons name="thumbs-up-outline" size={26} color="black" />
             <Text style={styles.likeCount}>{likeCount}</Text>
           </View>
+        )}
+      </>
+    );
+  };
+
+  const Saved = () => {
+    return (
+      <>
+        {userSavedPost ? (
+          <Ionicons name="ios-bookmark" size={26} color="black" />
+        ) : (
+          <Ionicons name="bookmark-outline" size={26} color="black" />
         )}
       </>
     );
@@ -106,12 +123,13 @@ const PostDetailsCard = ({
         </TouchableOpacity>
 
         <View style={styles.shareBtns}>
-          <Ionicons
-            style={styles.btn}
-            name="bookmark-outline"
-            size={26}
-            color="black"
-          />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => handleSavePost()}
+          >
+            <Saved />
+          </TouchableOpacity>
+
           <Ionicons
             style={styles.btn}
             name="paper-plane-outline"
