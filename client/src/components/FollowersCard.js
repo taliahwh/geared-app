@@ -1,8 +1,12 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
-const FollowersCard = ({ name, username, profileImage }) => {
+const FollowersCard = ({ name, username, profileImage, followerId }) => {
   const handleFollowUser = () => {};
+
+  // Redux state
+  const { _id: authUserId } = useSelector((state) => state.userSignIn.userInfo);
 
   return (
     <View style={styles.container}>
@@ -20,11 +24,13 @@ const FollowersCard = ({ name, username, profileImage }) => {
         </View>
       </View>
 
-      <View style={styles.btnContainer}>
-        <TouchableOpacity onPress={handleFollowUser} activeOpacity={0.6}>
-          <Text style={styles.followingBtn}>Following</Text>
-        </TouchableOpacity>
-      </View>
+      {followerId !== authUserId && (
+        <View style={styles.btnContainer}>
+          <TouchableOpacity onPress={handleFollowUser} activeOpacity={0.6}>
+            <Text style={styles.followingBtn}>Following</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
