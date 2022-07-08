@@ -182,7 +182,7 @@ const getLikedPosts = asyncHandler(async (req, res) => {
   const likedPosts = await Post.find({ _id: { $in: userLikes } });
   const likedPostsInOrder = likedPosts.reverse();
 
-  res.status(200).json(likedPostsInOrder);
+  res.status(200).json(likedPosts);
 });
 
 /**
