@@ -43,7 +43,7 @@ const CommentsScreen = ({ route }) => {
     (state) => state.deleteComment
   );
 
-  const { userDetails } = useSelector((state) => state.userDetails);
+  const { userDetails } = useSelector((state) => state.authUserDetails);
   const listedBy = postDetails && postDetails.listedBy.userId;
 
   const renderItem = ({ item }) => {
