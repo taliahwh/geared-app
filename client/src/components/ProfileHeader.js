@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   Linking,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import {
   Menu,
@@ -19,12 +19,8 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
-// Components
-import ProfileHeaderLoader from './Loaders/ProfileHeaderLoader';
-import AlertMessage from '../components/AlertMessage';
-
 // Actions
-import { logout, getUserDetails, followUser } from '../actions/userActions';
+import { logout, followUser } from '../actions/userActions';
 
 const TagRender = ({ name }) => <Text style={styles.tags}>{name}</Text>;
 
@@ -32,25 +28,21 @@ const Separator = () => {
   return <View style={{ width: 1, backgroundColor: '#fff' }} />;
 };
 
-const ProfileHeader = ({ userId }) => {
+const ProfileHeader = ({
+  userId,
+  profileImage,
+  name,
+  username,
+  bio,
+  website,
+  interests,
+  followingCount,
+  followersCount,
+  isFollowing,
+}) => {
   // Hooks
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
-  // State from redux
-  const {
-    loading: loadingUserDetails,
-    userDetails,
-    error: errorUserDetails,
-  } = useSelector((state) => state.userDetails);
-
-  const { success: successFollowUser } = useSelector(
-    (state) => state.followUser
-  );
-
-  const { success: successUpdateProfile } = useSelector(
-    (state) => state.userUpdateProfile
-  );
 
   const handleNavigate = (query) => {
     if (query === 'followers') {
@@ -69,140 +61,115 @@ const ProfileHeader = ({ userId }) => {
     dispatch(followUser(userId));
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      dispatch(getUserDetails(userId));
-    }, [dispatch, successFollowUser])
-  );
-
-  // useEffect(() => {
-  //   dispatch(getUserDetails(userId));
-  // }, [dispatch, userId, successFollowUser, successUpdateProfile]);
-
   return (
     <View style={styles.container}>
-      {loadingUserDetails && <ProfileHeaderLoader />}
-      {errorUserDetails && <AlertMessage>{errorUserDetails}</AlertMessage>}
-
-      {userDetails && (
-        <>
-          <View style={styles.userInfoContainer}>
-            <Image
-              style={styles.userImage}
-              source={{
-                uri: userDetails.profileImage,
-              }}
-            />
-            <View style={styles.userNameContainer}>
-              <Text style={styles.userDisplayName}>{userDetails.name}</Text>
-              <Text style={styles.username}>{`@${userDetails.username}`}</Text>
-              <View style={styles.ratingsContainer}>
-                <Ionicons name="star" size={15} color="#3E5E7E" />
-                <Ionicons name="star" size={15} color="#3E5E7E" />
-                <Ionicons name="star" size={15} color="#3E5E7E" />
-                <Ionicons name="star" size={15} color="#3E5E7E" />
-                <Ionicons name="star" size={15} color="#3E5E7E" />
-                <Text>(13)</Text>
-                {/* <Ionicons name="star-half" size={15} color="#3E5E7E" /> */}
-              </View>
-            </View>
-
-            <View>
-              <Pressable
-                style={styles.pickerContainer}
-                onPress={() => MenuProvider.open}
-              >
-                <Menu>
-                  <MenuTrigger>
-                    <Ionicons
-                      name="ellipsis-horizontal"
-                      size={24}
-                      color="black"
-                    />
-                  </MenuTrigger>
-                  <MenuOptions style={styles.menu}>
-                    <MenuOption onSelect={handleLogout}>
-                      <Text
-                        style={{
-                          fontSize: 15,
-                          paddingVertical: 2,
-                          textAlign: 'center',
-                          fontWeight: '500',
-                        }}
-                      >
-                        Sign Out
-                      </Text>
-                    </MenuOption>
-                  </MenuOptions>
-                </Menu>
-              </Pressable>
-            </View>
+      <View style={styles.userInfoContainer}>
+        <Image
+          style={styles.userImage}
+          source={{
+            uri: profileImage,
+          }}
+        />
+        <View style={styles.userNameContainer}>
+          <Text style={styles.userDisplayName}>{name}</Text>
+          <Text style={styles.username}>{`@${username}`}</Text>
+          <View style={styles.ratingsContainer}>
+            <Ionicons name="star" size={15} color="#3E5E7E" />
+            <Ionicons name="star" size={15} color="#3E5E7E" />
+            <Ionicons name="star" size={15} color="#3E5E7E" />
+            <Ionicons name="star" size={15} color="#3E5E7E" />
+            <Ionicons name="star" size={15} color="#3E5E7E" />
+            <Text>(13)</Text>
           </View>
+        </View>
 
-          {userDetails.bio !== '' && (
-            <Text style={styles.description}>{userDetails.bio}</Text>
-          )}
-          {userDetails.website && (
-            <Text
-              style={styles.website}
-              onPress={() => {
-                Linking.openURL(`https://${userDetails.website}`);
-              }}
-            >
-              {userDetails.website}
-            </Text>
-          )}
-
-          {userDetails.interests && (
-            <View style={styles.tagsContainer}>
-              {/* <Text style={styles.lookingFor}>Collecting:</Text> */}
-              <FlatList
-                data={userDetails.interests}
-                renderItem={({ item }) =>
-                  item.name !== null && <TagRender name={item.name} />
-                }
-                keyExtractor={(item) => item.id}
-                ItemSeparatorComponent={Separator}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-              />
-            </View>
-          )}
-
-          <View style={styles.followersAndShareContainer}>
-            <View style={styles.followersContainer}>
-              <TouchableOpacity
-                onPress={() => handleNavigate('following')}
-                activeOpacity={1}
-              >
-                <View>
-                  <Text style={styles.count}>
-                    {userDetails.following.length}
+        <View>
+          <Pressable
+            style={styles.pickerContainer}
+            onPress={() => MenuProvider.open}
+          >
+            <Menu>
+              <MenuTrigger>
+                <Ionicons name="ellipsis-horizontal" size={24} color="black" />
+              </MenuTrigger>
+              <MenuOptions style={styles.menu}>
+                <MenuOption onSelect={handleLogout}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      paddingVertical: 2,
+                      textAlign: 'center',
+                      fontWeight: '500',
+                    }}
+                  >
+                    Sign Out
                   </Text>
-                  <Text>following</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleNavigate('followers')}
-                activeOpacity={1}
-              >
-                <View>
-                  <Text style={styles.count}>
-                    {userDetails.followers.length}
-                  </Text>
-                  <Text>followers</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
+          </Pressable>
+        </View>
+      </View>
 
-            <View style={styles.followBtnContainer}>
-              <TouchableOpacity onPress={handleFollowUser} activeOpacity={0.7}>
-                <Text style={styles.followBtn}>Follow</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
+      {bio !== '' && <Text style={styles.description}>{bio}</Text>}
+      {website && (
+        <Text
+          style={styles.website}
+          onPress={() => {
+            Linking.openURL(`https://${website}`);
+          }}
+        >
+          {website}
+        </Text>
       )}
+
+      {interests && (
+        <View style={styles.tagsContainer}>
+          <FlatList
+            data={interests}
+            renderItem={({ item }) =>
+              item.name !== null && <TagRender name={item.name} />
+            }
+            keyExtractor={(item) => item.id}
+            ItemSeparatorComponent={Separator}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
+      )}
+
+      <View style={styles.followersAndShareContainer}>
+        <View style={styles.followersContainer}>
+          <TouchableOpacity
+            onPress={() => handleNavigate('following')}
+            activeOpacity={1}
+          >
+            <View>
+              <Text style={styles.count}>{followingCount}</Text>
+              <Text>following</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleNavigate('followers')}
+            activeOpacity={1}
+          >
+            <View>
+              <Text style={styles.count}>{followersCount}</Text>
+              <Text>followers</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.followBtnContainer}>
+          <TouchableOpacity onPress={handleFollowUser} activeOpacity={0.7}>
+            {isFollowing ? (
+              <Text style={styles.followingBtn}>Following</Text>
+            ) : (
+              <Text style={styles.followBtn}>Follow</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
@@ -295,11 +262,24 @@ const styles = StyleSheet.create({
     width: '100%',
     textAlign: 'center',
     paddingVertical: 5,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 15,
     borderRadius: 3,
     overflow: 'hidden',
     color: '#fff',
+  },
+  followingBtn: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#3E5E7E',
+    width: '100%',
+    textAlign: 'center',
+    paddingVertical: 5,
+    fontWeight: '600',
+    fontSize: 15,
+    borderRadius: 3,
+    overflow: 'hidden',
+    color: '#3E5E7E',
   },
   count: {
     fontWeight: '600',
