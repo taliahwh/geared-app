@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ManageRoute from '../components/tab-view/ManageRoutes';
 import PaymentsRoute from '../components/tab-view/PaymentsRoute';
 import ProfileSettingsRoute from '../components/tab-view/ProfileSettingsRoute';
-import { getUserDetails } from '../actions/userActions';
+import { getAuthUserDetails } from '../actions/userActions';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
@@ -49,19 +49,18 @@ const DashboardScreen = ({ navigation }) => {
     { key: 'settings', title: 'Settings' },
   ]);
 
-  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
   const {
     loading: loadingUserDetails,
     userDetails,
     error: errorUserDetails,
-  } = useSelector((state) => state.userDetails);
+  } = useSelector((state) => state.authUserDetails);
   const { success: successUpdateProfile } = useSelector(
     (state) => state.userUpdateProfile
   );
 
   useEffect(() => {
-    dispatch(getUserDetails(userId));
-  }, [dispatch, userId, successUpdateProfile]);
+    dispatch(getAuthUserDetails());
+  }, [dispatch, successUpdateProfile]);
 
   return (
     <>
