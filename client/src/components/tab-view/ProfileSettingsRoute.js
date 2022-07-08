@@ -23,7 +23,7 @@ import styles from '../../styles/ProfileSettingsRouteStyles';
 
 // Actions
 import {
-  getUserDetails,
+  getAuthUserDetails,
   updateProfile,
   updatePassword,
 } from '../../actions/userActions';
@@ -44,7 +44,7 @@ const ProfileSettingsRoute = () => {
     loading: loadingUserDetails,
     userDetails,
     error: errorUserDetails,
-  } = useSelector((state) => state.userDetails);
+  } = useSelector((state) => state.authUserDetails);
 
   const { error: errorUpdateProfile, success: successUpdateProfile } =
     useSelector((state) => state.userUpdateProfile);
@@ -80,7 +80,7 @@ const ProfileSettingsRoute = () => {
         {
           text: 'OK',
           onPress: () => {
-            dispatch(getUserDetails(userId));
+            dispatch(getAuthUserDetails());
             dispatch({ type: CLEAR_PROFILE_DATA });
           },
         },
@@ -91,7 +91,7 @@ const ProfileSettingsRoute = () => {
         {
           text: 'OK',
           onPress: () => {
-            dispatch(getUserDetails(userId));
+            dispatch(getAuthUserDetails());
             dispatch({ type: CLEAR_PROFILE_DATA });
           },
         },
@@ -102,7 +102,7 @@ const ProfileSettingsRoute = () => {
         {
           text: 'OK',
           onPress: () => {
-            dispatch(getUserDetails(userId));
+            dispatch(getAuthUserDetails());
             dispatch({ type: CLEAR_PASSWORD_DATA });
           },
         },
@@ -113,7 +113,7 @@ const ProfileSettingsRoute = () => {
         {
           text: 'OK',
           onPress: () => {
-            dispatch(getUserDetails(userId));
+            dispatch(getAuthUserDetails());
             dispatch({ type: CLEAR_PASSWORD_DATA });
           },
         },
@@ -171,7 +171,7 @@ const ProfileSettingsRoute = () => {
 
   // Will be called every time the dashboard tab is focused
   useEffect(() => {
-    dispatch(getUserDetails(userId));
+    dispatch(getAuthUserDetails());
   }, [dispatch, userId, successUpdatePassword, successUpdateProfile]);
 
   return (
