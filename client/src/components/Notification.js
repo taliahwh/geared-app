@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
@@ -28,7 +35,6 @@ const Notification = ({
   };
 
   const handleNavigation = () => {
-    // console.log(notificationType);
     if (notificationType === 'Comment') {
       navigation.navigate('Comments', { postId });
     }
@@ -99,7 +105,8 @@ const Notification = ({
       )}
 
       {!isViewed && (
-        <TouchableOpacity
+        <Pressable
+          onLongPress={() => handleViewNotification(user)}
           onPress={() => {
             handleViewNotification(user);
             handleNavigation();
@@ -155,7 +162,7 @@ const Notification = ({
               />
             )}
           </View>
-        </TouchableOpacity>
+        </Pressable>
       )}
     </>
   );
