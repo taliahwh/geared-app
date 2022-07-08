@@ -49,7 +49,7 @@ const LikesRoute = () => {
 
   useEffect(() => {
     dispatch(getLikedPosts());
-  }, [dispatch]);
+  }, [dispatch, successLikedPost]);
 
   return (
     <>
