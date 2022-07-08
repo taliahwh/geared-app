@@ -35,6 +35,7 @@ const FollowersScreen = ({ route }) => {
         name={item.name}
         username={item.username}
         profileImage={item.profileImage}
+        followerId={item._id}
       />
     );
   };
