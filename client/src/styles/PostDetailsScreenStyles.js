@@ -148,7 +148,8 @@ const styles = StyleSheet.create({
   },
   priceLabel: {
     fontWeight: '500',
-    fontSize: 15,
+    fontSize: 13,
+    paddingRight: 2,
   },
   price: {
     fontSize: 15,
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
   uploadDate: {
     paddingLeft: 15,
     paddingTop: 4,
-    fontSize: 12,
+    fontSize: 10,
     paddingBottom: 5,
   },
   aboutTheSellerContainer: {
