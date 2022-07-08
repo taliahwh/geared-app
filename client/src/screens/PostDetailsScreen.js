@@ -17,7 +17,6 @@ import moment from 'moment';
 // import styles from '../styles/PostDetailsScreenStyles';
 
 // Components
-import FullWidthCarouselCards from '../components/carousel/FullWidthCarouselCards';
 import AlertMessage from '../components/AlertMessage';
 import PostDetailsCard from '../components/PostDetailsCard';
 
@@ -31,7 +30,6 @@ import {
 const PostDetailsScreen = ({ route, forSale, offers }) => {
   // Hooks
   const dispatch = useDispatch();
-  const navigation = useNavigation();
 
   // Params from navigation
   const { postId } = route.params;
@@ -43,6 +41,7 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
   const { success: successLikePost } = useSelector(
     (state) => state.likePostDetailsScreen
   );
+  const { success: successSavePost } = useSelector((state) => state.savePost);
   const {
     loading: loadingPostDetails,
     postDetails,
@@ -68,26 +67,9 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
     );
   };
 
-  const handleLikePost = () => {
-    dispatch(likePost(postDetails));
-  };
-
-  const navigateToComments = () => {
-    navigation.navigate('Comments', {
-      postId,
-      post: postDetails,
-    });
-  };
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     dispatch(getPostDetails(postId));
-  //   }, [dispatch, postId, successLikePost])
-  // );
-
   useEffect(() => {
     dispatch(getPostDetails(postId));
-  }, [dispatch, postId, successLikePost]);
+  }, [dispatch, postId, successLikePost, successSavePost]);
 
   return (
     <>
@@ -111,6 +93,7 @@ const PostDetailsScreen = ({ route, forSale, offers }) => {
           productImages={postDetails.images}
           likeCount={postDetails.likes.length}
           userLikedPost={postDetails.likes.includes(signedInUserId)}
+          userSavedPost={postDetails.savedBy.includes(signedInUserId)}
           description={postDetails.description}
           numComments={postDetails.comments.length}
           condition={postDetails.condition}
