@@ -1,6 +1,8 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 
 export const HeaderClose = () => {
@@ -21,6 +23,7 @@ export const HeaderBack = () => {
 
 export const HeaderNotification = () => {
   const navigation = useNavigation();
+
   return (
     <View style={{ marginLeft: 15 }}>
       <TouchableOpacity
