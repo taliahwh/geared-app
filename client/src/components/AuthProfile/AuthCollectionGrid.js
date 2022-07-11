@@ -21,8 +21,6 @@ import { getAuthUserPosts } from '../../actions/userActions';
 
 const thirdWindowWidth = Dimensions.get('window').width / 3;
 
-import { CLEAR_POSTS_DATA } from '../../constants/userConstants';
-
 const ImageRender = ({ src }) => {
   return (
     <View style={styles.container}>
