@@ -2,6 +2,7 @@ import express from 'express';
 
 import {
   getAllPosts,
+  getFollowingUsersPosts,
   createNewPost,
   getPostById,
   likePost,
@@ -22,6 +23,8 @@ router.post('/', authMiddleware, createNewPost);
 router.post('/comment/:id', authMiddleware, createNewComment);
 
 router.get('/explore', authMiddleware, getAllPosts);
+
+router.get('/following', authMiddleware, getFollowingUsersPosts);
 
 router.get('/likedposts', authMiddleware, getLikedPosts);
 
