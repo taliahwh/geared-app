@@ -15,8 +15,7 @@ import TradingCardPost from '../TradingCardPost';
 import AlertMessage from '../AlertMessage';
 
 // Actions
-import { getExplorePosts, getSavedPosts } from '../../actions/postActions';
-import { getUserDetails } from '../../actions/userActions';
+import { getExplorePosts } from '../../actions/postActions';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -28,7 +27,6 @@ const ExploreRoute = () => {
   const [isRefreshing, setIsRefreshing] = React.useState(false);
 
   // Redux state
-
   const {
     loading: loadingExplorePosts,
     posts,
