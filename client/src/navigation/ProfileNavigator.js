@@ -1,6 +1,4 @@
-import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useNavigation } from '@react-navigation/native';
 
 import ProfileScreen from '../screens/ProfileScreen';
 import PostDetailsScreen from '../screens/PostDetailsScreen';
@@ -25,7 +23,6 @@ const ProfileNavigator = () => {
             elevation: 0,
             shadowOpacity: 0,
             borderBottomWidth: 0,
-            // height: 60,
           },
           headerLeft: HeaderNotification,
         }}
