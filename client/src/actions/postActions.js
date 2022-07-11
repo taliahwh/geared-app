@@ -5,6 +5,9 @@ import {
   EXPLORE_POSTS_REQUEST,
   EXPLORE_POSTS_SUCCESS,
   EXPLORE_POSTS_FAILURE,
+  FOLLOWING_POSTS_REQUEST,
+  FOLLOWING_POSTS_SUCCESS,
+  FOLLOWING_POSTS_FAILURE,
   CREATE_NEW_POST_REQUEST,
   CREATE_NEW_POST_SUCCESS,
   CREATE_NEW_POST_FAILURE,
@@ -51,6 +54,27 @@ export const getExplorePosts = () => async (dispatch, getState) => {
     dispatch({ type: EXPLORE_POSTS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: EXPLORE_POSTS_FAILURE });
+    console.log(error.message);
+  }
+};
+
+export const getFollowingPosts = () => async (dispatch, getState) => {
+  dispatch({ type: FOLLOWING_POSTS_REQUEST });
+
+  const { authToken } = getState().userSignIn;
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    const { data } = await geared.get('/api/posts/following', config);
+
+    dispatch({ type: FOLLOWING_POSTS_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: FOLLOWING_POSTS_FAILURE });
     console.log(error.message);
   }
 };
