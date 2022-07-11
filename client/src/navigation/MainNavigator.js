@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  createNavigationContainerRef,
-  getFocusedRouteNameFromRoute,
-} from '@react-navigation/native';
+import { createNavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSelector, useDispatch } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,7 +15,7 @@ import DashboardNavigator from './DashboardNavigator';
 import MessagesNavigator from './MessagesNavigator';
 
 // Actions
-import { getNotifications } from '../actions/userActions';
+import { getNotifications, getAuthUserDetails } from '../actions/userActions';
 
 export const navigationRef = createNavigationContainerRef();
 
@@ -43,6 +40,7 @@ const MainNavigator = () => {
 
   useEffect(() => {
     dispatch(getNotifications(userId));
+    dispatch(getAuthUserDetails(userId));
   }, [dispatch, userId, successViewNotification]);
 
   return (
@@ -117,7 +115,8 @@ const MainNavigator = () => {
             shadowOpacity: 0,
             borderBottomWidth: 0,
           },
-          tabBarBadge: unreadNotifications ? unreadNotifications.length : 0,
+          tabBarBadge: unreadNotifications && unreadNotifications.length,
+
           tabBarBadgeStyle: {
             backgroundColor: '#3E5E7E',
             fontSize: 12,
