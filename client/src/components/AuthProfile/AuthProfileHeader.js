@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Pressable,
   Linking,
+  Share,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -52,6 +53,30 @@ const AuthProfileHeader = () => {
     (state) => state.userUpdateProfile
   );
 
+  const { success: successFollowUser } = useSelector(
+    (state) => state.followUser
+  );
+
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          'React Native | A framework for building native apps using React',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   const handleNavigate = (query) => {
     if (query === 'followers') {
       navigation.navigate('Followers', { userId });
@@ -65,15 +90,9 @@ const AuthProfileHeader = () => {
     dispatch(logout());
   };
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     dispatch(getAuthUserDetails());
-  //   }, [dispatch, successUpdateProfile])
-  // );
-
   useEffect(() => {
     dispatch(getAuthUserDetails());
-  }, [dispatch, successUpdateProfile]);
+  }, [dispatch, successUpdateProfile, successFollowUser]);
 
   return (
     <View style={styles.container}>
@@ -191,9 +210,11 @@ const AuthProfileHeader = () => {
                 </View>
               </TouchableOpacity>
             </View>
+            {/* <TouchableOpacity onPress={handleShare}> */}
             <View style={styles.shareBtnContainer}>
               <Text style={styles.shareBtn}>Share collection</Text>
             </View>
+            {/* </TouchableOpacity> */}
           </View>
         </>
       )}
@@ -212,9 +233,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   userImage: {
-    flex: 2,
+    // flex: 2,
     // backgroundColor: 'pink',
     height: 68,
+    width: 68,
+    borderRadius: 65 / 2,
     borderWidth: 1,
     borderColor: '#d4d4d4',
     borderRadius: 1000,
