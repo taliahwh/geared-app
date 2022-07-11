@@ -19,6 +19,25 @@ const getAllPosts = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @desc Fetch all following users' posts
+ * @route GET /posts/explore
+ * @access Public
+ */
+const getFollowingUsersPosts = asyncHandler(async (req, res) => {
+  const { id: authUserId } = req.user;
+
+  const authUser = await User.findById(authUserId);
+
+  const usersFollowingIds = authUser.following.map(mongoose.Types.ObjectId); // convert strs to objectId
+  const usersFollowingPosts = await Post.find({
+    'listedBy.userId': { $in: usersFollowingIds },
+  });
+  const orderedPosts = usersFollowingPosts.reverse();
+
+  res.status(200).json(orderedPosts);
+});
+
+/**
  * @desc Create new post
  * @route POST /posts/
  * @access Public
@@ -369,6 +388,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
 export {
   getAllPosts,
+  getFollowingUsersPosts,
   createNewPost,
   getPostById,
   likePost,
