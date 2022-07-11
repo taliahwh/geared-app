@@ -2,6 +2,9 @@ import {
   EXPLORE_POSTS_REQUEST,
   EXPLORE_POSTS_SUCCESS,
   EXPLORE_POSTS_FAILURE,
+  FOLLOWING_POSTS_REQUEST,
+  FOLLOWING_POSTS_SUCCESS,
+  FOLLOWING_POSTS_FAILURE,
   CREATE_NEW_POST_REQUEST,
   CREATE_NEW_POST_SUCCESS,
   CREATE_NEW_POST_FAILURE,
@@ -42,6 +45,22 @@ export const explorePostsReducer = (state = { posts: [] }, action) => {
         posts: action.payload,
       };
     case EXPLORE_POSTS_FAILURE:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const followingPostsReducer = (state = { posts: [] }, action) => {
+  switch (action.type) {
+    case FOLLOWING_POSTS_REQUEST:
+      return { loading: true, ...state };
+    case FOLLOWING_POSTS_SUCCESS:
+      return {
+        loading: false,
+        posts: action.payload,
+      };
+    case FOLLOWING_POSTS_FAILURE:
       return { loading: false, error: action.payload };
     default:
       return state;
