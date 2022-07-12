@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "geared",
-    "slug": "client",
+    "slug": "geared",
+    "owner": "taliahwh",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/geared_icon.png",
