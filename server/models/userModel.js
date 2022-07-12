@@ -78,6 +78,10 @@ const userSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    pushToken: {
+      type: String,
+      default: '',
+    },
   },
   {
     // Automatically generates createdAt and updatedAt fields
