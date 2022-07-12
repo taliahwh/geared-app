@@ -1,8 +1,27 @@
 import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet, TextInput } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Notifications from 'expo-notifications';
 
-const SearchScreen = ({ navigation }) => {
+const SearchScreen = () => {
+  const handlePushNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'Title',
+        body: 'body',
+        data: { data: 'data goes here' },
+      },
+      trigger: { seconds: 2 },
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
@@ -23,6 +42,9 @@ const SearchScreen = ({ navigation }) => {
           />
         </View>
       </View>
+      <TouchableOpacity onPress={handlePushNotification}>
+        <Text style={styles.notificationBtn}>Push Notification</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -55,6 +77,19 @@ const styles = StyleSheet.create({
     color: '#71717a',
     width: '5%',
     // backgroundColor: 'orange',
+  },
+  notificationBtn: {
+    marginTop: 20,
+    marginLeft: 125,
+    display: 'flex',
+    justifyContent: 'center',
+    width: 150,
+    textAlign: 'center',
+    backgroundColor: 'gray',
+    padding: 10,
+    fontWeight: '500',
+    color: 'white',
+    fontSize: 15,
   },
 });
 
