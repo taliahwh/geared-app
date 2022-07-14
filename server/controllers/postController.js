@@ -6,6 +6,8 @@ import User from '../models/userModel.js';
 import Comment from '../models/commentModel.js';
 import Notification from '../models/notificationModel.js';
 
+import sendPushNotification from '../utils/sendPushNotification.js';
+
 /**
  * @desc Fetch all posts to display in Explore tab
  * @route GET /posts/explore
@@ -162,7 +164,9 @@ const likePost = asyncHandler(async (req, res) => {
 
   await user.save();
 
+  // If liking the post:
   if (index === -1 && String(userId) !== String(userOfPostId)) {
+    // Send a notification through app
     const newNotification = await Notification.create({
       notificationType: 'Like Post',
       notificationBody: `@${user.username} liked your post`,
@@ -175,6 +179,11 @@ const likePost = asyncHandler(async (req, res) => {
         profileImage: user.profileImage,
       },
     });
+
+    // Send Push Notification
+    const pushToken = userOfPost.pushToken;
+    sendPushNotification(pushToken, `@${user.username} liked your post`);
+
     await newNotification.save();
     userOfPost.notifications.push(newNotification);
     await userOfPost.save();
@@ -329,6 +338,14 @@ const createNewComment = asyncHandler(async (req, res) => {
         profileImage: commentingUser.profileImage,
       },
     });
+
+    // Send Push Notification
+    const pushToken = userOfPost.pushToken;
+    sendPushNotification(
+      pushToken,
+      `@${commentingUser.username} commented on your post: ${commentBody}`
+    );
+
     await newNotification.save();
     userOfPost.notifications.push(newNotification);
     await userOfPost.save();
