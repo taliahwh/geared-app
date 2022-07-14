@@ -5,6 +5,9 @@ import {
   USER_SIGN_UP_REQUEST,
   USER_SIGN_UP_SUCCESS,
   USER_SIGN_UP_FAILURE,
+  GET_USER_PUSH_TOKEN_REQUEST,
+  GET_USER_PUSH_TOKEN_SUCCESS,
+  GET_USER_PUSH_TOKEN_FAILURE,
   AUTH_USER_DETAILS_REQUEST,
   AUTH_USER_DETAILS_SUCCESS,
   AUTH_USER_DETAILS_FAILURE,
@@ -92,6 +95,19 @@ export const userSignUpReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case CLEAR_SIGN_UP_DATA:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const savePushTokenReducer = (state = {}, action) => {
+  switch (action.type) {
+    case GET_USER_PUSH_TOKEN_REQUEST:
+      return { loading: true };
+    case GET_USER_PUSH_TOKEN_SUCCESS:
+      return { loading: false, success: true };
+    case GET_USER_PUSH_TOKEN_FAILURE:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }
