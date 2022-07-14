@@ -5,6 +5,9 @@ import {
   USER_SIGN_UP_REQUEST,
   USER_SIGN_UP_SUCCESS,
   USER_SIGN_UP_FAILURE,
+  GET_USER_PUSH_TOKEN_REQUEST,
+  GET_USER_PUSH_TOKEN_SUCCESS,
+  GET_USER_PUSH_TOKEN_FAILURE,
   AUTH_USER_DETAILS_REQUEST,
   AUTH_USER_DETAILS_SUCCESS,
   AUTH_USER_DETAILS_FAILURE,
@@ -111,6 +114,32 @@ export const signUp =
       });
     }
   };
+
+export const savePushToken = (pushToken) => async (dispatch, getState) => {
+  const { authToken } = getState().userSignIn;
+  try {
+    dispatch({ type: GET_USER_PUSH_TOKEN_REQUEST });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    await gearedApi.put('/api/users/pushtoken', { pushToken }, config);
+
+    dispatch({ type: GET_USER_PUSH_TOKEN_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: GET_USER_PUSH_TOKEN_FAILURE,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
 
 export const getAuthUserDetails = () => async (dispatch, getState) => {
   const { authToken } = getState().userSignIn;
