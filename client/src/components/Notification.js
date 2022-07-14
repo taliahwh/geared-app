@@ -24,7 +24,7 @@ const Notification = ({
   commentBody,
   isViewed,
   notificationId,
-  user,
+  // user,
 }) => {
   // Hooks
   const navigation = useNavigation();
@@ -77,7 +77,7 @@ const Notification = ({
                   </Text>
                 )}
 
-                {notificationType === 'Comment' && (
+                {/* {notificationType === 'Comment' && (
                   <Text>
                     <Text style={styles.username}>{username}</Text> commented on
                     your post:{' '}
@@ -85,7 +85,7 @@ const Notification = ({
                       ? `${commentBody.slice(0, 80)}...`
                       : commentBody}
                   </Text>
-                )}
+                )} */}
               </View>
               <Text style={styles.timePosted}>
                 {moment(timePosted).startOf('minute').fromNow().toUpperCase()}
@@ -108,7 +108,7 @@ const Notification = ({
         <Pressable
           onLongPress={() => handleViewNotification(user)}
           onPress={() => {
-            handleViewNotification(user);
+            // handleViewNotification(user);
             handleNavigation();
           }}
         >
@@ -138,7 +138,7 @@ const Notification = ({
                   </Text>
                 )}
 
-                {notificationType === 'Comment' && (
+                {/* {notificationType === 'Comment' && (
                   <Text>
                     <Text style={styles.username}>{username}</Text> commented on
                     your post:{' '}
@@ -146,7 +146,7 @@ const Notification = ({
                       ? `${commentBody.slice(0, 80)}...`
                       : commentBody}
                   </Text>
-                )}
+                )} */}
               </View>
               <Text style={styles.timePosted}>
                 {moment(timePosted).startOf('minute').fromNow().toUpperCase()}
