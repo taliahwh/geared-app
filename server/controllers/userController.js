@@ -124,6 +124,30 @@ const signUp = asyncHandler(async (req, res) => {
   }
 });
 
+/**
+ * @desc Save user's push token for push notifications
+ * by receiving it from client if accepted upon prompt.
+ * Push token get updated in the user model and remains
+ * the same upon every sign in.
+ * @route PUT /user/pushtoken
+ * @access Public
+ */
+const savePushToken = asyncHandler(async (req, res) => {
+  const { id: userId } = req.user;
+  const { pushToken } = req.body;
+
+  const user = await User.findById(userId);
+  if (!user) {
+    res.status(404);
+    throw new Error('No user found with that id.');
+  }
+
+  user.pushToken = pushToken;
+  await user.save();
+
+  res.json(pushToken);
+});
+
 // @desc Update user profile
 // @route PUT /api/users/profile
 // @access Private
@@ -376,7 +400,8 @@ const getNotifications = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 
-  const notifications = user.notifications;
+  // const notifications = user.notifications;
+  const notifications = await Notification.find({ requestTo: userId });
 
   res.status(200).json(notifications);
 });
@@ -510,6 +535,7 @@ const getFollowing = asyncHandler(async (req, res) => {
 export {
   signIn,
   signUp,
+  savePushToken,
   getAuthUserDetails,
   getUserDetails,
   getAuthPosts,
