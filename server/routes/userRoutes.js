@@ -3,6 +3,7 @@ import express from 'express';
 import {
   signIn,
   signUp,
+  savePushToken,
   getAuthUserDetails,
   getUserDetails,
   getAuthPosts,
@@ -31,6 +32,8 @@ router.put('/notifications/:id', authMiddleware, markNotificationAsViewed);
 router.put('/password', authMiddleware, updateUserPassword);
 
 router.put('/profile', authMiddleware, updateUserProfile);
+
+router.put('/pushtoken', authMiddleware, savePushToken);
 
 router.get('/auth-collection', authMiddleware, getAuthPosts);
 
