@@ -23,6 +23,7 @@ import {
   authUserPostsReducer,
   followUserReducer,
   notificationsReducer,
+  savePushTokenReducer,
   userDetailsReducer,
   userPostsReducer,
   userSignInReducer,
@@ -59,6 +60,7 @@ const reducer = combineReducers({
   userUpdateProfile: userUpdateProfileReducer,
   userUpdatePassword: userUpdatePasswordReducer,
   userViewNotification: viewNotificationReducer,
+  savePushToken: savePushTokenReducer,
 });
 
 const persistConfig = {
