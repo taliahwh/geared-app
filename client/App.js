@@ -13,6 +13,9 @@ import getNotificationsPermission from './src/utils/getNotificationsPermission';
 // Components
 import Loader from './src/components/Loader';
 
+// Actions
+import { savePushToken } from './src/actions/userActions';
+
 // Navigators
 import { navigationRef } from './src/navigation/RootNavigation';
 import MainNavigator from './src/navigation/MainNavigator';
@@ -27,6 +30,7 @@ Notifications.setNotificationHandler({
 });
 
 const App = () => {
+  const dispatch = useDispatch();
   const { authToken } = useSelector((state) => state.userSignIn);
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
@@ -37,7 +41,17 @@ const App = () => {
       `ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.`,
     ]);
 
-    getNotificationsPermission();
+    // Gets permission for notifications and sets pushToken in user model
+    const getToken = async () => {
+      try {
+        const response = await getNotificationsPermission();
+        // console.log(response);
+        dispatch(savePushToken(response));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getToken();
 
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current =
