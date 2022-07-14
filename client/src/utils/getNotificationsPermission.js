@@ -1,6 +1,10 @@
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import storage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+
+// Actions
+import { savePushToken } from '../actions/userActions';
 
 const getNotificationsPermission = async () => {
   if (Device.isDevice) {
@@ -11,15 +15,15 @@ const getNotificationsPermission = async () => {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
     }
+
     if (finalStatus !== 'granted') {
-      // alert('Failed to get push token for push notification!');
+      alert('Failed to get push token for push notification!');
       await storage.setItem('expopushtoken', '');
       return;
     }
     const token = (await Notifications.getExpoPushTokenAsync()).data;
     await storage.setItem('expopushtoken', token);
-    console.log(token);
-    // this.setState({ expoPushToken: token });
+    return token;
   } else {
     alert('Must use physical device for Push Notifications');
   }
