@@ -14,7 +14,7 @@ import Notification from '../components/Notification';
 import AlertMessage from '../components/AlertMessage';
 
 // Actions
-import { getUserDetails } from '../actions/userActions';
+import { getNotifications } from '../actions/userActions';
 
 const NotificationScreen = () => {
   // Hooks
@@ -26,10 +26,10 @@ const NotificationScreen = () => {
   const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
 
   const {
-    loading: loadingUserDetails,
-    userDetails,
-    error: errorUserDetails,
-  } = useSelector((state) => state.userDetails);
+    loading: loadingNotifications,
+    notifications,
+    error: errorNotifications,
+  } = useSelector((state) => state.notifications);
 
   const { success: successViewNotification } = useSelector(
     (state) => state.userViewNotification
@@ -44,46 +44,46 @@ const NotificationScreen = () => {
         notificationType={item.notificationType}
         postId={item.postId}
         postImage={item.postImage}
-        commentBody={item.commentBody && item.commentBody}
+        commentBody={item.commentBody}
         isViewed={item.viewed}
         notificationId={item._id}
-        user={userDetails && userDetails}
+        // user={userDetails && userDetails}
       />
     );
   };
 
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(getUserDetails(userId));
+      dispatch(getNotifications(userId));
     }, [dispatch, userId, successViewNotification])
   );
 
   return (
     <>
-      {errorUserDetails && (
+      {errorNotifications && (
         <View style={styles.centered}>
           <AlertMessage>{errorUserDetails}</AlertMessage>
         </View>
       )}
 
-      {loadingUserDetails && (
+      {loadingNotifications && (
         <View style={styles.centered}>
           <ActivityIndicator />
         </View>
       )}
 
-      {userDetails && userDetails.notifications.length > 0 && (
+      {notifications && notifications.length > 0 && (
         <View style={styles.container}>
           <FlatList
             ref={scrollRef}
-            data={userDetails.notifications.reverse()}
+            data={notifications}
             renderItem={renderItem}
             keyExtractor={(item) => item._id}
           />
         </View>
       )}
 
-      {userDetails && userDetails.notifications.length === 0 && (
+      {notifications && notifications.length === 0 && (
         <View style={styles.centered}>
           <Text style={styles.text}>No notifications.</Text>
         </View>
