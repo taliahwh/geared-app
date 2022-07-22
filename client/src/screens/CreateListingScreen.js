@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
+import geared from '../api/geared';
 import {
   ScrollView,
+  ActivityIndicator,
   View,
   Text,
   Modal,
   TouchableOpacity,
   TextInput,
   Image,
+  Platform,
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as ImagePicker from 'expo-image-picker';
-import { useDispatch } from 'react-redux';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
 // Component
@@ -27,6 +31,13 @@ import { createPost, getExplorePosts } from '../actions/postActions';
 const CreateListingScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
+  // State from Redux
+  const { error: errorCreateListing } = useSelector(
+    (state) => state.createPost
+  );
+
+  const { _id: userId } = useSelector((state) => state.userSignIn.userInfo);
 
   // Text input state
   const [description, setDescription] = useState('');
@@ -45,10 +56,14 @@ const CreateListingScreen = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   // Images
+  const [loadingImage, setLoadingImage] = useState(false);
+
   const [image1, setImage1] = useState(null);
   const [image2, setImage2] = useState(null);
   const [image3, setImage3] = useState(null);
   const [image4, setImage4] = useState(null);
+
+  // Loading images
 
   // Modals
   const [sportModalVisible, setSportModalVisible] = useState(false);
@@ -81,32 +96,141 @@ const CreateListingScreen = () => {
   // Location modal
   const [locationValue, setLocationValue] = useState('');
 
+  // const askForPermission = async () => {
+  //   const permissionResult =
+  //   await Permissions.askAsync(Permissions.CAMERA)
+  //   if (permissionResult.status !== ‘granted’) {
+  //     Alert.alert(‘no permissions to access camera!’,
+  //     [{ text: ‘ok’}])
+  //     return false
+  //   }
+  //   return true
+  // }
+
   const pickImage = async (imageNum) => {
     // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+
+    const imagePickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      // base64: true,
+      imagePickerResult: true,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
 
-    // console.log(result);
-
     if (imageNum === 1) {
-      if (!result.cancelled) {
-        setImage1(result.uri);
+      if (!imagePickerResult.cancelled) {
+        const formData = new FormData();
+        formData.append('postImage', {
+          name: `post${Date.now()}`,
+          uri: imagePickerResult.uri,
+          type: 'image/jpg',
+        });
+
+        try {
+          setLoadingImage('loading');
+          const { data: cloudinaryURL } = await geared.post(
+            '/api/upload/post',
+            formData,
+            {
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+              },
+            }
+          );
+
+          console.log(cloudinaryURL);
+          setImage1(cloudinaryURL);
+          setLoadingImage(false);
+        } catch (error) {
+          console.log(error);
+        }
       }
     } else if (imageNum === 2) {
-      if (!result.cancelled) {
-        setImage2(result.uri);
+      if (!imagePickerResult.cancelled) {
+        const formData = new FormData();
+        formData.append('postImage', {
+          name: `post${Date.now()}`,
+          uri: imagePickerResult.uri,
+          type: 'image/jpg',
+        });
+
+        try {
+          // console.log(formData);
+          const { data: cloudinaryURL } = await geared.post(
+            '/api/upload/post',
+            formData,
+            {
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+              },
+            }
+          );
+          // console.log(imagePickerResult);
+          console.log(cloudinaryURL);
+          setImage2(cloudinaryURL);
+        } catch (error) {
+          console.log(error);
+        }
       }
     } else if (imageNum === 3) {
-      if (!result.cancelled) {
-        setImage3(result.uri);
+      if (!imagePickerResult.cancelled) {
+        const formData = new FormData();
+        formData.append('postImage', {
+          name: `post${Date.now()}`,
+          uri: imagePickerResult.uri,
+          type: 'image/jpg',
+        });
+
+        try {
+          // console.log(formData);
+          const { data: cloudinaryURL } = await geared.post(
+            '/api/upload/post',
+            formData,
+            {
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+              },
+            }
+          );
+          // console.log(imagePickerResult);
+          console.log(cloudinaryURL);
+          setImage3(cloudinaryURL);
+        } catch (error) {
+          console.log(error);
+        }
       }
     } else {
-      if (!result.cancelled) {
-        setImage4(result.uri);
+      if (!imagePickerResult.cancelled) {
+        const formData = new FormData();
+        formData.append('postImage', {
+          name: `post${Date.now()}`,
+          uri: imagePickerResult.uri,
+          type: 'image/jpg',
+        });
+
+        try {
+          // console.log(formData);
+          const { data: cloudinaryURL } = await geared.post(
+            '/api/upload/post',
+            formData,
+            {
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+              },
+            }
+          );
+          // console.log(imagePickerResult);
+          console.log(cloudinaryURL);
+          setImage4(cloudinaryURL);
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
   };
@@ -198,7 +322,12 @@ const CreateListingScreen = () => {
     <View style={styles.container}>
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         {/* Error message */}
-        {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
+        {/* {errorMessage && <Text style={styles.error}>{errorMessage}</Text>} */}
+        {errorCreateListing && <Text>{errorCreateListing}</Text>}
+
+        <View style={styles.uploadingImage}>
+          <Text>Uploading...</Text>
+        </View>
 
         <View style={styles.cameraBtnContainer}>
           {image1 === null ? (
