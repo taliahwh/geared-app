@@ -1,4 +1,3 @@
-import axios from 'axios';
 import geared from '../api/geared';
 
 import {
