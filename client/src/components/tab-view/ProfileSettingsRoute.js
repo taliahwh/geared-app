@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import geared from '../../api/geared';
 import {
   View,
   Text,
@@ -148,15 +149,38 @@ const ProfileSettingsRoute = () => {
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
 
-    if (!result.cancelled) {
-      setProfileImage(result.uri);
+    if (!imagePickerResult.cancelled) {
+      const formData = new FormData();
+      formData.append('profileImage', {
+        name: `post${Date.now()}`,
+        uri: imagePickerResult.uri,
+        type: 'image/jpg',
+      });
+
+      try {
+        const { data: cloudinaryURL } = await geared.post(
+          '/api/upload/profile',
+          formData,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+
+        console.log(cloudinaryURL);
+        setProfileImage(cloudinaryURL);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
