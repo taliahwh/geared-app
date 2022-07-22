@@ -51,8 +51,6 @@ const TradingCardPost = ({
   savedBy,
   commentsCount,
 }) => {
-  // console.log(savedPosts);
-
   // Hooks
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -127,6 +125,7 @@ const TradingCardPost = ({
         <View style={styles.userInformation}>
           <Image
             style={styles.userImage}
+            // style={{ width: 40, height: 40, borderRadius: 40 / 2, flex: 1 }}
             source={{
               uri: profileImage,
             }}
@@ -272,9 +271,11 @@ const styles = StyleSheet.create({
     flex: 1,
     // width: 1,
     height: 40,
+    width: 40,
+    borderRadius: 40 / 2,
     borderWidth: 1,
     borderColor: '#d4d4d4',
-    borderRadius: 100,
+    // borderRadius: 100,
   },
   usernameContainer: {
     flex: 6,
