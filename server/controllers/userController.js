@@ -214,6 +214,16 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     }
   );
 
+  // update profile image for any posts the user has
+  await Post.updateMany(
+    { 'listedBy.userId': userId },
+    {
+      $set: {
+        'listedBy.profileImage': newProfileImage ? newProfileImage : null,
+      },
+    }
+  );
+
   res.status(200).json({
     _id: updatedUser._id,
     name: updatedUser.name,
