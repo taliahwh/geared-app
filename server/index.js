@@ -1,3 +1,4 @@
+import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
@@ -8,6 +9,7 @@ import colors from 'colors';
 // API Routes
 import postRoutes from './routes/postRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
 
 // Error handling middleware
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
@@ -19,15 +21,20 @@ connectDB();
 const app = express();
 
 // Allows access to JSON data in the body
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '15MB' }));
 app.use(cors());
 
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
+
+// const __dirname = path.resolve();
+// app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // Error handling middleware
 app.use(notFound);
