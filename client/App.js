@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider, useSelector, useDispatch } from 'react-redux';
 import { MenuProvider } from 'react-native-popup-menu';
