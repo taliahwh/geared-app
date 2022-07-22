@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import geared from '../api/geared';
 import {
   View,
   Text,
@@ -32,8 +33,6 @@ const SignUpDetailsScreen = ({ route }) => {
   // Hooks
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const { firstName, lastName, email, username, password, confirmPassword } =
-    route.params;
 
   // Input state
   const [dateOfBirth, setDateOfBirth] = useState({
@@ -50,6 +49,7 @@ const SignUpDetailsScreen = ({ route }) => {
   const [interest4, setInterest4] = useState('');
   const [showAlertMessage, setShowAlertMessage] = useState(false);
   const [AlertMessageMessage, setAlertMessageMessage] = useState(null);
+  const [loadingSignUp, setLoadingSignUp] = useState(false);
 
   // Input ref
   const dayRef = useRef();
@@ -57,7 +57,6 @@ const SignUpDetailsScreen = ({ route }) => {
 
   // Modals
   const [bioModalVisible, setBioModalVisible] = useState(false);
-  const [interestsModalVisible, setInterestsModalVisible] = useState(false);
 
   // State from redux store
   const { error: errorSignIn } = useSelector((state) => state.userSignIn);
@@ -74,19 +73,44 @@ const SignUpDetailsScreen = ({ route }) => {
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let imagePickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
 
-    if (!result.cancelled) {
-      setProfileImage(result.uri);
+    if (!imagePickerResult.cancelled) {
+      const formData = new FormData();
+      formData.append('profileImage', {
+        name: `post${Date.now()}`,
+        uri: imagePickerResult.uri,
+        type: 'image/jpg',
+      });
+
+      try {
+        const { data: cloudinaryURL } = await geared.post(
+          '/api/upload/profile',
+          formData,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+
+        console.log(cloudinaryURL);
+        setProfileImage(cloudinaryURL);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
-  const handleSubmit = () => {
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+  const handleSubmit = async () => {
     let currentYear = new Date().getFullYear();
     let dob;
 
@@ -122,6 +146,10 @@ const SignUpDetailsScreen = ({ route }) => {
 
     dob = `${dateOfBirth.month}/${dateOfBirth.day}/${dateOfBirth.year}`;
 
+    // 5 second timer
+    setLoadingSignUp(true);
+    await delay(5000);
+
     dispatch(
       completeSignUp(
         dob,
@@ -133,6 +161,7 @@ const SignUpDetailsScreen = ({ route }) => {
         interest4
       )
     );
+    // setLoadingSignUp(false);
   };
 
   return (
@@ -165,9 +194,6 @@ const SignUpDetailsScreen = ({ route }) => {
                     returnKeyType="next"
                     keyboardType="numeric"
                     maxLength={2}
-                    onSubmitEditing={() => {
-                      dayRef.current.focus();
-                    }}
                   />
                   <Text>/</Text>
                   <TextInput
@@ -183,9 +209,6 @@ const SignUpDetailsScreen = ({ route }) => {
                     returnKeyType="next"
                     keyboardType="numeric"
                     maxLength={2}
-                    onSubmitEditing={() => {
-                      yearRef.current.focus();
-                    }}
                   />
                   <Text>/</Text>
                   <TextInput
@@ -201,9 +224,6 @@ const SignUpDetailsScreen = ({ route }) => {
                     returnKeyType="done"
                     keyboardType="numeric"
                     maxLength={4}
-                    onSubmitEditing={() => {
-                      yearRef.current.focus();
-                    }}
                   />
                 </View>
               </View>
@@ -231,24 +251,6 @@ const SignUpDetailsScreen = ({ route }) => {
                   </View>
                 </TouchableOpacity>
               </View>
-
-              {/* <View style={styles.textInputContainer}>
-                <Text style={styles.inputTitle}>Interests</Text>
-
-                <TouchableOpacity
-                  onPress={() => setInterestsModalVisible(true)}
-                  activeOpacity={0.8}
-                >
-                  <View style={styles.chevronContainer}>
-                    <Text style={styles.optionalText}>optional</Text>
-                    <Ionicons
-                      name="ios-chevron-forward-outline"
-                      size={22}
-                      color="#71717a"
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View> */}
 
               <View style={styles.profileImageSection}>
                 <Text style={styles.inputTitle}>Profile image</Text>
@@ -314,78 +316,12 @@ const SignUpDetailsScreen = ({ route }) => {
                 </Modal>
               </View>
 
-              {/* Interests Modal */}
-              {/* <View style={styles.centeredView}>
-                <Modal
-                  animationType="fade"
-                  transparent={true}
-                  visible={interestsModalVisible}
-                  onRequestClose={() => {
-                    AlertMessage.AlertMessage('Modal has been closed.');
-                    setInterestsModalVisible(!interestsModalVisible);
-                  }}
-                >
-                  <ModalComponent
-                    header={'Interests'}
-                    closeModal={() => setInterestsModalVisible(false)}
-                    modal={true}
-                    input={
-                      <View style={styles.modalContainer}>
-                        <Text style={styles.modalDisplayText}>
-                          Create a few interest tags to connect with other users
-                          and make your profile more accessible
-                        </Text>
-
-                        <View style={styles.interestTagContainer}>
-                          <TextInput
-                            style={styles.interestInput}
-                            value={interest1}
-                            onChangeText={(value) => setInterest1(value)}
-                            placeholder="Stephen Curry"
-                            placeholderTextColor={'#a1a1aa'}
-                            autoComplete={'off'}
-                            autoCapitalize="words"
-                            maxLength={128}
-                          />
-                          <TextInput
-                            style={styles.interestInput}
-                            value={interest2}
-                            onChangeText={(value) => setInterest2(value)}
-                            placeholder="New York Yankees"
-                            placeholderTextColor={'#a1a1aa'}
-                            autoComplete={'off'}
-                            autoCapitalize="words"
-                            maxLength={128}
-                          />
-                          <TextInput
-                            style={styles.interestInput}
-                            value={interest3}
-                            onChangeText={(value) => setInterest3(value)}
-                            placeholder="Atlanta Hawks"
-                            placeholderTextColor={'#a1a1aa'}
-                            autoComplete={'off'}
-                            autoCapitalize="words"
-                            maxLength={128}
-                          />
-                          <TextInput
-                            style={styles.interestInput}
-                            value={interest4}
-                            onChangeText={(value) => setInterest4(value)}
-                            placeholder="Anthony Edwards"
-                            placeholderTextColor={'#a1a1aa'}
-                            autoComplete={'off'}
-                            autoCapitalize="words"
-                            maxLength={128}
-                          />
-                        </View>
-                      </View>
-                    }
-                  />
-                </Modal>
-              </View> */}
-
               <TouchableOpacity onPress={handleSubmit}>
-                <Text style={styles.signUpBtn}>Sign Up</Text>
+                {!loadingSignUp ? (
+                  <Text style={styles.signUpBtn}>Sign Up</Text>
+                ) : (
+                  <Text style={styles.signUpBtn}>Creating account...</Text>
+                )}
               </TouchableOpacity>
 
               <View style={styles.signUpTextContainer}>
