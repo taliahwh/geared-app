@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 15,
-    paddingTop: 25,
+    paddingTop: 20,
   },
   error: {
     color: '#f87171',
@@ -14,8 +14,14 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     fontWeight: '500',
   },
+  uploadingImage: {
+    textAlign: 'center',
+    fontSize: 13,
+    marginBottom: 10,
+    color: 'red',
+  },
   cameraBtnContainer: {
-    dispaly: 'flex',
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
