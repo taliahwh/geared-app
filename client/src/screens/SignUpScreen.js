@@ -10,6 +10,7 @@ import {
   Platform,
   Keyboard,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -20,7 +21,6 @@ import Loader from '../components/Loader';
 
 // Actions
 import { signUp } from '../actions/userActions';
-import { CLEAR_SIGN_UP_DATA } from '../constants/userConstants';
 
 const SignUpScreen = () => {
   // Hooks
@@ -33,8 +33,6 @@ const SignUpScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
 
   // Input ref
   const lastNameRef = useRef();
@@ -78,7 +76,7 @@ const SignUpScreen = () => {
             <Text style={styles.logo}>geared</Text>
 
             <View style={styles.inputContainer}>
-              {loadingSignUp && <Loader />}
+              {loadingSignUp && <ActivityIndicator />}
               {errorSignUp && <AlertMessage>{errorSignUp}</AlertMessage>}
 
               <TextInput
@@ -89,10 +87,7 @@ const SignUpScreen = () => {
                 placeholder="First name"
                 placeholderTextColor={'#a1a1aa'}
                 autoCapitalize="words"
-                returnKeyType="next"
-                onSubmitEditing={() => {
-                  lastNameRef.current.focus();
-                }}
+                // returnKeyType="next"
               />
 
               <TextInput
@@ -103,7 +98,7 @@ const SignUpScreen = () => {
                 placeholder="Last name"
                 placeholderTextColor={'#a1a1aa'}
                 autoCapitalize="words"
-                returnKeyType="next"
+                // returnKeyType="next"
                 ref={lastNameRef}
                 onSubmitEditing={() => {
                   emailRef.current.focus();
@@ -120,11 +115,8 @@ const SignUpScreen = () => {
                 autoCapitalize="none"
                 autoComplete="email"
                 autoCorrect={false}
-                returnKeyType="next"
+                // returnKeyType="next"
                 ref={emailRef}
-                onSubmitEditing={() => {
-                  usernameRef.current.focus();
-                }}
               />
 
               <TextInput
@@ -135,11 +127,8 @@ const SignUpScreen = () => {
                 placeholderTextColor={'#a1a1aa'}
                 autoCapitalize="none"
                 autoCorrect={false}
-                returnKeyType="next"
+                // returnKeyType="next"
                 ref={usernameRef}
-                onSubmitEditing={() => {
-                  passwordRef.current.focus();
-                }}
               />
 
               <TextInput
@@ -151,9 +140,6 @@ const SignUpScreen = () => {
                 autoCapitalize="none"
                 ref={passwordRef}
                 secureTextEntry
-                onSubmitEditing={() => {
-                  confirmPasswordRef.current.focus();
-                }}
               />
 
               <TextInput
