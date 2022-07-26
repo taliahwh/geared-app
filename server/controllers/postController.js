@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import asyncHandler from 'express-async-handler';
+import moment from 'moment';
 
 import Post from '../models/postModel.js';
 import User from '../models/userModel.js';
@@ -66,6 +67,8 @@ const createNewPost = asyncHandler(async (req, res) => {
     throw new Error('Not authorized');
   }
 
+  const userJoinedDate = moment(user.createdAt).format('MMMM YYYY');
+
   const newPost = await Post.create({
     images,
     description,
@@ -83,6 +86,7 @@ const createNewPost = asyncHandler(async (req, res) => {
       username: user.username,
       profileImage: user.profileImage,
       name: user.name,
+      dateJoined: userJoinedDate,
     },
   });
 
