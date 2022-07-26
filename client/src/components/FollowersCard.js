@@ -1,36 +1,43 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 
 const FollowersCard = ({ name, username, profileImage, followerId }) => {
-  const handleFollowUser = () => {};
+  const navigation = useNavigation();
 
   // Redux state
   const { _id: authUserId } = useSelector((state) => state.userSignIn.userInfo);
 
+  const handleNavigate = () => {
+    navigation.navigate('ProfileDetails', { userId: followerId });
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.imageAndContentContainer}>
-        <Image
-          style={styles.userImage}
-          source={{
-            uri: profileImage,
-          }}
-        />
+      <TouchableOpacity onPress={handleNavigate} activeOpacity={0.9}>
+        <View style={styles.imageAndContentContainer}>
+          <Image
+            style={styles.userImage}
+            source={{
+              uri: profileImage,
+            }}
+          />
 
-        <View style={styles.content}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.username}>{`@${username}`}</Text>
+          <View style={styles.content}>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.username}>{`@${username}`}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
 
-      {followerId !== authUserId && (
+      {/* {followerId !== authUserId && (
         <View style={styles.btnContainer}>
           <TouchableOpacity onPress={handleFollowUser} activeOpacity={0.6}>
             <Text style={styles.followingBtn}>Following</Text>
           </TouchableOpacity>
         </View>
-      )}
+      )} */}
     </View>
   );
 };
