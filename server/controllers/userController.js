@@ -42,7 +42,7 @@ const signIn = asyncHandler(async (req, res) => {
 
     if (!correctPassword) {
       res.status(400);
-      throw new Error('Invalid password.');
+      throw new Error('Invalid password');
     }
 
     if (userByUsername && correctPassword) {
