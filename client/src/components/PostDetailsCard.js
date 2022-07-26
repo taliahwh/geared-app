@@ -38,6 +38,7 @@ const PostDetailsCard = ({
   sport,
   forSale,
   offers,
+  userDateJoined,
   timePosted,
 }) => {
   // Hooks
@@ -98,7 +99,7 @@ const PostDetailsCard = ({
           <View style={styles.usernameContainer}>
             <Text style={styles.username}>{username}</Text>
 
-            <Text style={styles.location}>Phoenix, Arizona</Text>
+            {/* <Text style={styles.location}>Phoenix, Arizona</Text> */}
           </View>
         </View>
         <View style={styles.info}>
@@ -194,7 +195,9 @@ const PostDetailsCard = ({
           <Image style={styles.sellerImage} source={{ uri: profileImage }} />
           <View style={styles.sellerNameContainer}>
             <Text style={styles.sellerName}>{name}</Text>
-            <Text style={styles.sellerMeta}>JOINED MAY 2022</Text>
+            <Text
+              style={styles.sellerMeta}
+            >{`JOINED ${userDateJoined.toUpperCase()}`}</Text>
           </View>
         </View>
         <View style={styles.sellerMenuContainer}>
