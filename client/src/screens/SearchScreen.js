@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import * as Notifications from 'expo-notifications';
 import { launchImageLibrary } from 'react-native-image-picker';
+import moment from 'moment';
 
 const SearchScreen = () => {
   const handlePushNotification = async () => {
@@ -41,6 +42,11 @@ const SearchScreen = () => {
     console.log(image);
   };
 
+  const handleConsole = () => {
+    const month = moment('2022-07-22T18:54:46.645+00:00').format('MMMM YYYY');
+    console.log(month.toUpperCase());
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
@@ -67,10 +73,9 @@ const SearchScreen = () => {
       <TouchableOpacity onPress={handleUpload}>
         <Text style={styles.uploadBtn}>Upload</Text>
       </TouchableOpacity>
-      {/* <Image
-        // source={require('../../../uploads/image-1658343811184.jpg')}
-        style={{ width: 50, height: 50 }}
-      /> */}
+      <TouchableOpacity onPress={handleConsole}>
+        <Text style={styles.uploadBtn}>Print to console</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
