@@ -10,6 +10,7 @@ import {
   Platform,
   Keyboard,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
@@ -22,9 +23,13 @@ import AlertMessage from '../components/AlertMessage';
 import { signIn } from '../actions/userActions';
 
 const LoginScreen = () => {
+  // Hooks
   const navigation = useNavigation();
   const passwordRef = useRef();
   const dispatch = useDispatch();
+
+  // Loading state
+  const [loadingSignIn, setLoadingSignIn] = useState(false);
 
   const { error: errorSignIn } = useSelector((state) => state.userSignIn);
 
@@ -36,8 +41,11 @@ const LoginScreen = () => {
     mode: 'onBlur',
   });
 
-  const onSubmit = (data) => {
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+  const onSubmit = async (data) => {
     const { username, password } = data;
+
     dispatch(signIn(username, password));
   };
 
@@ -65,6 +73,7 @@ const LoginScreen = () => {
                     placeholder="Email or Username"
                     placeholderTextColor={'#a1a1aa'}
                     autoCapitalize="none"
+                    autoComplete={'off'}
                     returnKeyType="next"
                     onSubmitEditing={() => {
                       passwordRef.current.focus();
@@ -94,6 +103,13 @@ const LoginScreen = () => {
                 onPress={handleSubmit(onSubmit)}
                 activeOpacity={0.5}
               >
+                {/* {!loadingSignIn ? (
+                  <Text style={styles.loginBtn}>Login</Text>
+                ) : (
+                  <View style={styles.loadingBtn}>
+                    <ActivityIndicator color={'#fff'} />
+                  </View>
+                )} */}
                 <Text style={styles.loginBtn}>Login</Text>
               </TouchableOpacity>
 
@@ -158,6 +174,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
+    backgroundColor: '#3E5E7E',
+    color: '#fff',
+    paddingVertical: 11,
+    marginTop: 7,
+  },
+  loadingBtn: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#3E5E7E',
     color: '#fff',
     paddingVertical: 11,
