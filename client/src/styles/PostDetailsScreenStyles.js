@@ -31,12 +31,11 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   userImage: {
-    flex: 1,
-    // width: 1,
     height: 40,
+    width: 40,
     borderWidth: 1,
     borderColor: '#d4d4d4',
-    borderRadius: 100,
+    borderRadius: 40 / 2,
   },
   usernameContainer: {
     flex: 6,
