@@ -6,6 +6,7 @@ import CommentsScreen from '../screens/CommentsScreen';
 import NotificationsScreen from '../screens/NotificationsScreen';
 import FollowersScreen from '../screens/FollowersScreen';
 import FollowingScreen from '../screens/FollowingScreen';
+import ViewUserProfileScreen from '../screens/ViewUserProfileScreen';
 
 import { HeaderBack, HeaderNotification } from '../components/HeaderBackImages';
 
@@ -70,6 +71,20 @@ const ProfileNavigator = () => {
           headerTitle: 'Following',
           headerBackTitleVisible: false,
           headerBackImage: HeaderBack,
+        }}
+      />
+      <Stack.Screen
+        name="ProfileDetails"
+        component={ViewUserProfileScreen}
+        options={{
+          headerTitle: '',
+          headerBackTitleVisible: false,
+          headerBackImage: HeaderBack,
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
         }}
       />
     </Stack.Navigator>
