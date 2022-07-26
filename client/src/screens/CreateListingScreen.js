@@ -129,7 +129,7 @@ const CreateListingScreen = () => {
         });
 
         try {
-          setLoadingImage('loading');
+          setLoadingImage(true);
           const { data: cloudinaryURL } = await geared.post(
             '/api/upload/post',
             formData,
@@ -158,7 +158,7 @@ const CreateListingScreen = () => {
         });
 
         try {
-          // console.log(formData);
+          setLoadingImage(true);
           const { data: cloudinaryURL } = await geared.post(
             '/api/upload/post',
             formData,
@@ -169,9 +169,9 @@ const CreateListingScreen = () => {
               },
             }
           );
-          // console.log(imagePickerResult);
           console.log(cloudinaryURL);
           setImage2(cloudinaryURL);
+          setLoadingImage(false);
         } catch (error) {
           console.log(error);
         }
@@ -186,7 +186,7 @@ const CreateListingScreen = () => {
         });
 
         try {
-          // console.log(formData);
+          setLoadingImage(true);
           const { data: cloudinaryURL } = await geared.post(
             '/api/upload/post',
             formData,
@@ -197,9 +197,8 @@ const CreateListingScreen = () => {
               },
             }
           );
-          // console.log(imagePickerResult);
           console.log(cloudinaryURL);
-          setImage3(cloudinaryURL);
+          setLoadingImage(false);
         } catch (error) {
           console.log(error);
         }
@@ -214,7 +213,7 @@ const CreateListingScreen = () => {
         });
 
         try {
-          // console.log(formData);
+          setLoadingImage(true);
           const { data: cloudinaryURL } = await geared.post(
             '/api/upload/post',
             formData,
@@ -225,9 +224,9 @@ const CreateListingScreen = () => {
               },
             }
           );
-          // console.log(imagePickerResult);
           console.log(cloudinaryURL);
           setImage4(cloudinaryURL);
+          setLoadingImage(false);
         } catch (error) {
           console.log(error);
         }
@@ -325,9 +324,11 @@ const CreateListingScreen = () => {
         {/* {errorMessage && <Text style={styles.error}>{errorMessage}</Text>} */}
         {errorCreateListing && <Text>{errorCreateListing}</Text>}
 
-        <View style={styles.uploadingImage}>
-          <Text>Uploading...</Text>
-        </View>
+        {loadingImage && (
+          <View>
+            <Text style={styles.uploadingImage}>Uploading...</Text>
+          </View>
+        )}
 
         <View style={styles.cameraBtnContainer}>
           {image1 === null ? (
