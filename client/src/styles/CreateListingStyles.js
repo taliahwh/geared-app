@@ -17,8 +17,9 @@ const styles = StyleSheet.create({
   uploadingImage: {
     textAlign: 'center',
     fontSize: 13,
-    marginBottom: 10,
-    color: 'red',
+    fontWeight: '500',
+    marginBottom: 15,
+    color: 'gray',
   },
   cameraBtnContainer: {
     display: 'flex',
