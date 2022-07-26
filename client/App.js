@@ -52,7 +52,8 @@ const App = () => {
         console.log(error);
       }
     };
-    getToken();
+
+    if (authToken) getToken();
 
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current =
