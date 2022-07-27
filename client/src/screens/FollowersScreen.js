@@ -30,6 +30,7 @@ const FollowersScreen = ({ route }) => {
   } = useSelector((state) => state.viewFollowers);
 
   const renderItem = ({ item }) => {
+    // console.log(item);
     return (
       <FollowersCard
         name={item.name}
