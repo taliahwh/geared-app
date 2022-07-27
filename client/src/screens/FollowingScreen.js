@@ -35,6 +35,7 @@ const FollowingScreen = ({ route }) => {
         name={item.name}
         username={item.username}
         profileImage={item.profileImage}
+        followerId={item._id}
       />
     );
   };
@@ -72,7 +73,7 @@ const FollowingScreen = ({ route }) => {
 
       {following && following.length === 0 && (
         <View style={styles.centered}>
-          <Text style={styles.text}>You're not following anyone yet.</Text>
+          <Text style={styles.text}>Not following anyone yet.</Text>
         </View>
       )}
     </>
