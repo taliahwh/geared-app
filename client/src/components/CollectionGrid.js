@@ -96,6 +96,11 @@ const styles = StyleSheet.create({
     height: thirdWindowWidth,
     width: thirdWindowWidth,
   },
+  noPostsContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default CollectionGrid;
