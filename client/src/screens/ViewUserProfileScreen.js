@@ -12,7 +12,8 @@ import AlertMessage from '../components/AlertMessage';
 import { getUserDetails } from '../actions/userActions';
 
 const ViewUserProfileScreen = ({ route }) => {
-  const { userId } = route.params;
+  const { userId, num } = route.params;
+  // console.log(Math.floor(100000 + Math.random() * 9000));
 
   // Hooks
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const ViewUserProfileScreen = ({ route }) => {
 
   useEffect(() => {
     dispatch(getUserDetails(userId));
-  }, [dispatch, successFollowUser]);
+  }, [dispatch, successFollowUser, num]);
 
   return (
     <View style={styles.collectionContainter}>
