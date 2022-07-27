@@ -61,8 +61,8 @@ const SignUpDetailsScreen = ({ route }) => {
   // State from redux store
   const { error: errorSignIn } = useSelector((state) => state.userSignIn);
 
-  const { error: errorUpdateProfile } = useSelector(
-    (state) => state.userUpdateProfile
+  const { error: errorCompleteSignUp } = useSelector(
+    (state) => state.completeSignUp
   );
 
   useFocusEffect(
@@ -175,8 +175,8 @@ const SignUpDetailsScreen = ({ route }) => {
 
             <View style={styles.inputContainer}>
               {errorSignIn && <AlertMessage>{errorSignIn}</AlertMessage>}
-              {errorUpdateProfile && (
-                <AlertMessage>{errorUpdateProfile}</AlertMessage>
+              {errorCompleteSignUp && (
+                <AlertMessage>{errorCompleteSignUp}</AlertMessage>
               )}
               <View style={styles.textInputContainer}>
                 <Text style={styles.inputTitle}>Date of birth</Text>
