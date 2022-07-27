@@ -5,6 +5,9 @@ import {
   USER_SIGN_UP_REQUEST,
   USER_SIGN_UP_SUCCESS,
   USER_SIGN_UP_FAILURE,
+  COMPLETE_SIGN_UP_REQUEST,
+  COMPLETE_SIGN_UP_SUCCESS,
+  COMPLETE_SIGN_UP_FAILURE,
   GET_USER_PUSH_TOKEN_REQUEST,
   GET_USER_PUSH_TOKEN_SUCCESS,
   GET_USER_PUSH_TOKEN_FAILURE,
@@ -95,6 +98,19 @@ export const userSignUpReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case CLEAR_SIGN_UP_DATA:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const userCompleteSignUpReducer = (state = {}, action) => {
+  switch (action.type) {
+    case COMPLETE_SIGN_UP_REQUEST:
+      return { loading: true };
+    case COMPLETE_SIGN_UP_SUCCESS:
+      return { loading: false, success: true };
+    case COMPLETE_SIGN_UP_FAILURE:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }
