@@ -96,7 +96,7 @@ const FollowingRoute = () => {
 
       {posts && posts.length === 0 && (
         <View style={styles.centered}>
-          <Text>You are not following anyone yet.</Text>
+          <Text>Not following anyone yet.</Text>
         </View>
       )}
     </>
