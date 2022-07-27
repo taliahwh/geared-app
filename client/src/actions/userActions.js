@@ -5,6 +5,9 @@ import {
   USER_SIGN_UP_REQUEST,
   USER_SIGN_UP_SUCCESS,
   USER_SIGN_UP_FAILURE,
+  COMPLETE_SIGN_UP_REQUEST,
+  COMPLETE_SIGN_UP_SUCCESS,
+  COMPLETE_SIGN_UP_FAILURE,
   GET_USER_PUSH_TOKEN_REQUEST,
   GET_USER_PUSH_TOKEN_SUCCESS,
   GET_USER_PUSH_TOKEN_FAILURE,
@@ -344,7 +347,7 @@ export const completeSignUp =
   async (dispatch, getState) => {
     const { token: authToken } = getState().userSignUp.userInfo;
     try {
-      dispatch({ type: UPDATE_USER_PROFILE_REQUEST });
+      dispatch({ type: COMPLETE_SIGN_UP_REQUEST });
 
       const config = {
         headers: {
@@ -370,10 +373,10 @@ export const completeSignUp =
       );
 
       dispatch({ type: USER_SIGN_IN_SUCCESS, payload: data });
-      dispatch({ type: UPDATE_USER_PROFILE_SUCCESS, payload: data });
+      dispatch({ type: COMPLETE_SIGN_UP_SUCCESS, payload: data });
     } catch (error) {
       dispatch({
-        type: UPDATE_USER_PROFILE_FAILURE,
+        type: COMPLETE_SIGN_UP_FAILURE,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message
