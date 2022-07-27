@@ -10,7 +10,10 @@ const FollowersCard = ({ name, username, profileImage, followerId }) => {
   const { _id: authUserId } = useSelector((state) => state.userSignIn.userInfo);
 
   const handleNavigate = () => {
-    navigation.navigate('ProfileDetails', { userId: followerId });
+    navigation.navigate('ProfileDetails', {
+      userId: followerId,
+      num: Math.floor(100000 + Math.random() * 900000),
+    });
   };
 
   return (
@@ -30,14 +33,6 @@ const FollowersCard = ({ name, username, profileImage, followerId }) => {
           </View>
         </View>
       </TouchableOpacity>
-
-      {/* {followerId !== authUserId && (
-        <View style={styles.btnContainer}>
-          <TouchableOpacity onPress={handleFollowUser} activeOpacity={0.6}>
-            <Text style={styles.followingBtn}>Following</Text>
-          </TouchableOpacity>
-        </View>
-      )} */}
     </View>
   );
 };
