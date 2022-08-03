@@ -16,6 +16,9 @@ import BaseballVideo from '../assets/videos/baseball.mp4';
 import FootballVideo from '../assets/videos/football.mp4';
 import googleIcon from '../assets/google-color.png';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 const WelcomeScreen = () => {
   const navigation = useNavigation();
   const video = useRef(null);
@@ -118,7 +121,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
-    backgroundColor: '#3E5E7E',
+    backgroundColor: theme.PRIMARY_COLOR,
     color: '#fff',
     paddingVertical: 11,
     // marginBottom: 7,
