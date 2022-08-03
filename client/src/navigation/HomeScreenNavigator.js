@@ -80,14 +80,16 @@ const HomeScreenNavigator = () => {
           name="UserProfile"
           component={ProfileScreen}
           options={{
-            headerTitle: '',
+            headerTitle: () => <HeaderNotification />,
+            headerBackTitleVisible: false,
+            headerBackImage: HeaderBack,
             headerStyle: {
               elevation: 0,
               shadowOpacity: 0,
               borderBottomWidth: 0,
               // height: 60,
             },
-            headerLeft: HeaderNotification,
+            // headerLeft: HeaderNotification,
           }}
         />
       </Stack.Group>
