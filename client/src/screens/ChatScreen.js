@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 const ChatScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
@@ -51,7 +54,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'green',
     padding: 15,
     borderBottomWidth: 1.5,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     height: 100,
     alignItems: 'center',
   },
