@@ -14,9 +14,9 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useSelector, useDispatch } from 'react-redux';
 
 // Tab Screens
-import ManageRoute from '../components/tab-view/ManageRoutes';
-import PaymentsRoute from '../components/tab-view/PaymentsRoute';
-import ProfileSettingsRoute from '../components/tab-view/ProfileSettingsRoute';
+import ManageRoute from './ManageRoutes';
+import PaymentsRoute from './PaymentsRoute';
+import ProfileSettingsRoute from './ProfileSettingsRoute';
 import { getAuthUserDetails } from '../actions/userActions';
 
 const initialLayout = { width: Dimensions.get('window').width };
@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   indicator: {
-    // backgroundColor: '#3E5E7E',
     backgroundColor: '#404040',
   },
   tabBar: {
@@ -126,8 +125,6 @@ const styles = StyleSheet.create({
     // paddingLeft: 30,
   },
   userImage: {
-    // borderWidth: 1,
-    // borderColor: '#d4d4d4',
     borderRadius: 1000,
     marginRight: 15,
     height: 60,

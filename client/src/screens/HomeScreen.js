@@ -4,8 +4,8 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { StatusBar } from 'expo-status-bar';
 
 // Tabs
-import FollowingRoute from '../components/tab-view/FollowingRoute';
-import ExploreRoute from '../components/tab-view/ExploreRoute';
+import FollowingRoute from './FollowingRoute';
+import ExploreRoute from './ExploreRoute';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
