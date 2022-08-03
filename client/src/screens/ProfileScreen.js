@@ -3,11 +3,14 @@ import React, { useState } from 'react';
 import { Text, StyleSheet, Dimensions, StatusBar } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 import AuthCollectionRoute from '../components/AuthProfile/AuthCollectionRoute';
-import LikesRoute from '../components/tab-view/LikesRoute';
-import SavedRoute from '../components/tab-view/SavedRoute';
-import ReviewsRoute from '../components/tab-view/ReviewsRoute';
-import TestRoute from '../components/tab-view/TestRoute';
+import LikesRoute from './LikesRoute';
+import SavedRoute from './SavedRoute';
+import ReviewsRoute from './ReviewsRoute';
+import TestRoute from './TestRoute';
 
 const initialLayout = { width: Dimensions.get('window').width };
 
@@ -62,7 +65,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   indicator: {
-    backgroundColor: '#3E5E7E',
+    backgroundColor: theme.PRIMARY_COLOR,
   },
   tabBar: {
     backgroundColor: 'white',
