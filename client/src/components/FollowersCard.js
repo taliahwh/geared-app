@@ -3,6 +3,9 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 const FollowersCard = ({ name, username, profileImage, followerId }) => {
   const navigation = useNavigation();
 
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
     borderRadius: 50 / 2,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   content: {
     marginLeft: 10,
@@ -79,8 +82,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '500',
     // backgroundColor: 'gray',
-    color: '#3E5E7E',
-    borderColor: '#3E5E7E',
+    color: theme.PRIMARY_COLOR,
+    borderColor: theme.PRIMARY_COLOR,
     paddingHorizontal: 7,
     paddingVertical: 5,
     borderWidth: 1,
@@ -89,9 +92,9 @@ const styles = StyleSheet.create({
   followingBtn: {
     textAlign: 'center',
     fontWeight: '500',
-    backgroundColor: '#3E5E7E',
+    backgroundColor: theme.PRIMARY_COLOR,
     color: '#fff',
-    borderColor: '#3E5E7E',
+    borderColor: theme.PRIMARY_COLOR,
     paddingHorizontal: 7,
     paddingVertical: 5,
     borderWidth: 1,
