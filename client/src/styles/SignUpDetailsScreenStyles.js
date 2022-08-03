@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import theme from './styles.theme';
 
 const modalHeight = Dimensions.get('window').height / 4;
 
@@ -7,6 +8,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#fff',
+  },
+  uploadingImage: {
+    textAlign: 'center',
+    fontSize: 13,
+    fontWeight: '500',
+    // marginBottom: 15,
+    color: 'gray',
   },
   logo: {
     fontSize: 45,
@@ -36,7 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 10,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     paddingBottom: 7,
   },
   inputTitle: {
@@ -72,12 +80,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     // marginVertical: 10,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     paddingBottom: 7,
   },
   profileImageContainer: {
     borderWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     height: 30,
     width: 30,
     borderRadius: 100,
@@ -97,7 +105,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
-    backgroundColor: '#3E5E7E',
+    backgroundColor: theme.PRIMARY_COLOR,
     color: '#fff',
     paddingVertical: 11,
     marginTop: 15,
@@ -157,7 +165,7 @@ const styles = StyleSheet.create({
   },
   interestInput: {
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     marginVertical: 10,
     paddingVertical: 7,
     paddingHorizontal: 7,

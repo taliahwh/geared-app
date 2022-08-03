@@ -1,19 +1,32 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import theme from './styles.theme';
-
-const SLIDER_HEIGHT = Dimensions.get('window').width + 10;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
+    marginHorizontal: 15,
+    paddingTop: 11,
+    paddingBottom: 20,
+    marginTop: 15,
+    borderRadius: 5,
     display: 'flex',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+    elevation: 1,
+    zIndex: 1,
   },
   headingContainer: {
     paddingHorizontal: 15,
-    paddingTop: 6,
     dispay: 'flex',
     flexDirection: 'row',
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderColor: theme.BORDER_COLOR,
   },
   userInformation: {
     paddingVertical: 5,
@@ -33,11 +46,14 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   userImage: {
+    flex: 1,
+    // width: 1,
     height: 40,
     width: 40,
+    borderRadius: 40 / 2,
     borderWidth: 1,
     borderColor: theme.BORDER_COLOR,
-    borderRadius: 40 / 2,
+    // borderRadius: 100,
   },
   usernameContainer: {
     flex: 6,
@@ -53,12 +69,12 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     paddingRight: 5,
   },
-  location: {
+  listingType: {
     fontSize: 13,
   },
   imageContainer: {
-    paddingTop: 7,
-    height: SLIDER_HEIGHT,
+    paddingHorizontal: 15,
+    height: ITEM_WIDTH,
     display: 'flex',
     alignItems: 'center',
   },
@@ -88,17 +104,22 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     paddingHorizontal: 15,
-    paddingTop: 7,
-    display: 'flex',
-    flexDirection: 'row',
+    paddingTop: 10,
   },
   usernameFont: {
     fontWeight: '500',
-    paddingRight: 5,
+    backgroundColor: 'pink',
+    // marginRight: 5,
   },
   viewComments: {
     paddingTop: 7,
     paddingHorizontal: 15,
+    color: '#A8A8A8',
+  },
+  timePosted: {
+    paddingTop: 10,
+    paddingHorizontal: 15,
+    fontSize: 11,
     color: '#A8A8A8',
   },
   commentsContainer: {
@@ -149,116 +170,30 @@ const styles = StyleSheet.create({
   },
   priceLabel: {
     fontWeight: '500',
-    fontSize: 13,
-    paddingRight: 2,
+    fontSize: 15,
   },
   price: {
     fontSize: 15,
   },
-  tag: {
-    marginTop: 5,
-    marginLeft: 13,
-    width: 105,
+
+  tagsContainer: {
+    // backgroundColor: 'pink',
+    marginTop: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
+  postTags: {
     marginRight: 10,
     fontSize: 13,
     fontWeight: '500',
-    color: 'white',
-    backgroundColor: theme.PRIMARY_COLOR,
+    color: '#7390AD',
+    backgroundColor: '#F1F1F1',
     paddingHorizontal: 7,
     paddingVertical: 3,
-    borderRadius: 10,
+    borderRadius: 5,
     overflow: 'hidden',
-  },
-  cardDetailsContainer: {
-    paddingHorizontal: 15,
-    paddingTop: 10,
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  specsContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginRight: 10,
-  },
-  specsLabel: {
-    fontWeight: '600',
-    marginLeft: 4,
-  },
-  uploadDate: {
-    paddingLeft: 15,
-    paddingTop: 4,
-    fontSize: 10,
-    paddingBottom: 5,
-  },
-  aboutTheSellerContainer: {
-    marginHorizontal: 15,
-    borderTopWidth: 1,
-    borderColor: theme.BORDER_COLOR,
-    marginTop: 10,
-  },
-  aboutTheSellerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    paddingVertical: 10,
-  },
-  sellerInfoContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    paddingTop: 15,
-    alignItems: 'center',
-  },
-  sellerImage: {
-    flex: 2,
-    height: 55,
-    borderWidth: 1,
-    borderColor: theme.BORDER_COLOR,
-    borderRadius: 100,
-  },
-  sellerNameContainer: {
-    flex: 12,
-  },
-  sellerName: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginLeft: 15,
-  },
-  sellerMeta: {
-    fontSize: 11,
-    marginLeft: 15,
-  },
-  sellerMenuContainer: {
-    paddingTop: 10,
-  },
-  menuOption: {
-    display: 'flex',
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: theme.BORDER_COLOR,
-    paddingVertical: 7,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    // backgroundColor: 'pink',
-  },
-  menuOptionContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    // width: '100%',
-    justifyContent: 'space-between',
-    // backgroundColor: 'orange',
-    width: '95%',
-  },
-  menuTitle: {
-    fontSize: 17,
-    paddingTop: 3,
-  },
-  menuQty: {
-    marginRight: 20,
-    fontSize: 16,
-    color: '#737373',
-  },
-  menuArrow: {
-    color: '#525252',
   },
 });
 

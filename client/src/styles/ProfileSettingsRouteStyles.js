@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import theme from './styles.theme';
 
 const modalHeight = Dimensions.get('window').height / 4;
 
@@ -12,7 +13,7 @@ const styles = StyleSheet.create({
   },
   border: {
     borderTopWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     marginVertical: 20,
   },
   section: {
@@ -29,14 +30,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   imageInputContainer: {
     display: 'flex',
     flexDirection: 'row',
     paddingVertical: 7,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     alignItems: 'center',
   },
   dateInputContainer: {
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   slash: { paddingHorizontal: 5 },
   inputTitle: {
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-between',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   flexInputTitle: {
     flex: 3,
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     borderWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     borderRadius: 100,
   },
   btn: {
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
   tagsContainer: {
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
 
   // Modal
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
   },
   interestInput: {
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     marginVertical: 10,
     paddingVertical: 7,
     paddingHorizontal: 7,
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'orange',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   modalInputTitle: {
     width: '100%',
