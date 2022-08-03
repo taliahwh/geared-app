@@ -4,37 +4,40 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import maxey from '../assets/test-images/maxey.jpg';
 import { Ionicons } from '@expo/vector-icons';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 const Ratings = () => {
   return (
     <View style={styles.ratingsIconContainer}>
       <Ionicons
         name="star"
         size={13}
-        color="#3E5E7E"
+        color={theme.PRIMARY_COLOR}
         style={{ marginRight: 3 }}
       />
       <Ionicons
         name="star"
         size={13}
-        color="#3E5E7E"
+        color={theme.PRIMARY_COLOR}
         style={{ marginRight: 3 }}
       />
       <Ionicons
         name="star"
         size={13}
-        color="#3E5E7E"
+        color={theme.PRIMARY_COLOR}
         style={{ marginRight: 3 }}
       />
       <Ionicons
         name="star"
         size={13}
-        color="#3E5E7E"
+        color={theme.PRIMARY_COLOR}
         style={{ marginRight: 3 }}
       />
       <Ionicons
         name="star"
         size={13}
-        color="#3E5E7E"
+        color={theme.PRIMARY_COLOR}
         style={{ marginRight: 3 }}
       />
     </View>
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
   },
   border: {
     borderTopWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     marginTop: 7,
   },
   headerContainer: {
@@ -99,7 +102,7 @@ const styles = StyleSheet.create({
     width: 57,
     height: 57,
     borderWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     borderRadius: 1000,
     marginRight: 15,
   },
