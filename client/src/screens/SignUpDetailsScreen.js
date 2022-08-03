@@ -50,6 +50,7 @@ const SignUpDetailsScreen = ({ route }) => {
   const [showAlertMessage, setShowAlertMessage] = useState(false);
   const [AlertMessageMessage, setAlertMessageMessage] = useState(null);
   const [loadingSignUp, setLoadingSignUp] = useState(false);
+  const [loadingImage, setLoadingImage] = useState(false);
 
   // Input ref
   const dayRef = useRef();
@@ -89,6 +90,7 @@ const SignUpDetailsScreen = ({ route }) => {
       });
 
       try {
+        setLoadingImage(true);
         const { data: cloudinaryURL } = await geared.post(
           '/api/upload/profile',
           formData,
@@ -102,6 +104,7 @@ const SignUpDetailsScreen = ({ route }) => {
 
         console.log(cloudinaryURL);
         setProfileImage(cloudinaryURL);
+        setLoadingImage(false);
       } catch (error) {
         console.log(error);
       }
@@ -169,180 +172,180 @@ const SignUpDetailsScreen = ({ route }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
-            <Text style={styles.header}>Set up your account</Text>
+        {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+        <View style={styles.container}>
+          <Text style={styles.header}>Set up your account</Text>
 
-            <View style={styles.inputContainer}>
-              {errorSignIn && <AlertMessage>{errorSignIn}</AlertMessage>}
-              {errorCompleteSignUp && (
-                <AlertMessage>{errorCompleteSignUp}</AlertMessage>
-              )}
-              <View style={styles.textInputContainer}>
-                <Text style={styles.inputTitle}>Date of birth</Text>
+          {loadingImage && <Text style={styles.uploadingImage}>Uploading</Text>}
 
-                <View style={styles.dobContainer}>
-                  <TextInput
-                    style={styles.input}
-                    value={dateOfBirth.month}
-                    onChangeText={(value) =>
-                      setDateOfBirth({ ...dateOfBirth, month: value })
-                    }
-                    placeholder="MM"
-                    placeholderTextColor={'#a1a1aa'}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    keyboardType="numeric"
-                    maxLength={2}
-                  />
-                  <Text>/</Text>
-                  <TextInput
-                    style={styles.input}
-                    ref={dayRef}
-                    value={dateOfBirth.day}
-                    onChangeText={(value) =>
-                      setDateOfBirth({ ...dateOfBirth, day: value })
-                    }
-                    placeholder="DD"
-                    placeholderTextColor={'#a1a1aa'}
-                    autoCapitalize="none"
-                    returnKeyType="next"
-                    keyboardType="numeric"
-                    maxLength={2}
-                  />
-                  <Text>/</Text>
-                  <TextInput
-                    style={styles.input}
-                    ref={yearRef}
-                    value={dateOfBirth.year}
-                    onChangeText={(value) =>
-                      setDateOfBirth({ ...dateOfBirth, year: value })
-                    }
-                    placeholder="YYYY"
-                    placeholderTextColor={'#a1a1aa'}
-                    autoCapitalize="none"
-                    returnKeyType="done"
-                    keyboardType="numeric"
-                    maxLength={4}
-                  />
-                </View>
-              </View>
+          <View style={styles.inputContainer}>
+            {errorSignIn && <AlertMessage>{errorSignIn}</AlertMessage>}
+            {errorCompleteSignUp && (
+              <AlertMessage>{errorCompleteSignUp}</AlertMessage>
+            )}
+            <View style={styles.textInputContainer}>
+              <Text style={styles.inputTitle}>Date of birth</Text>
 
-              {showAlertMessage && (
-                <Text style={styles.dobAlertMessage}>
-                  {AlertMessageMessage}
-                </Text>
-              )}
-
-              <View style={styles.textInputContainer}>
-                <Text style={styles.inputTitle}>Bio</Text>
-
-                <TouchableOpacity
-                  onPress={() => setBioModalVisible(true)}
-                  activeOpacity={0.8}
-                >
-                  <View style={styles.chevronContainer}>
-                    <Text style={styles.optionalText}>optional</Text>
-                    <Ionicons
-                      name="ios-chevron-forward-outline"
-                      size={22}
-                      color="#71717a"
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.profileImageSection}>
-                <Text style={styles.inputTitle}>Profile image</Text>
-
-                <View style={styles.imageAndOptionalText}>
-                  <Text style={[styles.optionalText, { paddingRight: 10 }]}>
-                    optional
-                  </Text>
-                  {!profileImage ? (
-                    <TouchableOpacity
-                      onPress={() => pickImage()}
-                      activeOpacity={1}
-                    >
-                      <Image
-                        style={styles.profileImageContainer}
-                        source={{
-                          uri: 'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
-                        }}
-                      />
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => pickImage()}
-                      activeOpacity={1}
-                    >
-                      <Image
-                        source={{ uri: profileImage }}
-                        style={{ width: 30, height: 30, borderRadius: 100 }}
-                      />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-
-              {/* Bio Modal */}
-              <View style={styles.centeredView}>
-                <Modal
-                  animationType="fade"
-                  transparent={true}
-                  visible={bioModalVisible}
-                  onRequestClose={() => {
-                    AlertMessage.AlertMessage('Modal has been closed.');
-                    setBioModalVisible(!bioModalVisible);
-                  }}
-                >
-                  <ModalComponent
-                    header={'Bio'}
-                    closeModal={() => setBioModalVisible(false)}
-                    modal={true}
-                    input={
-                      <TextInput
-                        style={styles.textInput}
-                        value={bio}
-                        onChangeText={(value) => setBio(value)}
-                        placeholder="Something about yourself..."
-                        placeholderTextColor={'#a1a1aa'}
-                        autoFocus={true}
-                        returnKeyType="done"
-                        maxLength={128}
-                      />
-                    }
-                  />
-                </Modal>
-              </View>
-
-              <TouchableOpacity onPress={handleSubmit}>
-                {!loadingSignUp ? (
-                  <Text style={styles.signUpBtn}>Sign Up</Text>
-                ) : (
-                  <Text style={styles.signUpBtn}>Creating account...</Text>
-                )}
-              </TouchableOpacity>
-
-              <View style={styles.signUpTextContainer}>
-                <Text style={styles.signUpText}>Have an account?</Text>
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  onPress={() => navigation.navigate('Login')}
-                >
-                  <Text
-                    style={{
-                      textDecorationLine: 'underline',
-                      fontWeight: '500',
-                    }}
-                  >
-                    Login
-                  </Text>
-                </TouchableOpacity>
+              <View style={styles.dobContainer}>
+                <TextInput
+                  style={styles.input}
+                  value={dateOfBirth.month}
+                  onChangeText={(value) =>
+                    setDateOfBirth({ ...dateOfBirth, month: value })
+                  }
+                  placeholder="MM"
+                  placeholderTextColor={'#a1a1aa'}
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  keyboardType="numeric"
+                  maxLength={2}
+                />
+                <Text>/</Text>
+                <TextInput
+                  style={styles.input}
+                  ref={dayRef}
+                  value={dateOfBirth.day}
+                  onChangeText={(value) =>
+                    setDateOfBirth({ ...dateOfBirth, day: value })
+                  }
+                  placeholder="DD"
+                  placeholderTextColor={'#a1a1aa'}
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  keyboardType="numeric"
+                  maxLength={2}
+                />
+                <Text>/</Text>
+                <TextInput
+                  style={styles.input}
+                  ref={yearRef}
+                  value={dateOfBirth.year}
+                  onChangeText={(value) =>
+                    setDateOfBirth({ ...dateOfBirth, year: value })
+                  }
+                  placeholder="YYYY"
+                  placeholderTextColor={'#a1a1aa'}
+                  autoCapitalize="none"
+                  returnKeyType="done"
+                  keyboardType="numeric"
+                  maxLength={4}
+                />
               </View>
             </View>
+
+            {showAlertMessage && (
+              <Text style={styles.dobAlertMessage}>{AlertMessageMessage}</Text>
+            )}
+
+            <View style={styles.textInputContainer}>
+              <Text style={styles.inputTitle}>Bio</Text>
+
+              <TouchableOpacity
+                onPress={() => setBioModalVisible(true)}
+                activeOpacity={0.8}
+              >
+                <View style={styles.chevronContainer}>
+                  <Text style={styles.optionalText}>optional</Text>
+                  <Ionicons
+                    name="ios-chevron-forward-outline"
+                    size={22}
+                    color="#71717a"
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.profileImageSection}>
+              <Text style={styles.inputTitle}>Profile image</Text>
+
+              <View style={styles.imageAndOptionalText}>
+                <Text style={[styles.optionalText, { paddingRight: 10 }]}>
+                  optional
+                </Text>
+                {!profileImage ? (
+                  <TouchableOpacity
+                    onPress={() => pickImage()}
+                    activeOpacity={1}
+                  >
+                    <Image
+                      style={styles.profileImageContainer}
+                      source={{
+                        uri: 'https://t4.ftcdn.net/jpg/02/15/84/43/360_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg',
+                      }}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => pickImage()}
+                    activeOpacity={1}
+                  >
+                    <Image
+                      source={{ uri: profileImage }}
+                      style={{ width: 30, height: 30, borderRadius: 100 }}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+
+            {/* Bio Modal */}
+            <View style={styles.centeredView}>
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={bioModalVisible}
+                onRequestClose={() => {
+                  AlertMessage.AlertMessage('Modal has been closed.');
+                  setBioModalVisible(!bioModalVisible);
+                }}
+              >
+                <ModalComponent
+                  header={'Bio'}
+                  closeModal={() => setBioModalVisible(false)}
+                  modal={true}
+                  input={
+                    <TextInput
+                      style={styles.textInput}
+                      value={bio}
+                      onChangeText={(value) => setBio(value)}
+                      placeholder="Something about yourself..."
+                      placeholderTextColor={'#a1a1aa'}
+                      autoFocus={true}
+                      returnKeyType="done"
+                      maxLength={128}
+                    />
+                  }
+                />
+              </Modal>
+            </View>
+
+            <TouchableOpacity onPress={handleSubmit}>
+              {!loadingSignUp ? (
+                <Text style={styles.signUpBtn}>Sign Up</Text>
+              ) : (
+                <Text style={styles.signUpBtn}>Creating account...</Text>
+              )}
+            </TouchableOpacity>
+
+            <View style={styles.signUpTextContainer}>
+              <Text style={styles.signUpText}>Have an account?</Text>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => navigation.navigate('Login')}
+              >
+                <Text
+                  style={{
+                    textDecorationLine: 'underline',
+                    fontWeight: '500',
+                  }}
+                >
+                  Login
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
+        {/* </TouchableWithoutFeedback> */}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
