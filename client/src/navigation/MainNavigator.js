@@ -4,6 +4,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSelector, useDispatch } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 // Screens
 import SearchScreen from '../screens/SearchScreen';
 
@@ -98,7 +101,7 @@ const MainNavigator = () => {
           headerShown: false,
           tabBarBadge: 3,
           tabBarBadgeStyle: {
-            backgroundColor: '#3E5E7E',
+            backgroundColor: theme.PRIMARY_COLOR,
             fontSize: 12,
             fontWeight: '500',
             color: '#fff',
@@ -118,7 +121,7 @@ const MainNavigator = () => {
           tabBarBadge: unreadNotifications && unreadNotifications.length,
 
           tabBarBadgeStyle: {
-            backgroundColor: '#3E5E7E',
+            backgroundColor: theme.PRIMARY_COLOR,
             fontSize: 12,
             fontWeight: '500',
             color: '#fff',
