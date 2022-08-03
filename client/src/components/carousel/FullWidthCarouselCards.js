@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Dimensions, Image, StyleSheet } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-// import CarouselCardItem from './CarouselCardItem';
 
 const SLIDER_WIDTH = Dimensions.get('window').width;
 
