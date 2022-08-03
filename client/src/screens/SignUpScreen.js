@@ -15,9 +15,12 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 // Components
 import AlertMessage from '../components/AlertMessage';
-import Loader from '../components/Loader';
+import Loader from '../components/Loaders/Loader';
 
 // Actions
 import { signUp } from '../actions/userActions';
@@ -208,7 +211,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     marginVertical: 10,
     paddingVertical: 7,
     paddingHorizontal: 7,
@@ -217,7 +220,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
-    backgroundColor: '#3E5E7E',
+    backgroundColor: theme.PRIMARY_COLOR,
     color: '#fff',
     paddingVertical: 11,
     marginTop: 7,

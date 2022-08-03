@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, StatusBar } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 // Components
 import ProfileHeader from '../components/ProfileHeader';
 import CollectionGrid from '../components/CollectionGrid';
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   indicator: {
-    backgroundColor: '#3E5E7E',
+    backgroundColor: theme.PRIMARY_COLOR,
   },
   tabBar: {
     backgroundColor: '#fff',
