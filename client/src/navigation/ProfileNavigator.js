@@ -19,13 +19,13 @@ const ProfileNavigator = () => {
         name="UserProfile"
         component={ProfileScreen}
         options={{
-          headerTitle: '',
+          headerTitle: () => <HeaderNotification />,
           headerStyle: {
             elevation: 0,
             shadowOpacity: 0,
             borderBottomWidth: 0,
           },
-          headerLeft: HeaderNotification,
+          // headerLeft: HeaderNotification,
         }}
       />
       <Stack.Screen
