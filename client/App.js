@@ -12,7 +12,7 @@ import * as Notifications from 'expo-notifications';
 import getNotificationsPermission from './src/utils/getNotificationsPermission';
 
 // Components
-import Loader from './src/components/Loader';
+import Loader from './src/components/Loaders/Loader';
 
 // Actions
 import { savePushToken } from './src/actions/userActions';
