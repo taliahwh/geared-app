@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 const MessagePreview = ({
   name,
   messagePreview,
@@ -47,14 +50,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 90,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   userImage: {
     backgroundColor: 'pink',
     flex: 2,
     height: 60,
     borderWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     borderRadius: 1000,
     // marginRight: 2,
   },
