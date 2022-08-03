@@ -11,6 +11,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 // Actions
 import { viewNotification } from '../actions/userActions';
 
@@ -180,7 +183,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#f5f5f5',
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   isViewedContainer: {
     display: 'flex',
@@ -191,7 +194,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   userImage: {
     height: 40,
@@ -199,7 +202,7 @@ const styles = StyleSheet.create({
     borderRadius: 40 / 2,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   content: {
     flex: 1,
