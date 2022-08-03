@@ -14,6 +14,9 @@ import {
 
 import { Ionicons } from '@expo/vector-icons';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 const containerHeight = Dimensions.get('window').height / 2;
 
 const Modal = ({
@@ -86,7 +89,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     marginBottom: 5,
   },
   headerTitle: {
