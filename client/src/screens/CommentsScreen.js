@@ -16,6 +16,9 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 // Components
 import Comment from '../components/Comment';
 import AlertMessage from '../components/AlertMessage';
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     // marginTop: 10,
     borderBottomWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -162,7 +165,7 @@ const styles = StyleSheet.create({
     borderRadius: 30 / 2,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   textInput: {
     flex: 1,
