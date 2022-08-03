@@ -10,6 +10,9 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
+// Styles
+import theme from '../styles/styles.theme';
+
 // Actions
 import { deleteComment } from '../actions/postActions';
 
@@ -70,7 +73,10 @@ const Comment = ({
                   <MenuOptions style={styles.menu}>
                     <MenuOption
                       onSelect={handleDeleteComment}
-                      style={{ borderBottomWidth: 1, borderColor: '#d4d4d4' }}
+                      style={{
+                        borderBottomWidth: 1,
+                        borderColor: theme.BORDER_COLOR,
+                      }}
                     >
                       <View style={styles.menuContainer}>
                         <Text
@@ -141,7 +147,7 @@ const styles = StyleSheet.create({
     borderRadius: 40 / 2,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: '#d4d4d4',
+    borderColor: theme.BORDER_COLOR,
   },
   commentContainer: {
     flex: 10,
